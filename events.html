@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events — Lucy Lou's Coffee</title>
+<meta name="description" content="Where Lucy Lou's coffee trailer will be next, and how to book it for a wedding, corporate morning, graduation, or fundraiser in Northwest Indiana.">
+<link rel="preload" href="assets/fonts/bigshoulders-400_900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/figtree-300_800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#2B1A1F">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="events">
+<a class="u-skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="wordmark" href="index.html">
+      <span class="wordmark-name">Lucy Lou's</span>
+      <span class="wordmark-sub">Mobile coffee trailer · NWI</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+    <ul class="nav-list" id="nav-list">
+      <li><a class="nav-link" data-page="menu" href="menu.html">Menu</a></li>
+      <li><a class="nav-link" data-page="trailer" href="trailer.html">The trailer</a></li>
+      <li><a class="nav-link" data-page="events" href="events.html">Events</a></li>
+      <li><a class="nav-tel" href="tel:+12197437216">(219) 743-7216</a></li>
+      <li><a class="btn nav-cta" href="preorder.html">Preorder</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="band band-dark band-tight">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:0">
+        <p class="eyebrow eyebrow-onDark">Public calendar &amp; private bookings</p>
+        <h1 class="headline">Events</h1>
+        <p class="lede lede-onDark">
+          Two things live here: the festivals and markets where you can just walk up, and the
+          form that gets the trailer to your own date. Weekends book out four to six months
+          ahead, and October is usually gone by spring.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="#book">Request your date</a>
+          <a class="btn btn-ghost btn-ghost-onDark" href="#upcoming">See what's coming up</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming ---------------------------------------------------------- -->
+  <section class="band" id="upcoming" aria-labelledby="upcoming-heading" style="scroll-margin-top:5.5rem">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Open to everyone</p>
+        <h2 class="headline" id="upcoming-heading">Coming up</h2>
+        <p class="lede">
+          No ticket, no guest list — find the trailer and get in line. Or don't get in line:
+          preorder and we'll have it on the counter.
+        </p>
+      </div>
+      <ul id="events-list">
+        <li class="event"><span class="event-meta">Loading the calendar…</span></li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn" href="preorder.html">Preorder for a stop</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rivets">
+
+  <!-- Packages ---------------------------------------------------------- -->
+  <section class="band" aria-labelledby="packages-heading">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Private bookings</p>
+        <h2 class="headline" id="packages-heading">Have us at yours</h2>
+        <p class="lede">
+          Every booking includes the trailer or cart, the baristas, the full menu, cups, ice,
+          and cleanup. What changes is how long we stay and how many people we're pouring for.
+        </p>
+      </div>
+      <ul class="grid grid-3" id="packages"></ul>
+
+      <div class="notice" style="margin-top:2rem">
+        <strong>What it costs.</strong> Pricing runs on guest count and hours, not a flat rate,
+        so we quote after we know the date and the headcount. Most weddings land in the same
+        range as a dessert table. Send the form below and you'll have a number back within a day.
+      </div>
+    </div>
+  </section>
+
+  <!-- Where we've been -------------------------------------------------- -->
+  <section class="band band-dark band-tight" aria-labelledby="past-heading">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:1.5rem">
+        <p class="eyebrow eyebrow-onDark">Since 2023</p>
+        <h2 class="headline-sm" id="past-heading">Where we've been</h2>
+      </div>
+      <ul class="past-list" id="past-list"></ul>
+    </div>
+  </section>
+
+  <!-- Book -------------------------------------------------------------- -->
+  <section class="band" id="book" aria-labelledby="book-heading" style="scroll-margin-top:5.5rem">
+    <div class="shell-narrow">
+      <div class="section-head">
+        <p class="eyebrow">Step one</p>
+        <h2 class="headline" id="book-heading">Request your date</h2>
+        <p class="lede">
+          This is a hold request, not a booking. We check the calendar, send you a quote, and
+          the date is yours once a deposit is in — usually within a day.
+        </p>
+      </div>
+
+      <form class="form" id="book-form" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="book-name">Your name</label>
+            <input class="field-input" id="book-name" name="name" autocomplete="name" required>
+            <p class="field-error" id="book-name-error"></p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="book-phone">Mobile number</label>
+            <input class="field-input" id="book-phone" name="phone" type="tel" autocomplete="tel" required>
+            <p class="field-error" id="book-phone-error"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="book-email">Email</label>
+          <input class="field-input" id="book-email" name="email" type="email" autocomplete="email">
+          <p class="field-hint">Optional — the quote goes here if you'd rather not get a text.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="book-kind">What's the occasion</label>
+            <select class="field-select" id="book-kind" name="kind">
+              <option>Wedding</option>
+              <option>Corporate or office</option>
+              <option>Graduation party</option>
+              <option>Bridal or baby shower</option>
+              <option>Church or school fundraiser</option>
+              <option>Festival or market</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="book-date">Date</label>
+            <input class="field-input" id="book-date" name="date" type="date" required>
+            <p class="field-error" id="book-date-error"></p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="book-venue">Venue or address</label>
+            <input class="field-input" id="book-venue" name="venue" autocomplete="off">
+            <p class="field-hint">If you haven't picked one yet, leave it blank.</p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="book-guests">Roughly how many guests</label>
+            <input class="field-input" id="book-guests" name="guests" type="number" min="1" inputmode="numeric" required>
+            <p class="field-error" id="book-guests-error"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="book-setup">Trailer or cart</label>
+          <select class="field-select" id="book-setup" name="setup">
+            <option value="trailer">Trailer — we have outdoor space for it</option>
+            <option value="cart">Cart — we're indoors</option>
+            <option value="">Not sure, help us pick</option>
+          </select>
+          <p class="field-hint">
+            Not sure? <a href="trailer.html#fit-heading">See which one fits your venue</a>.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="book-notes">Anything else</label>
+          <textarea class="field-textarea" id="book-notes" name="notes" placeholder="Timing, a signature drink you have in mind, whether the venue needs an insurance certificate."></textarea>
+        </div>
+
+        <div class="btn-row" style="margin-top:0.5rem">
+          <button class="btn" type="submit">Send the request</button>
+          <a class="btn btn-ghost" href="tel:+12197437216">Rather just call</a>
+        </div>
+      </form>
+
+      <div class="receipt" id="book-result" hidden>
+        <p class="eyebrow">Ready to send</p>
+        <h3 class="headline-sm" tabindex="-1">Send it over and we'll check the calendar</h3>
+        <p class="lede" style="margin-bottom:1.5rem">
+          Here's your request. Send it whichever way you prefer — we answer texts faster.
+        </p>
+        <pre class="notice" id="book-summary" style="white-space:pre-wrap;font-family:var(--mono);font-size:0.875rem"></pre>
+        <div class="btn-row">
+          <a class="btn" id="book-text" href="#">Text it to us</a>
+          <a class="btn btn-ghost" id="book-email-link" href="#">Email it instead</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <a class="wordmark" href="index.html">
+          <span class="wordmark-name">Lucy Lou's</span>
+          <span class="wordmark-sub">Mobile coffee trailer · NWI</span>
+        </a>
+        <p class="footer-blurb">
+          Espresso, cold brew, drip, refreshers, tea, and lotus energy — towed to markets,
+          weddings, and offices across Lake and Porter County.
+        </p>
+      </div>
+      <div>
+        <p class="footer-head">Order</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="menu.html">Menu</a></li>
+          <li><a class="footer-link" href="menu.html#group-seasonal">Seasonal</a></li>
+          <li><a class="footer-link" href="preorder.html">Preorder</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-head">Book</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="trailer.html">The trailer</a></li>
+          <li><a class="footer-link" href="events.html">Events</a></li>
+          <li><a class="footer-link" href="events.html#book">Request a date</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-head">Reach us</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="tel:+12197437216">(219) 743-7216</a></li>
+          <li><a class="footer-link" href="https://www.instagram.com/lucylouscoffee/">Instagram</a></li>
+          <li><a class="footer-link" href="https://www.tiktok.com/@lucylouscoffee">TikTok</a></li>
+          <li><a class="footer-link" href="https://www.facebook.com/">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year></span> Lucy Lou's Coffee. All rights reserved.</span>
+      <span>Life is hard, coffee helps.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/booking.js"></script>
+</body>
+</html>

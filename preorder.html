@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preorder — Lucy Lou's Coffee</title>
+<meta name="description" content="Preorder coffee from Lucy Lou's mobile trailer. Pick the stop you're coming to, build your drinks, choose a pickup time, and skip the line.">
+<link rel="preload" href="assets/fonts/bigshoulders-400_900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/figtree-300_800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#2B1A1F">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="preorder">
+<a class="u-skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="wordmark" href="index.html">
+      <span class="wordmark-name">Lucy Lou's</span>
+      <span class="wordmark-sub">Mobile coffee trailer · NWI</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+    <ul class="nav-list" id="nav-list">
+      <li><a class="nav-link" data-page="menu" href="menu.html">Menu</a></li>
+      <li><a class="nav-link" data-page="trailer" href="trailer.html">The trailer</a></li>
+      <li><a class="nav-link" data-page="events" href="events.html">Events</a></li>
+      <li><a class="nav-tel" href="tel:+12197437216">(219) 743-7216</a></li>
+      <li><a class="btn nav-cta" href="preorder.html">Preorder</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="band band-dark band-tight">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:0">
+        <p class="eyebrow eyebrow-onDark">Skip the line</p>
+        <h1 class="headline">Preorder</h1>
+        <p class="lede lede-onDark">
+          Tell us which stop you're coming to and when, and your drinks will be waiting at the
+          window with your name on them. You pay when you pick up — nothing is charged here.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell">
+
+      <!-- The steps are a real sequence: a stop, then drinks, then a time. -->
+      <ol class="steps">
+        <li class="step" data-step="1"><span class="step-num">1</span> Pick your stop</li>
+        <li class="step" data-step="2"><span class="step-num">2</span> Build your order</li>
+        <li class="step" data-step="3"><span class="step-num">3</span> Set a pickup time</li>
+      </ol>
+
+      <p class="u-visually-hidden" id="order-live" role="status" aria-live="polite"></p>
+
+      <div class="order-layout">
+        <div>
+
+          <!-- 1 · stop ------------------------------------------------- -->
+          <section data-panel="1" aria-labelledby="step1-heading">
+            <h2 class="headline-sm" id="step1-heading" tabindex="-1">Which stop are you coming to?</h2>
+            <p class="lede">
+              The trailer moves, so an order has to belong to a place and a window.
+              Pick one and the rest follows.
+            </p>
+            <div class="stop-pick" id="stop-pick" style="margin-top:1.75rem"></div>
+            <div class="btn-row">
+              <button class="btn" type="button" id="to-drinks" disabled>Choose drinks</button>
+            </div>
+            <p class="cart-fine">
+              Don't see your date? The trailer may be booked private that day —
+              <a href="events.html#book">ask about your own event</a>.
+            </p>
+          </section>
+
+          <!-- 2 · drinks ----------------------------------------------- -->
+          <section data-panel="2" aria-labelledby="step2-heading" hidden>
+            <h2 class="headline-sm" id="step2-heading" tabindex="-1">Build your order</h2>
+            <p class="lede">
+              Open a drink to set the size, milk, and extras. Everything you add shows up
+              in the ticket beside you.
+            </p>
+            <div id="drink-list" style="margin-top:2rem"></div>
+            <div class="btn-row">
+              <button class="btn" type="button" id="to-pickup" disabled>Set a pickup time</button>
+              <button class="btn btn-ghost" type="button" id="back-to-stops">Change stop</button>
+            </div>
+          </section>
+
+          <!-- 3 · pickup ----------------------------------------------- -->
+          <section data-panel="3" aria-labelledby="step3-heading" hidden>
+            <h2 class="headline-sm" id="step3-heading" tabindex="-1">When are you coming by?</h2>
+            <p class="lede">Pick a time inside the window at <strong id="pickup-where"></strong>.</p>
+
+            <form class="form" id="order-form" style="margin-top:1.75rem" novalidate>
+              <div class="form-row">
+                <div class="field">
+                  <label class="field-label" for="pickup-name">Name for the cup</label>
+                  <input class="field-input" id="pickup-name" name="name" autocomplete="name" required>
+                  <p class="field-error" id="pickup-name-error"></p>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="pickup-phone">Mobile number</label>
+                  <input class="field-input" id="pickup-phone" name="phone" type="tel" autocomplete="tel" required>
+                  <p class="field-hint">We text you when it's on the counter.</p>
+                  <p class="field-error" id="pickup-phone-error"></p>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field-label" for="pickup-slot">Pickup time</label>
+                <select class="field-select" id="pickup-slot" name="slot" required></select>
+                <p class="field-error" id="pickup-slot-error"></p>
+              </div>
+
+              <div class="field">
+                <label class="field-label" for="pickup-notes">Anything we should know</label>
+                <textarea class="field-textarea" id="pickup-notes" name="notes" placeholder="Extra hot, light ice, one is for a kid — whatever helps."></textarea>
+              </div>
+
+              <div class="btn-row" style="margin-top:0.5rem">
+                <button class="btn" type="submit">Place preorder</button>
+                <button class="btn btn-ghost" type="button" id="back-to-drinks">Back to drinks</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- 4 · receipt ---------------------------------------------- -->
+          <section data-panel="4" aria-labelledby="step4-heading" hidden>
+            <div class="receipt">
+              <p class="eyebrow">Preorder placed</p>
+              <h2 class="headline-sm" id="step4-heading" tabindex="-1">Your order code</h2>
+              <p class="receipt-code" id="receipt-code"></p>
+
+              <div class="cart-stop">
+                <span class="cart-stop-label">Where</span>
+                <strong id="receipt-where"></strong>
+              </div>
+              <div class="cart-stop">
+                <span class="cart-stop-label">When</span>
+                <strong id="receipt-when"></strong>
+              </div>
+              <div class="cart-stop">
+                <span class="cart-stop-label">Name and number</span>
+                <strong id="receipt-who"></strong>
+              </div>
+
+              <ul class="cart-lines" id="receipt-lines" style="margin-top:1.25rem"></ul>
+              <div class="cart-total"><span>Total due at the window</span><span id="receipt-total"></span></div>
+
+              <div class="notice" style="margin-top:1.5rem">
+                <strong>One more tap.</strong> Send the ticket to the trailer so we start it on
+                time. It opens your messages app with the whole order already written out.
+              </div>
+
+              <div class="btn-row">
+                <a class="btn" id="receipt-send" href="#">Text the order to the trailer</a>
+                <button class="btn btn-ghost" type="button" id="receipt-copy">Copy the order</button>
+                <a class="btn btn-ghost" href="preorder.html">Start another order</a>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- running ticket --------------------------------------------- -->
+        <aside class="cart" id="cart" aria-label="Your order">
+          <div class="cart-head">
+            <h2 class="cart-title">Your ticket</h2>
+            <span class="cart-count" id="cart-count">0 drinks</span>
+          </div>
+          <div class="cart-body" id="cart-body"></div>
+        </aside>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <a class="wordmark" href="index.html">
+          <span class="wordmark-name">Lucy Lou's</span>
+          <span class="wordmark-sub">Mobile coffee trailer · NWI</span>
+        </a>
+        <p class="footer-blurb">
+          Espresso, cold brew, drip, refreshers, tea, and lotus energy — towed to markets,
+          weddings, and offices across Lake and Porter County.
+        </p>
+      </div>
+      <div>
+        <p class="footer-head">Order</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="menu.html">Menu</a></li>
+          <li><a class="footer-link" href="menu.html#group-seasonal">Seasonal</a></li>
+          <li><a class="footer-link" href="preorder.html">Preorder</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-head">Book</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="trailer.html">The trailer</a></li>
+          <li><a class="footer-link" href="events.html">Events</a></li>
+          <li><a class="footer-link" href="events.html#book">Request a date</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-head">Reach us</p>
+        <ul class="footer-links">
+          <li><a class="footer-link" href="tel:+12197437216">(219) 743-7216</a></li>
+          <li><a class="footer-link" href="https://www.instagram.com/lucylouscoffee/">Instagram</a></li>
+          <li><a class="footer-link" href="https://www.tiktok.com/@lucylouscoffee">TikTok</a></li>
+          <li><a class="footer-link" href="https://www.facebook.com/">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year></span> Lucy Lou's Coffee. All rights reserved.</span>
+      <span>Life is hard, coffee helps.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/preorder.js"></script>
+</body>
+</html>

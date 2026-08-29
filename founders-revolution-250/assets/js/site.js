@@ -149,6 +149,15 @@
       if (v != null) el.textContent = v;
     });
 
+    // Every buy button points at the store named in data.js. The real URL is
+    // in the markup too, so the links still work with scripting off; this just
+    // keeps one place to change it.
+    if (AF.store) {
+      document.querySelectorAll('[data-store]').forEach(function (a) {
+        a.href = AF.store;
+      });
+    }
+
     // The back-label specification, written out of data.js so the figures are
     // stated once and cannot drift between pages.
     var specEl = document.querySelector('[data-spec]');

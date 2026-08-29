@@ -132,6 +132,18 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .cols--7-5 { grid-template-columns: 7fr 5fr; }
 }
 
+/* Grid items default to min-width:auto, so one unbreakable string — an email
+   address, a URL — sets the width of the whole track and pushes the column
+   past the page. Let tracks shrink, and let long strings wrap. */
+.cols > * { min-width: 0; }
+/* Two different needs. A .tlink can be an address sitting in a narrow grid
+   column, so it takes `anywhere` — that lets the track shrink, and the text
+   only actually breaks when the column really is too narrow. The footer takes
+   `break-word`, because there `anywhere` shrinks the fr track enough to break
+   the address on a full-width desktop, where it fits perfectly well. */
+.tlink { overflow-wrap: anywhere; }
+.ftr a, .field__hint { overflow-wrap: break-word; }
+
 /* an engraved hairline, like the rule on the bottle label */
 .rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
 .night .rule, .oxblood .rule { background: var(--rule-night); }
@@ -824,6 +836,70 @@ body[data-gated="1"] { overflow: hidden; }
 }
 .night .orglist small, .oxblood .orglist small { color: var(--cream-soft); }
 
+/* =========================================================================
+   FOUNDERS
+   ========================================================================= */
+.founders {
+  display: grid; gap: clamp(2.5rem, 5vw, 4.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+}
+.founder { display: grid; gap: 1.5rem; justify-items: start; }
+
+/* A circle that crops rather than squashes, whatever shape the photograph
+   arrives in. The stand-in initials hold the same circle until it does. */
+.founder__portrait {
+  width: clamp(9rem, 16vw, 13rem); aspect-ratio: 1;
+  border-radius: 50%; overflow: hidden;
+  display: grid; place-items: center;
+  background: var(--oxblood);
+  border: 1px solid var(--rule-night);
+}
+.founder__portrait img { width: 100%; height: 100%; object-fit: cover; }
+.founder__portrait span {
+  font-family: var(--display); font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  color: var(--cream); letter-spacing: .04em;
+}
+.founder h2 { font-family: var(--display); font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); }
+.founder .label { color: var(--whiskey-ink); display: block; margin-bottom: .5rem; }
+.night .founder .label, .oxblood .founder .label, .night-2 .founder .label { color: var(--whiskey-lt); }
+.founder__bio { max-width: 46ch; }
+.founder__bio p + p { margin-top: 1em; }
+
+/* =========================================================================
+   BUY
+   Nothing is transacted here; these send people to the store that does.
+   ========================================================================= */
+.offer {
+  display: grid; align-content: start; gap: 1.1rem;
+  padding: clamp(1.75rem, 3.5vw, 2.5rem);
+  border: 1px solid var(--rule-night); border-radius: 3px;
+  background: rgba(247,238,218,.05);
+}
+.offer--lead { background: var(--oxblood); border-color: transparent; }
+.offer__price {
+  font-family: var(--display); font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem);
+  line-height: 1;
+}
+.offer__price small {
+  display: block; margin-top: .5rem;
+  font-family: var(--label); font-size: .66rem; letter-spacing: .16em;
+  text-transform: uppercase; opacity: .72;
+}
+.offer ul { display: grid; gap: .5rem; margin-block: .3rem; }
+.offer li { position: relative; padding-left: 1.3rem; font-size: .97rem; }
+.offer li::before {
+  content: ''; position: absolute; left: 0; top: .62em;
+  width: .4rem; height: .4rem; border-radius: 50%; background: var(--whiskey-lt);
+}
+.offer .btn { margin-top: .7rem; justify-content: center; }
+.offer__sku {
+  font-family: var(--label); font-size: .64rem; letter-spacing: .1em;
+  color: var(--cream-soft); opacity: .8;
+}
+
+/* the ↗ on anything that leaves for the store */
+.ext::after { content: '\2197'; font-size: .9em; line-height: 1; margin-left: .1em; }
+
 /* The demo is one page, so the header's "past the film" test needs an anchor. */
 #top { position: absolute; top: 0; }
 </style>
@@ -877,8 +953,9 @@ body[data-gated="1"] { overflow: hidden; }
       <a href="#box">The Box</a>
       <a href="#bourbon">The Bourbon</a>
       <a href="#heritage">The 250th</a>
+      <a href="#founders">Founders</a>
       <a href="#partners">Partners</a>
-      <a class="btn btn--whiskey" href="#reserve">Reserve</a>
+      <a class="btn btn--whiskey" href="#buy">Buy</a>
     </nav>
   </div>
 </header>
@@ -944,7 +1021,7 @@ body[data-gated="1"] { overflow: hidden; }
           <p><strong data-val="remaining">66</strong> of <strong data-val="sets">250</strong>
              sets remain unclaimed.</p>
           <div class="actions" style="margin-top:1.6rem">
-            <a class="btn btn--whiskey" href="#reserve">Reserve a set</a>
+            <a class="btn btn--whiskey ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
             <a class="tlink" href="#box">See what's inside</a>
           </div>
         </div>
@@ -1098,7 +1175,7 @@ body[data-gated="1"] { overflow: hidden; }
           <li>Two pewter Jefferson cups</li>
           <li>Numbered certificate of authenticity</li>
         </ul>
-        <a class="btn btn--cream" href="#reserve">Reserve a set</a>
+        <a class="btn btn--cream ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
       </article>
 
       <article class="buy__card" data-reveal="stagger">
@@ -1110,7 +1187,7 @@ body[data-gated="1"] { overflow: hidden; }
           <li>Numbered neck tag</li>
           <li>No box, stopper, or cups</li>
         </ul>
-        <a class="btn btn--solid" href="#reserve">Reserve a bottle</a>
+        <a class="btn btn--solid ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy a bottle<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
       </article>
     </div>
   </div>
@@ -1139,6 +1216,58 @@ body[data-gated="1"] { overflow: hidden; }
   </div>
 </section>
 
+<section class="section night" id="founders">
+  <div class="wrap">
+    <div class="founders">
+
+      <article class="founder" data-reveal>
+        <!-- Swap the <span> for <img src="assets/img/founders/bruce.jpg" alt="Dr. Bruce Lautenschlager"> -->
+        <div class="founder__portrait"><span>BL</span></div>
+        <div>
+          <span class="label">Co-founder</span>
+          <h2>Dr. Bruce Lautenschlager</h2>
+        </div>
+        <div class="founder__bio muted">
+          <p>Bruce is an inventor, author and entrepreneur, and has been involved
+             in many businesses over the years. As a history buff, he was aware
+             of the Sons of the American Revolution. To become a member his
+             genealogy had to be traced and proven to show he was related to a
+             Revolutionary patriot. In April 2025 he was inducted into the John
+             Martin Chapter of his local SAR.</p>
+          <p>As the SAR celebrates our nation&rsquo;s Revolutionary history and
+             honours the patriots who served and secured our freedom, Bruce
+             wanted to find his own way to commemorate them. With the
+             nation&rsquo;s 250-year celebration beginning in 2026, he felt
+             inspired to profile, celebrate and recognise those patriots.</p>
+        </div>
+      </article>
+
+      <article class="founder" data-reveal>
+        <!-- Swap the <span> for <img src="assets/img/founders/allen.jpg" alt="Allen Hayne"> -->
+        <div class="founder__portrait"><span>AH</span></div>
+        <div>
+          <span class="label">Co-founder</span>
+          <h2>Allen Hayne</h2>
+        </div>
+        <div class="founder__bio muted">
+          <p>Allen co-founded this business to honour his ancestors who fought in
+             the Revolutionary War, and to celebrate the 250th anniversary of the
+             founding of the United States. For Allen, bourbon is more than a
+             spirit &mdash; it is a vessel for heritage, history and gratitude
+             toward the freedoms we enjoy as Americans.</p>
+          <p>Before entering the world of bourbon, Allen dedicated 39 years to
+             education in Indiana. He served as a teacher, swimming coach, Dean
+             of Students, principal, and ultimately retired as a school
+             superintendent. His personal connection to American history runs
+             deep, with multiple relatives traced back to the Revolutionary War.
+             He is also an active member of the Sons of the American Revolution,
+             carrying forward his family&rsquo;s legacy of patriotism.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
 
 
 
@@ -1275,7 +1404,7 @@ body[data-gated="1"] { overflow: hidden; }
         <span><span data-val="sets">250</span> total</span>
       </div>
     </div>
-    <a class="btn btn--whiskey" href="#reserve" style="margin-top:.6rem">Reserve yours</a>
+    <a class="btn btn--whiskey ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer" style="margin-top:.6rem">Buy now<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
   </div>
 </section>
 
@@ -1299,15 +1428,16 @@ body[data-gated="1"] { overflow: hidden; }
           <li><a href="#box">The Collector's Box</a></li>
           <li><a href="#bourbon">The Bourbon</a></li>
           <li><a href="#heritage">The 250th</a></li>
+          <li><a href="#founders">Meet the Founders</a></li>
           <li><a href="#partners">Partnerships</a></li>
-          <li><a href="#reserve">Reserve</a></li>
+          <li><a href="#buy">Buy</a></li>
         </ul>
       </div>
       <div>
         <h3>Contact</h3>
         <ul>
           <li><a href="mailto:allocations@foundersrevolution250.com">allocations@foundersrevolution250.com</a></li>
-          <li><a href="#reserve">Reservation enquiries</a></li>
+          <li><a href="#buy">Where to buy</a></li>
         </ul>
       </div>
     </div>
@@ -1340,6 +1470,10 @@ window.AF_FRAMES = ["data:image/webp;base64,UklGRgApAABXRUJQVlA4IPQoAABQZQGdASrQ
 window.AF = (function () {
   'use strict';
 
+  // Where the bourbon is actually sold. Every buy button on the site points
+  // here; nothing is transacted on this site itself.
+  var STORE = 'https://foundersrevolution250.kybourbondirect.com/';
+
   var RELEASE = {
     name:     'Heritage Select 250',
     brand:    'American Founders',
@@ -1360,6 +1494,7 @@ window.AF = (function () {
     {
       id:    'box',
       name:  "The 250 Collector's Box",
+      // listed on the store as "American Founders Heritage Select 250 Special Bundle"
       price: 250,
       blurb: 'The full presentation set, numbered and boxed.',
       includes: [
@@ -1374,6 +1509,7 @@ window.AF = (function () {
     {
       id:    'bottle',
       name:  'The Bottle Alone',
+      // listed on the store as "American Founders Heritage Select 250 Bourbon 750ml"
       price: 95,
       blurb: 'The same whiskey, without the box. For drinking, not shelving.',
       includes: [
@@ -1406,6 +1542,7 @@ window.AF = (function () {
   }
 
   return {
+    store:   STORE,
     release: RELEASE,
     offers:  OFFERS,
     notes:   NOTES,
@@ -1569,6 +1706,15 @@ window.AF = (function () {
       var v = vals[el.getAttribute('data-val')];
       if (v != null) el.textContent = v;
     });
+
+    // Every buy button points at the store named in data.js. The real URL is
+    // in the markup too, so the links still work with scripting off; this just
+    // keeps one place to change it.
+    if (AF.store) {
+      document.querySelectorAll('[data-store]').forEach(function (a) {
+        a.href = AF.store;
+      });
+    }
 
     // The back-label specification, written out of data.js so the figures are
     // stated once and cannot drift between pages.

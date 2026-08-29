@@ -8,6 +8,10 @@
 window.AF = (function () {
   'use strict';
 
+  // Where the bourbon is actually sold. Every buy button on the site points
+  // here; nothing is transacted on this site itself.
+  var STORE = 'https://foundersrevolution250.kybourbondirect.com/';
+
   var RELEASE = {
     name:     'Heritage Select 250',
     brand:    'American Founders',
@@ -28,6 +32,7 @@ window.AF = (function () {
     {
       id:    'box',
       name:  "The 250 Collector's Box",
+      // listed on the store as "American Founders Heritage Select 250 Special Bundle"
       price: 250,
       blurb: 'The full presentation set, numbered and boxed.',
       includes: [
@@ -42,6 +47,7 @@ window.AF = (function () {
     {
       id:    'bottle',
       name:  'The Bottle Alone',
+      // listed on the store as "American Founders Heritage Select 250 Bourbon 750ml"
       price: 95,
       blurb: 'The same whiskey, without the box. For drinking, not shelving.',
       includes: [
@@ -74,6 +80,7 @@ window.AF = (function () {
   }
 
   return {
+    store:   STORE,
     release: RELEASE,
     offers:  OFFERS,
     notes:   NOTES,

@@ -48,12 +48,17 @@ for name in sorted(set(re.findall(r'src="assets/img/([^"]+\.jpg)"', body))):
                         'src="data:image/jpeg;base64,%s"' % b64)
     print('  inlined', name)
 # one page, so the nav walks the page instead of loading others
-for a, b in [('reserve.html?offer=box', '#reserve'), ('reserve.html?offer=bottle', '#reserve'),
-             ('reserve.html#form', '#reserve'), ('reserve.html', '#reserve'),
+for a, b in [('buy.html#offers', '#buy'), ('buy.html', '#buy'),
              ('collectors-box.html', '#box'), ('bourbon.html', '#bourbon'),
              ('heritage.html', '#heritage'), ('partnerships.html', '#partners'),
-             ('index.html', '#top')]:
+             ('founders.html', '#founders'), ('index.html', '#top')]:
     body = body.replace('href="%s"' % a, 'href="%s"' % b)
+# Pull the founder bios in from their own page.
+founders = re.search(r'<section class="section section--flush night">(.*?)</section>',
+                     read('founders.html'), re.S).group(0)
+founders = founders.replace('<section class="section section--flush night">',
+                            '<section class="section night" id="founders">', 1)
+
 # Pull the partner sections in from their own page, so the one-file demo shows
 # what the nav points at instead of a dead anchor.
 partners = re.search(r'<main id="main">(.*?)</main>', read('partnerships.html'), re.S).group(1)
@@ -64,12 +69,16 @@ partners = partners.replace('<section class="section">',
 for a, b in [('reserve.html', '#reserve')]:
     partners = partners.replace('href="%s"' % a, 'href="%s"' % b)
 body = body.replace('<!-- ============================================================== reserve -->',
-                    partners + '\n<!-- ============================================================== reserve -->')
+                    founders + '\n' + partners + '\n<!-- ============================================================== reserve -->')
 
 # the closing allocation band is where "Reserve" should land
 body = body.replace('<section class="section section--tight night night-2">',
                     '<section class="section section--tight night night-2" id="reserve">', 1)
-assert 'id="reserve"' in body, 'the reserve band moved — update this selector'
+assert 'id="reserve"' in body, 'the closing band moved — update this selector'
+for anchor in ('#box', '#bourbon', '#heritage', '#founders', '#partners', '#buy', '#reserve'):
+    assert 'id="%s"' % anchor[1:] in body, 'nothing for the nav to reach at ' + anchor
+
+assert 'kybourbondirect.com' in body, 'the store links did not make it into the demo'
 
 # ---- js ------------------------------------------------------------------
 data_js = read('assets/js/data.js')

@@ -18,24 +18,6 @@
 <link rel="preload" href="assets/fonts/librecaslondisplay-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/librecaslontext-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css">
-<noscript><style>
-  /* No script: the gate can never be dismissed, so it must not be shown. */
-  .gate { display: none !important; }
-  /* No scrubber, so the hero becomes a poster with all its copy visible. */
-  .pour { height: auto; }
-  .pour__stage { position: relative; height: auto; min-height: 0; }
-  .pour__shade, .pour__grain, .pour__embers, .pour__fire,
-  .pour__canvas, .pour__cue, .pour__rail, .pour__loading { display: none; }
-  .pour__poster { position: relative; height: clamp(22rem, 60vh, 40rem); }
-  .pour__copy {
-    position: relative; inset: auto; grid-template-columns: 1fr; gap: 2.5rem;
-    padding-block: clamp(3rem, 8vw, 6rem);
-  }
-  .pour__stack { position: static; min-height: 0; display: grid; gap: 2.5rem; }
-  .pour__beat { position: static; translate: none; max-width: 34ch; }
-  .pour__ledger { grid-column: 1; justify-self: stretch; }
-  [data-cue] { --t: 1; opacity: 1; transform: none; }
-</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -85,8 +67,9 @@
       <a href="collectors-box.html" aria-current="page">The Box</a>
       <a href="bourbon.html">The Bourbon</a>
       <a href="heritage.html">The 250th</a>
+      <a href="founders.html">Founders</a>
       <a href="partnerships.html">Partners</a>
-      <a class="btn btn--whiskey" href="reserve.html">Reserve</a>
+      <a class="btn btn--whiskey" href="buy.html">Buy</a>
     </nav>
   </div>
 </header>
@@ -189,7 +172,7 @@
         <span><span data-val="sets">250</span> total</span>
       </div>
     </div>
-    <a class="btn btn--whiskey" href="reserve.html?offer=box" style="margin-top:.6rem">Reserve a set</a>
+    <a class="btn btn--whiskey ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer" style="margin-top:.6rem">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
     <p class="muted" style="font-size:.9rem">Or <a class="tlink" href="bourbon.html">read about the whiskey</a> first.</p>
   </div>
 </section>
@@ -213,15 +196,16 @@
           <li><a href="collectors-box.html">The Collector's Box</a></li>
           <li><a href="bourbon.html">The Bourbon</a></li>
           <li><a href="heritage.html">The 250th</a></li>
+          <li><a href="founders.html">Meet the Founders</a></li>
           <li><a href="partnerships.html">Partnerships</a></li>
-          <li><a href="reserve.html">Reserve</a></li>
+          <li><a href="buy.html">Buy</a></li>
         </ul>
       </div>
       <div>
         <h3>Contact</h3>
         <ul>
           <li><a href="mailto:allocations@foundersrevolution250.com">allocations@foundersrevolution250.com</a></li>
-          <li><a href="reserve.html#form">Reservation enquiries</a></li>
+          <li><a href="buy.html">Where to buy</a></li>
         </ul>
       </div>
     </div>

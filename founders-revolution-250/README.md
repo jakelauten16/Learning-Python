@@ -16,7 +16,8 @@ while the whiskey is still falling.
 | `bourbon.html` | Tasting notes, the full specification, how to drink it |
 | `heritage.html` | The 250th — the eagle, the Jefferson cup, the typeface |
 | `partnerships.html` | The makers, the SAR and DAR, and the Terre Haute organisations |
-| `reserve.html` | Reservation request with a printed receipt |
+| `founders.html` | Bruce Lautenschlager and Allen Hayne |
+| `buy.html` | Both products, and the handoff to the store |
 
 ## How the scroll film works
 
@@ -203,9 +204,11 @@ bottle).
   note.** All plausible, none verified. The mash bill in particular is a claim
   about your whiskey.
 - **`allocations@foundersrevolution250.com`** — set this to a real address in
-  the footer of each page and in `TO` at the top of `assets/js/reserve.js`.
-- **The shipping states** in the reserve form, and the compliance wording in the
-  footer. These are legal claims and need a real answer.
+  the footer of each page and on `buy.html`.
+- **The compliance wording** in the footer, and the shipping notes on
+  `buy.html`. The flat rates ($19.99 up to four bottles, $29.99 for five or six)
+  are read off the store; the age and state rules are legal claims and should be
+  checked against what the store actually enforces.
 - **"American Founders Distilling Co."** in the footer copyright.
 - **The 250th-anniversary and Jefferson-cup history** on `heritage.html` is
   broadly accurate but written as marketing, not as citation.
@@ -213,6 +216,14 @@ bottle).
   ones you listed, but the one-line description under each ("Barrel work for the
   Heritage Select release", "Raising money for first responders") is inferred
   from the name. Check every one.
+
+### Founder portraits
+
+Same arrangement as the partner logos, in `assets/img/founders/`. Each portrait
+is a circle fitted with `object-fit: cover`, so a photograph crops to the circle
+rather than squashing into it, whatever shape it arrives in. Until the files are
+added, each shows the founder's initials. Swap the `<span>` for an `<img>` in
+`founders.html` — the comment above each one shows the exact line.
 
 ### Partner logos
 
@@ -228,22 +239,34 @@ tall crest and a wide wordmark both sit correctly inside it and **neither is
 ever stretched** — which is what was going wrong on the old site. Drop the files
 in `assets/img/partners/` at whatever size they come in; the box handles it.
 
-## How reserving works right now
+## Buying
 
-There is no payment processor and no server. A reservation is validated in the
-browser, given a reference like `AF-250-QAFU`, shown as a receipt, and handed
-off as a pre-written email. Nobody is charged until someone replies to confirm
-the allocation — which is how allocated whiskey is actually sold, and which
-means the page works today on any static host.
+The bourbon is sold through **Kentucky Bourbon Direct**:
 
-### Wiring it to a real backend
+<https://foundersrevolution250.kybourbondirect.com/>
 
-Everything funnels through the submit handler in `assets/js/reserve.js`. The
-reservation is already assembled as an object (`collect()`) and as plain text
-(`summary()`); `POST` either one to your endpoint and keep the receipt screen as
-the confirmation. A hosted form service (Formspree, Netlify Forms) drops in at
-the same point. If you take payment later, the receipt is where a checkout
-redirect goes.
+Nothing is transacted on this site. Every buy button is an external link to that
+store, which handles payment, age verification and shipping. On the store the
+two products are listed as:
+
+| On this site | On the store | Price |
+| --- | --- | --- |
+| The 250 Collector's Set | American Founders Heritage Select 250 Special Bundle | $250 |
+| The Bottle Alone | American Founders Heritage Select 250 Bourbon 750ml | $95 |
+
+**The URL lives in one place** — `STORE` at the top of `assets/js/data.js`. It is
+also written into each link's `href` so the buttons still work with scripting
+off, and `site.js` overwrites every `[data-store]` link from `data.js` at load.
+Change it in `data.js` and re-run `python3 tools/build-demo.py`; to change the
+hard-coded fallbacks too, search the HTML for `kybourbondirect`.
+
+Every external link opens in a new tab, carries `rel="noopener noreferrer"`, is
+marked with a `↗`, and tells a screen reader where it is going.
+
+There used to be a browser-side reservation form here (`reserve.html`), built
+when there was no storefront. **It has been removed** — with a real store live,
+a form that collects an order and emails it would have quietly competed with the
+real checkout, and anyone who used it would never have received a bottle.
 
 ## Running it locally
 

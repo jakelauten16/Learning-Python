@@ -73,7 +73,12 @@
   }
 
   /* --- drawing ----------------------------------------------------------- */
-  var BAND = 0.58;   // share of a portrait stage the picture band occupies
+  // Share of a portrait stage the picture band occupies. Lower is a shorter
+  // band but a wider view of the frame: covering the width of a phone with a
+  // 16:9 still means cropping the sides, and the taller the band, the harder
+  // that crop bites — which compounds badly on the shots that are already
+  // pushed in. 0.52 keeps the pour readable and leaves the copy room below.
+  var BAND = 0.52;
   var ctx = canvas.getContext('2d', { alpha: false });
   var cw = 0, ch = 0, drawn = '', portrait = false;
 

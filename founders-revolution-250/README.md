@@ -127,7 +127,24 @@ Two widths are built (1280px and 720px, ~3.2MB and ~1.6MB). The page picks one
 from the viewport at load and keeps it — re-picking on resize would throw away
 everything already decoded for no visible gain.
 
-### Where the copy comes from
+### Where the copy sits
+
+**In a band along the bottom, never across the picture.** The film's subject —
+two men at a table — lives in the middle of the frame, and copy laid over them
+reads as a caption stuck on a photograph rather than as a scene you are looking
+at. The scrim follows: there are no side curtains, only a gradient that stays
+clear through the middle of the frame and reaches near-solid at the very bottom
+so bold type lands on a clean ground.
+
+The hero headline is set in **Libre Caslon Text at 700**, not the display cut.
+Caslon Display is a hairline face — lovely at rest, thin over moving film. The
+text cut is the same family with far more weight on the stem, and it holds at a
+glance. Sizes are tuned to the band rather than inherited from the page scale,
+since the bold cut sets much larger than the display one at the same value.
+
+The spec ledger runs as a strip along the very bottom (three or two columns on a
+phone) rather than a column up the right-hand side, so it never crosses the
+picture either. Entries light left to right as the cup fills.
 
 Every fact over the film is real text in the document, tagged with the scroll
 window it owns:

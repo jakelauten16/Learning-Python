@@ -220,11 +220,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* Portrait runs the film as a band across the top (see paint() in pour.js);
    the poster underneath has to sit the same way or it shows through wrong. */
 @media (max-aspect-ratio: 10/13) {
-  .pour__poster { height: 58%; object-position: 50% 0; }
+  .pour__poster { height: 52%; object-position: 50% 0; }
   .pour__shade {
     background:
-      linear-gradient(to bottom, rgba(8,6,5,.72) 0%, rgba(8,6,5,.10) 22%,
-                      rgba(8,6,5,.10) 44%, rgba(16,14,12,.96) 60%, var(--night) 66%);
+      linear-gradient(to bottom, rgba(8,6,5,.62) 0%, rgba(8,6,5,.06) 18%,
+                      rgba(8,6,5,0) 34%, rgba(12,10,9,.88) 50%, #0c0a09 57%);
   }
 }
 .pour__stage {
@@ -253,10 +253,23 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pour__shade {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(120% 88% at 50% 46%, transparent 34%, rgba(8,6,5,.62) 100%),
-    linear-gradient(to right, rgba(8,6,5,.90) 0%, rgba(8,6,5,.74) 24%, rgba(8,6,5,.24) 46%, rgba(8,6,5,.10) 62%, rgba(8,6,5,.68) 100%),
-    linear-gradient(to bottom, rgba(8,6,5,.72) 0%, transparent 26%, transparent 62%, rgba(8,6,5,.86) 100%);
+    /* The band the copy sits on. It reaches near-solid at the very bottom so
+       bold type lands on a clean ground, but starts low enough that the two of
+       them are never touched by it. */
+    linear-gradient(to bottom,
+      rgba(8,6,5,.50) 0%,
+      rgba(8,6,5,.10) 14%,
+      rgba(8,6,5,0)   34%,
+      rgba(8,6,5,0)   46%,
+      rgba(8,6,5,.40) 63%,
+      rgba(9,7,6,.80) 78%,
+      rgba(10,8,7,.95) 90%,
+      #0c0a09 100%),
+    /* A gentle close-down at the corners only. There are no side curtains any
+       more — the middle of the frame, where the men are, is left alone. */
+    radial-gradient(132% 108% at 50% 42%, transparent 60%, rgba(8,6,5,.52) 100%);
 }
+
 /* ---------- firelight -----------------------------------------------------
    The clip was shot in a tavern. The frames are graded towards firelight by
    tools/build-frames.py; these two layers add what a grade cannot — a glow that
@@ -307,29 +320,26 @@ button, input, select, textarea { font: inherit; color: inherit; }
   100% { transform: translate(0, 0); }
 }
 
-/* ---------- copy laid over the film ------------------------------------- */
+/* ---------- copy laid over the film -------------------------------------
+   Everything sits in a band along the bottom. The film's subject — two men at
+   a table — lives in the middle of the frame, and copy laid across it reads as
+   a caption stuck on a photograph rather than as a scene you are looking at.
+   Keeping the picture clear is what makes them look like people in a room. */
 .pour__copy {
-  position: absolute; inset: 0;
-  display: grid; align-content: center;
+  position: absolute; inset-inline: 0; bottom: 0;
+  display: grid; align-content: end; gap: clamp(1.1rem, 2.4vh, 1.9rem);
   width: var(--page); margin-inline: auto;
-  padding-block: clamp(4rem, 10vh, 7rem);
+  padding-bottom: clamp(1.4rem, 4vh, 2.75rem);
   pointer-events: none;
 }
 .pour__copy > * { pointer-events: auto; }
-@media (min-width: 62rem) {
-  .pour__copy {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    column-gap: clamp(2rem, 6vw, 6rem);
-  }
-}
 
 /* Each cue fades and lifts on its own scroll window. pour.js writes --t
    (0 = hidden, 1 = fully shown) onto the element; CSS does the rest. */
 [data-cue] {
   --t: 0;
   opacity: var(--t);
-  transform: translate3d(0, calc((1 - var(--t)) * 1.6rem), 0);
+  transform: translate3d(0, calc((1 - var(--t)) * 1.1rem), 0);
   will-change: opacity, transform;
 }
 /* Invisible, but still in the accessibility tree — a screen reader gets the
@@ -337,63 +347,89 @@ button, input, select, textarea { font: inherit; color: inherit; }
    holds a link, so nothing invisible keeps a tab stop. */
 [data-cue][data-hidden] { pointer-events: none; }
 
-/* The statements — one at a time, stacked so they cross-fade in place. */
-.pour__stack { position: relative; grid-column: 1; min-height: 15rem; }
-@media (max-width: 61.99rem) { .pour__stack { min-height: 13rem; } }
+/* The statements — one at a time, stacked so they cross-fade in place. Each is
+   pinned to the bottom of the box, so a two-line headline and a five-line one
+   both sit on the same baseline instead of bouncing the band's height. */
+.pour__stack { position: relative; min-height: 11.5rem; }
 .pour__beat {
-  position: absolute; inset-inline-start: 0; top: 50%;
-  transform-origin: left center;
-  translate: 0 -50%;
-  max-width: 24ch;
+  position: absolute; inset-inline: 0; bottom: 0;
+  display: grid; gap: .55rem clamp(2rem, 5vw, 4.5rem);
+}
+@media (min-width: 62rem) {
+  .pour__stack { min-height: 12.5rem; }
+  /* Headline and supporting line side by side, sharing a baseline. */
+  .pour__beat { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: end; }
+  .pour__beat .label   { grid-column: 1 / -1; }
+  .pour__beat h1,
+  .pour__beat h2       { grid-column: 1; }
+  .pour__beat p        { grid-column: 2; padding-bottom: .45rem; }
+  .pour__beat .actions { grid-column: 1 / -1; margin-top: .5rem; }
 }
 .pour__beat .label {
-  color: var(--whiskey-lt); display: block; margin-bottom: 1.1rem;
-  text-shadow: 0 1px 14px rgba(0,0,0,.85);
+  color: var(--whiskey-lt); display: block;
+  font-weight: 600; letter-spacing: .2em;
 }
 .pour__beat p {
-  margin-top: 1rem; max-width: 34ch;
-  color: #e3d7bd; font-size: 1.02rem; line-height: 1.55;
-  text-shadow: 0 1px 16px rgba(0,0,0,.8);
+  margin: 0; max-width: 42ch;
+  color: #ece1c8; font-size: clamp(1rem, .95rem + .25vw, 1.14rem);
+  line-height: 1.5;
 }
-.pour__beat .actions .tlink { color: var(--cream); text-shadow: 0 1px 14px rgba(0,0,0,.9); }
+.pour__beat .actions .tlink { color: var(--cream); }
+
+/* Caslon Display is a hairline face — beautiful at rest, thin over moving
+   film. The hero takes the text cut at 700 instead: same family, far more
+   weight on the stem, and it holds at a glance. */
 .pour__title {
-  color: var(--cream);
-  text-shadow: 0 1px 3px rgba(0,0,0,.55), 0 4px 34px rgba(0,0,0,.75);
+  font-family: var(--text); font-weight: 700;
+  letter-spacing: -.018em; line-height: 1.02;
+  color: #fdf6e6;
+  text-shadow: 0 2px 18px rgba(0,0,0,.55);
 }
 .pour__title em { font-style: normal; color: var(--whiskey-lt); }
+/* Set against the display face, the bold text cut sets much larger — these
+   sizes are tuned to the band, not inherited from the page scale. */
+.pour__beat h1.pour__title { font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.6rem); }
+.pour__beat h2.pour__title { font-size: clamp(1.9rem, 1.35rem + 2.1vw, 3.1rem); }
 
-/* ---------- the ledger: facts that light up and stay lit ---------------- */
+/* ---------- the ledger: facts that light up and stay lit ----------------
+   A strip along the very bottom rather than a column up the side, so it never
+   crosses the picture either. Entries light left to right as the cup fills. */
 .pour__ledger {
-  grid-column: 2; justify-self: end;
-  display: grid; gap: .1rem;
-  min-width: 17rem;
-  border-top: 1px solid var(--rule-night);
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  gap: 0 clamp(.75rem, 2vw, 2rem);
+  padding-top: clamp(.7rem, 1.6vh, 1rem);
+  border-top: 1px solid rgba(247,238,218,.22);
 }
 .pour__ledger li {
-  display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
-  padding: .78rem .1rem;
-  border-bottom: 1px solid var(--rule-night);
-  font-family: var(--label); font-size: .72rem; font-weight: 500;
+  display: grid; gap: .18rem; align-content: start;
+  font-family: var(--label); font-size: .68rem; font-weight: 600;
   letter-spacing: .13em; text-transform: uppercase;
-  color: var(--cream);
 }
-.pour__ledger dt, .pour__ledger .k { color: var(--cream-soft); }
+.pour__ledger .k { color: #b9ab90; font-weight: 500; }
 .pour__ledger .v { color: var(--whiskey-lt); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 61.99rem) {
-  .pour__copy { grid-template-columns: 1fr; align-content: end; gap: 2.25rem; }
-  /* Beats are centred in this box, so it has to clear the tallest of them —
-     the closing one, which carries a button — or it runs into the ledger. */
-  .pour__stack { grid-column: 1; min-height: 15.5rem; }
-  .pour__ledger { grid-column: 1; justify-self: stretch; min-width: 0; }
-  .pour__ledger li { padding: .55rem .1rem; font-size: .66rem; }
+  .pour__stack { min-height: 12rem; }
+  .pour__beat p { max-width: 46ch; font-size: 1rem; }
+  .pour__beat h1.pour__title { font-size: clamp(2.2rem, 1.4rem + 3.2vw, 3.2rem); }
+  .pour__beat h2.pour__title { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.4rem); }
+  /* Six across is unreadable on a phone; two rows of three. */
+  .pour__ledger {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .7rem clamp(.6rem, 3vw, 1.5rem);
+  }
+  .pour__ledger li { font-size: .6rem; }
+}
+@media (max-width: 26rem) {
+  .pour__ledger { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---------- the fill rail: a thin column that fills as the cup does ------ */
 .pour__rail {
-  position: absolute; top: 50%; translate: 0 -50%;
-  inset-inline-end: clamp(.7rem, 2vw, 1.6rem);
-  width: 2px; height: min(38vh, 17rem);
+  position: absolute; top: 36%; translate: 0 -50%;
+  inset-inline-end: clamp(1rem, 3vw, 2.6rem);
+  width: 2px; height: min(28vh, 12rem);
   background: rgba(247,238,218,.16);
   border-radius: 2px; overflow: hidden;
 }
@@ -404,15 +440,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @media (max-width: 47.99rem) { .pour__rail { display: none; } }
 
-/* ---------- scroll cue --------------------------------------------------- */
+/* ---------- scroll cue ---------------------------------------------------
+   Tucked into the corner above the band, clear of the picture. */
 .pour__cue {
-  position: absolute; inset-inline: 0; bottom: clamp(1.4rem, 4vh, 2.6rem);
-  display: grid; justify-items: center; gap: .7rem;
+  position: absolute; inset-inline-end: clamp(1rem, 3vw, 2.6rem);
+  bottom: clamp(1.4rem, 4vh, 2.75rem);
+  display: grid; justify-items: center; gap: .55rem;
   color: var(--cream-soft);
 }
-.pour__cue span { font-family: var(--label); font-size: .64rem; letter-spacing: .3em; text-transform: uppercase; }
+.pour__cue span {
+  font-family: var(--label); font-size: .6rem; font-weight: 500;
+  letter-spacing: .28em; text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
 .pour__cue i {
-  display: block; width: 1px; height: 2.4rem;
+  display: block; width: 1px; height: 2rem;
   background: linear-gradient(to bottom, transparent, var(--whiskey-lt));
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -422,6 +464,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   0%, 100% { transform: scaleY(.35); opacity: .35; }
   50%      { transform: scaleY(1);   opacity: 1; }
 }
+@media (max-width: 61.99rem) { .pour__cue { display: none; } }
 
 /* ---------- loading ------------------------------------------------------ */
 .pour__loading {
@@ -451,11 +494,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pour--static .pour__copy {
   position: relative; inset: auto;
   padding-block: clamp(3rem, 8vw, 6rem);
-  grid-template-columns: 1fr; gap: 2.5rem;
+  gap: 2.5rem;
 }
-.pour--static .pour__stack { position: static; min-height: 0; display: grid; gap: 2.5rem; }
-.pour--static .pour__beat { position: static; translate: none; max-width: 30ch; }
-.pour--static .pour__ledger { grid-column: 1; justify-self: stretch; }
+.pour--static .pour__stack { position: static; min-height: 0; display: grid; gap: 3rem; }
+.pour--static .pour__beat { position: static; inset: auto; }
 .pour--static [data-cue] { --t: 1; opacity: 1; transform: none; visibility: visible; }
 
 /* =========================================================================

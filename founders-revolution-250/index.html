@@ -29,12 +29,11 @@
   .pour__canvas, .pour__cue, .pour__rail, .pour__loading { display: none; }
   .pour__poster { position: relative; height: clamp(22rem, 60vh, 40rem); }
   .pour__copy {
-    position: relative; inset: auto; grid-template-columns: 1fr; gap: 2.5rem;
+    position: relative; inset: auto; gap: 2.5rem;
     padding-block: clamp(3rem, 8vw, 6rem);
   }
-  .pour__stack { position: static; min-height: 0; display: grid; gap: 2.5rem; }
-  .pour__beat { position: static; translate: none; max-width: 34ch; }
-  .pour__ledger { grid-column: 1; justify-self: stretch; }
+  .pour__stack { position: static; min-height: 0; display: grid; gap: 3rem; }
+  .pour__beat { position: static; inset: auto; }
   [data-cue] { --t: 1; opacity: 1; transform: none; }
 </style></noscript>
 </head>

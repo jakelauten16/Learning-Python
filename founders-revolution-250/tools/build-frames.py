@@ -50,26 +50,41 @@ CLOSE = ("colorbalance=rs=.03:rm=.04:bm=-.05,"
 
 # (name, source, start_s, end_s, every_nth_frame, zoom0, zoom1, cx0,cy0, cx1,cy1, grade, blur0, blur1)
 # zoom 1.0 is the full frame; centres are fractions of the source frame.
+#
+# Two rules govern this list.
+#
+# One: the sampling rate steps by at most one level between neighbouring shots
+# (8 -> 12 -> 24 -> ... -> 12 -> 8). Scroll distance is spent per frame, so a
+# shot sampled at 8fps next to one sampled at 24fps makes the action appear to
+# drop to a third speed the moment you cross the boundary. Ramping the density
+# instead of stepping it is most of what makes the whole move read as one take.
+#
+# Two: anything the eye is meant to follow — the cork coming out, the pour —
+# runs at the source's full 24fps and is framed tight enough to see. The cork
+# pull used to sit at 8fps inside the wide shot, which is why it did not read.
 SHOTS = [
-    ("camp",    CAMP, 0.30, 1.90, 3, 1.00, 1.10, .44, .52, .42, .54, FIRE,  0, 0),
-    ("men",     CAMP, 1.90, 2.85, 2, 1.10, 1.60, .42, .54, .385, .62, FIRE, 0, 0),
+    ("establish", CAMP, 0.05, 0.80, 2, 1.00, 1.10, .44, .52, .40, .52, FIRE, 0, 0),
+    ("cork_in",   CAMP, 0.80, 1.20, 2, 1.10, 1.55, .40, .52, .36, .52, FIRE, 0, 0),
+    # The cork itself: his hand is on it from ~0.8s and lifts clear at ~2.0s.
+    ("cork",      CAMP, 1.20, 2.05, 1, 1.55, 1.95, .36, .52, .35, .55, FIRE, 0, 0),
+    ("present",   CAMP, 2.05, 2.60, 1, 1.95, 1.75, .35, .55, .375, .60, FIRE, 0, 0),
     # Aimed at the amber in the bottle's shoulder, not the label — the whole
     # point of the move is to end on whiskey.
-    ("bottle",  CAMP, 2.85, 3.25, 1, 1.60, 2.40, .385, .62, .415, .665, FIRE, 0, 0),
+    ("push",      CAMP, 2.60, 3.25, 1, 1.75, 2.40, .375, .60, .415, .665, FIRE, 0, 0),
     # Through the glass: the last frames push past what the lens can hold and go
     # soft, and the pour comes back out of the same amber. The match cut does
     # the work — no dissolve needed.
-    ("through", CAMP, 3.25, 3.44, 1, 2.40, 4.00, .415, .665, .425, .668, FIRE, 0, 8),
+    ("through",   CAMP, 3.25, 3.44, 1, 2.40, 4.00, .415, .665, .425, .668, FIRE, 0, 8),
     # The cut lands with the bottle still in the top-left of the close-up, so
     # the push comes back out of the same amber it went into, then pulls back to
     # find the cup as the stream starts.
-    ("pour",    CAMP, 3.47, 5.40, 1, 2.10, 1.05, .26, .245, .50, .50, CLOSE, 5, 0),
+    ("pour",      CAMP, 3.47, 5.40, 1, 2.10, 1.05, .26, .245, .50, .50, CLOSE, 5, 0),
     # The new clip burns in a caption from 5.55s, so the pour finishes on the
     # original one. Both cups are at the same level and framed the same way at
     # the join, so it reads as one continuous pour.
-    ("pour2",   POUR, 6.10, 7.40, 1, 1.10, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
-    ("settle",  POUR, 7.40, 8.65, 2, 1.00, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
-    ("set",     POUR, 8.70, 10.00, 3, 1.06, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
+    ("pour2",     POUR, 6.10, 7.40, 1, 1.10, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
+    ("settle",    POUR, 7.40, 8.65, 2, 1.00, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
+    ("set",       POUR, 8.70, 10.00, 3, 1.06, 1.00, .50, .50, .50, .50, CLOSE, 0, 0),
 ]
 
 

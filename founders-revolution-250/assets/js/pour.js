@@ -230,16 +230,27 @@
      glide, which is most of the difference between the pour stuttering and the
      pour pouring. The loop runs only while it still has ground to cover, so a
      page at rest costs nothing. */
-  var target = 0, shown = -1, running = false;
-  var EASE = 0.15;        // share of the remaining distance covered per frame
+  var target = 0, shown = -1, running = false, lastT = 0;
+  var EASE = 0.15;        // share of the remaining distance covered per 60Hz frame
   var SNAP = 0.00018;     // close enough to stop
 
-  function loop() {
+  function loop(now) {
     target = progress();
     if (shown < 0) shown = target;               // first paint lands where we are
+    if (!lastT) lastT = now - 16.7;
+
+    // Frame-rate independent easing. A plain `shown += d * EASE` closes the gap
+    // twice as fast on a 120Hz display as on a 60Hz one, so the same page feels
+    // different on different machines. Scaling by elapsed time fixes the rate to
+    // wall-clock instead. The clamp stops a backgrounded tab, which can hand
+    // back a gap of seconds, from snapping the whole film in one frame.
+    var dt = Math.min(now - lastT || 16.7, 50);
+    lastT = now;
+    var k = 1 - Math.pow(1 - EASE, dt / 16.667);
+
     var d = target - shown;
     var done = Math.abs(d) < SNAP;
-    shown = done ? target : shown + d * EASE;
+    shown = done ? target : shown + d * k;
 
     applyCues(shown);
     if (conf) {
@@ -256,7 +267,7 @@
     else requestAnimationFrame(loop);
   }
 
-  function tick() { if (!running) { running = true; requestAnimationFrame(loop); } }
+  function tick() { if (!running) { running = true; lastT = 0; requestAnimationFrame(loop); } }
 
   /* --- go ---------------------------------------------------------------- */
   fetch('assets/media/frames/manifest.json')

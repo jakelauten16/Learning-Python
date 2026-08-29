@@ -17,31 +17,63 @@ while the whiskey is still falling.
 | `heritage.html` | The 250th — the eagle, the Jefferson cup, the typeface |
 | `reserve.html` | Reservation request with a printed receipt |
 
-## How the pour works
+## How the scroll film works
 
-The hero is **not a playing video**. It is 140 stills painted onto a `<canvas>`,
+The hero is **not a playing video**. It is 144 stills painted onto a `<canvas>`,
 with the frame picked from how far down the track you have scrolled.
 
 Scrubbing a real `<video>` by writing `currentTime` is jittery on most phones and
 unreliable on iOS. Drawing decoded images is neither, and it means the whiskey
 stops dead when the scroll does — which is the whole effect.
 
-**The frames are sampled unevenly on purpose.** `tools/build-frames.py` keeps the
-pour itself at the source's full 24fps and thins out the near-static bar shots at
-either end. Because scroll distance is handed out per *frame* rather than per
-second, that alone makes the pour occupy about 54% of the scroll while costing
-far fewer bytes than sampling the whole clip densely:
+### The shot list
 
-| Section of the film | Sampled at | Share of the scroll |
-| --- | --- | --- |
-| Bar at rest (0.0–3.6s) | 8fps | 0 – 21% |
-| Hand takes the bottle (3.6–4.3s) | 12fps | 21 – 27% |
-| **The pour (4.3–7.4s)** | **24fps** | **27 – 81%** |
-| Whiskey settles (7.4–8.7s) | 12fps | 81 – 92% |
-| Pull back to the set (8.7–10.0s) | 8fps | 92 – 100% |
+Scrolling walks one continuous move: **the two men at the fire → in on the
+bottle → through the glass → the pour → the finished set.** That move is cut in
+`tools/build-frames.py`, which names a source clip, a time range, a sampling
+rate and a zoom/centre pair per shot, then crops and rescales every frame to
+match. The camera move is therefore **baked into the frames** — real footage
+re-framed, not a CSS transform over a still — so it costs the page nothing and
+cannot drift out of sync with the scroll.
 
-`assets/js/pour.js` reads those boundaries out of `frames/manifest.json`, so the
-copy is pinned to the film rather than to guessed numbers.
+| Shot | Source | Sampled | Share of the scroll |
+| --- | --- | --- | --- |
+| The two of them, wide | `camp.mp4` 0.3–1.9s | 8fps | 0 – 9% |
+| Push in, on the bottle | `camp.mp4` 1.9–2.9s | 12fps | 9 – 17% |
+| The bottle in his hand | `camp.mp4` 2.9–3.3s | 24fps | 17 – 24% |
+| **Through the glass** | `camp.mp4` 3.3–3.4s | 24fps | 24 – 27% |
+| **The pour begins** | `camp.mp4` 3.5–5.4s | 24fps | 27 – 60% |
+| **The pour completes** | `pour.mp4` 6.1–7.4s | 24fps | 60 – 82% |
+| The whiskey settles | `pour.mp4` 7.4–8.7s | 12fps | 82 – 92% |
+| The finished set | `pour.mp4` 8.7–10.0s | 8fps | 92 – 100% |
+
+Two details worth knowing:
+
+- **The pour spans both clips.** `camp.mp4` burns in a caption from 5.55s, so
+  the pour finishes on the original clip. Both cups are at the same level and
+  framed the same way at the join, so it reads as one continuous pour.
+- **Through the glass is a match cut, not a dissolve.** The push ends on the
+  amber in the bottle's shoulder and goes soft; the close-up cuts in with the
+  bottle still in frame, and the move comes back out of the same amber before
+  pulling back to find the cup.
+
+Sampling is deliberately uneven: the pour runs at the source's full 24fps while
+the near-static wide shots are thinned out. Scroll distance is spent per *frame*
+rather than per second, so that alone gives the pour 55% of the track at a
+fraction of the bytes. `assets/js/pour.js` reads the shot boundaries out of
+`frames/manifest.json`, so the copy is pinned to the cut rather than to guessed
+numbers.
+
+### Firelight
+
+The clip was shot in a tavern, so the frames are graded towards firelight in the
+build (warm lows, cool highlights, a closed-down vignette). Two things a grade
+cannot do are added at runtime by `pour.js`: a glow that breathes, and embers
+drifting up on their own canvas and their own rAF loop — so the film underneath
+is repainted only when the scroll actually moves, and only while the hero is on
+screen. Both belong to the camp, and fade out as the push enters the bottle.
+
+**What is not there:** the encampment itself. See "The encampment shot" below.
 
 ### Loading
 
@@ -50,9 +82,9 @@ against within about a second, then the rest fill in behind it — pour first,
 since that is the part anyone actually watches. Until a frame arrives the
 canvas draws the nearest one it holds, so a half-loaded sequence still moves
 instead of blinking. Six requests run at a time; saturating the connection with
-140 makes the *first* frames arrive later, not sooner.
+144 makes the *first* frames arrive later, not sooner.
 
-Two widths are built (1280px and 720px, ~3.5MB and ~1.7MB). The page picks one
+Two widths are built (1280px and 720px, ~2.8MB and ~1.3MB). The page picks one
 from the viewport at load and keeps it — re-picking on resize would throw away
 everything already decoded for no visible gain.
 
@@ -62,8 +94,8 @@ Every fact over the film is real text in the document, tagged with the scroll
 window it owns:
 
 ```html
-<div class="pour__beat" data-cue="0.335,0.505">   <!-- fades in, then out -->
-<li data-cue="0.345">                              <!-- lights up and stays -->
+<div class="pour__beat" data-cue="0.300,0.440">   <!-- fades in, then out -->
+<li data-cue="0.320">                              <!-- lights up and stays -->
 ```
 
 `pour.js` writes a `--t` between 0 and 1 onto each one and CSS does the rest.
@@ -74,25 +106,51 @@ gets `inert` while hidden so nothing invisible keeps a tab stop.
 ### When it doesn't run
 
 - **`prefers-reduced-motion`** — the hero collapses to the poster with every
-  fact shown at once, and **no frames are downloaded at all** (saves ~3.5MB).
+  fact shown at once, and **no frames are downloaded at all** (saves ~2.8MB).
+  The embers never start.
 - **No JavaScript** — a `<noscript>` block does the same thing, and hides the
   age gate, which otherwise could never be dismissed.
 - **Portrait phones** — a 16:9 frame covering a tall viewport shows about a
   quarter of its width, so the picture runs as a band across the top instead,
   feathered into the ground, with the copy below it.
 
+## The encampment shot
+
+The brief was for the two of them **sitting around a fire with the rest of the
+Continental Army — thousands of soldiers, tents and fires behind them.** That
+footage does not exist in either source clip, and generating it needs an
+image/video model, which this build does not have. What is here instead is
+everything that *can* be done to the footage that exists: the firelight grade,
+the breathing glow, the drifting embers, and a vignette that takes the tavern
+shelves down into the dark.
+
+To drop the real thing in when you have it (Sora, Runway, Veo — a 10s plate of
+the two of them at a fire with the camp behind):
+
+1. Save it as `assets/media/camp.mp4`, replacing the current clip.
+2. Open `tools/build-frames.py` and adjust the `SHOTS` rows that use `CAMP` —
+   the time ranges, and the `cx/cy` centres the push aims at (they are
+   fractions of the frame, and currently aimed at the bottle in his hand).
+3. Re-run the script. It prints the new shot boundaries; move the `data-cue`
+   values in `index.html` to match.
+
+If the new plate is already firelit, drop the `FIRE` grade to `CLOSE` on those
+rows so it is not graded twice.
+
 ## Rebuilding the frames
 
-Replace `assets/media/pour.mp4` and re-run:
+The two source clips live at `assets/media/camp.mp4` (the two men, and their
+pour) and `assets/media/pour.mp4` (the original close-up, used for the pour's
+back half and the clean tail). Replace either and re-run:
 
 ```
 pip install imageio-ffmpeg     # or just have ffmpeg on PATH
-python3 tools/build-frames.py assets/media/pour.mp4
+python3 tools/build-frames.py
 ```
 
 That rewrites `assets/media/frames/` (both widths plus `manifest.json`),
 `poster.jpg`, and `og.jpg`. Commit what it produces. If your film has a
-different shape, edit `SEGMENTS` at the top of the script — and move the
+different shape, edit `SHOTS` at the top of the script — and move the
 `data-cue` values in `index.html` to match the new boundaries it prints.
 
 The section photographs in `assets/img/` are stills pulled from the same film

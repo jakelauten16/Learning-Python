@@ -18,6 +18,7 @@
   if (!root) return;
 
   var canvas  = root.querySelector('.pour__canvas');
+  var embers  = root.querySelector('.pour__embers');
   var railEl  = root.querySelector('.pour__rail');
   var loadEl  = root.querySelector('.pour__loading');
   var cues    = Array.prototype.slice.call(root.querySelectorAll('[data-cue]'));
@@ -210,9 +211,13 @@
     if (p !== lastP) {
       lastP = p;
       applyCues(p);
-      if (railEl && conf) {
-        var fill = smoothstep(conf.pourStart, conf.pourEnd, p);
-        railEl.style.setProperty('--fill', fill);
+      if (conf) {
+        var sh = conf.shots;
+        // The rail fills as the cup does: from the first drop to the last.
+        if (railEl) railEl.style.setProperty('--fill', smoothstep(sh.pour, sh.settle, p));
+        // Firelight and embers belong to the camp. Once the push has gone into
+        // the bottle we are inside the glass, and they would make no sense.
+        root.style.setProperty('--camp', String(1 - smoothstep(sh.through, sh.pour, p)));
       }
     }
     if (count) paint(Math.min(count - 1, Math.round(p * (count - 1))));
@@ -238,7 +243,7 @@
       var coarse = [], fine = [], i;
       for (i = 0; i < count; i++) (i % 6 === 0 || i === count - 1 ? coarse : fine).push(i);
 
-      var mid = Math.round(((m.pourStart + m.pourEnd) / 2) * count);
+      var mid = Math.round(((m.shots.pour + m.shots.settle) / 2) * count);
       fine.sort(function (a, b) { return Math.abs(a - mid) - Math.abs(b - mid); });
 
       queue(coarse, width, function () {
@@ -247,6 +252,7 @@
         queue(fine, width);
       });
 
+      startEmbers();
       window.addEventListener('scroll', tick, { passive: true });
       window.addEventListener('resize', function () { resize(); lastP = -1; tick(); }, { passive: true });
       if (window.ResizeObserver) new ResizeObserver(function () { resize(); tick(); }).observe(canvas);
@@ -258,6 +264,63 @@
       if (window.console) console.warn('[pour] falling back to static hero:', err.message);
       goStatic();
     });
+
+  /* --- embers ------------------------------------------------------------
+     Warm flecks lifting off the fire. They run on their own rAF loop, on their
+     own canvas, so the film underneath is repainted only when the scroll moves
+     — and only while the hero is actually on screen. */
+  function startEmbers() {
+    if (!embers || !window.IntersectionObserver) return;
+    var ec = embers.getContext('2d');
+    var bits = [], live = false, raf = 0, ew = 0, eh = 0;
+
+    function size() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var r = embers.getBoundingClientRect();
+      ew = Math.round(r.width * dpr); eh = Math.round(r.height * dpr);
+      if (embers.width !== ew || embers.height !== eh) { embers.width = ew; embers.height = eh; }
+    }
+    function seed(b, fresh) {
+      b.x = Math.random() * ew;
+      b.y = fresh ? eh + Math.random() * eh * 0.5 : Math.random() * eh;
+      b.r = (0.6 + Math.random() * 1.9) * Math.min(window.devicePixelRatio || 1, 2);
+      b.vy = -(0.15 + Math.random() * 0.5);
+      b.drift = (Math.random() - 0.5) * 0.28;
+      b.phase = Math.random() * Math.PI * 2;
+      b.life = 0.35 + Math.random() * 0.65;
+    }
+    size();
+    for (var i = 0; i < 46; i++) { bits.push({}); seed(bits[i], false); }
+
+    function tick(t) {
+      if (!live) return;
+      ec.clearRect(0, 0, ew, eh);
+      for (var i = 0; i < bits.length; i++) {
+        var b = bits[i];
+        b.y += b.vy;
+        b.x += b.drift + Math.sin(t / 900 + b.phase) * 0.22;
+        if (b.y < -8) seed(b, true);
+        // brightest low down, guttering out as they rise
+        var a = b.life * Math.max(0, Math.min(1, b.y / eh)) * (0.55 + 0.45 * Math.sin(t / 260 + b.phase));
+        if (a <= 0) continue;
+        ec.beginPath();
+        ec.arc(b.x, b.y, b.r, 0, 6.2832);
+        ec.fillStyle = 'rgba(255,' + (140 + ((b.r * 40) | 0)) + ',60,' + a.toFixed(3) + ')';
+        ec.fill();
+      }
+      raf = requestAnimationFrame(tick);
+    }
+
+    new IntersectionObserver(function (es) {
+      var vis = es[0].isIntersecting;
+      if (vis === live) return;
+      live = vis;
+      if (live) { size(); raf = requestAnimationFrame(tick); }
+      else { cancelAnimationFrame(raf); ec.clearRect(0, 0, ew, eh); }
+    }, { threshold: 0 }).observe(root.querySelector('.pour__stage'));
+
+    window.addEventListener('resize', size, { passive: true });
+  }
 
   // Someone turning reduced motion on mid-visit gets the static hero too.
   var onPref = function () { if (reduce.matches) goStatic(); };

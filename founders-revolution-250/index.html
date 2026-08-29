@@ -25,7 +25,7 @@
   /* No scrubber, so the hero becomes a poster with all its copy visible. */
   .pour { height: auto; }
   .pour__stage { position: relative; height: auto; min-height: 0; }
-  .pour__shade, .pour__grain,
+  .pour__shade, .pour__grain, .pour__embers, .pour__fire,
   .pour__canvas, .pour__cue, .pour__rail, .pour__loading { display: none; }
   .pour__poster { position: relative; height: clamp(22rem, 60vh, 40rem); }
   .pour__copy {
@@ -103,48 +103,51 @@
      ========================================================================= -->
 <section class="pour" data-pour data-hdr-over aria-label="The pour">
   <div class="pour__stage">
-    <img class="pour__poster" src="assets/media/poster.jpg" alt="A bottle of American Founders Heritage Select 250 bourbon beside a pewter cup and an open wooden collector's box on a bar." width="1280" height="720" fetchpriority="high">
+    <img class="pour__poster" src="assets/media/poster.jpg" alt="Two men in Continental Army dress at a firelit table, one holding a bottle of American Founders Heritage Select 250 bourbon beside the open collector's box." width="1280" height="720" fetchpriority="high">
     <canvas class="pour__canvas" aria-hidden="true"></canvas>
+    <canvas class="pour__embers" aria-hidden="true"></canvas>
+    <div class="pour__fire" aria-hidden="true"></div>
     <div class="pour__shade" aria-hidden="true"></div>
     <div class="pour__grain" aria-hidden="true"></div>
 
     <div class="pour__copy">
       <div class="pour__stack">
 
-        <div class="pour__beat" data-cue="-0.06,0.20">
+        <div class="pour__beat" data-cue="-0.06,0.088">
           <span class="label">Kentucky Straight Bourbon Whiskey</span>
           <h1 class="d-hero pour__title">Heritage<br>Select <em>250</em></h1>
-          <p>Seven years in oak, drawn from one barrel, bottled at the strength it
-             came out at — for the two hundred and fiftieth year of the republic.</p>
+          <p>Two hundred and fifty years ago an army wintered on what it had.
+             This is what we put away for the anniversary.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.225,0.325">
+        <div class="pour__beat" data-cue="0.100,0.225">
+          <span class="label">Drawn from a single cask</span>
           <h2 class="d-1 pour__title">One barrel. One cut.</h2>
           <p>Nothing was added on the way to the glass, and nothing was taken out.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.335,0.505">
+        <div class="pour__beat" data-cue="0.300,0.440">
           <span class="label">Aged Seven Years</span>
           <h2 class="d-1 pour__title">Seven summers on the top floor.</h2>
           <p>New charred American oak, high in the rickhouse where the heat works
              hardest. It came out the colour it is now.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.515,0.675">
+        <div class="pour__beat" data-cue="0.455,0.600">
           <span class="label">Cask Strength</span>
           <h2 class="d-1 pour__title">Bottled at barrel proof.</h2>
           <p>One hundred and twenty proof, uncut and non-chill filtered.
-             Add water if you like — it opens the fruit.</p>
+             Add water if you like &mdash; it opens the fruit.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.685,0.835">
+        <div class="pour__beat" data-cue="0.615,0.780">
           <span class="label">Limited Release</span>
           <h2 class="d-1 pour__title">Two hundred and fifty sets.</h2>
           <p>Then the barrel is empty. Each set is numbered, and the number
              is yours.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.875">
+        <div class="pour__beat" data-cue="0.872">
           <span class="label">Now Allocating</span>
           <h2 class="d-1 pour__title">Take your number.</h2>
           <p><strong data-val="remaining">66</strong> of <strong data-val="sets">250</strong>
@@ -158,13 +161,13 @@
       </div>
 
       <!-- The ledger fills line by line as the cup does. -->
-      <ul class="pour__ledger" data-cue="0.30" aria-label="Release specification">
-        <li data-cue="0.345"><span class="k">Style</span><span class="v">Kentucky Straight</span></li>
-        <li data-cue="0.425"><span class="k">Barrel</span><span class="v">Single</span></li>
-        <li data-cue="0.505"><span class="k">Age</span><span class="v" data-val="age">7 Years</span></li>
-        <li data-cue="0.585"><span class="k">Proof</span><span class="v" data-val="proof">120 Proof</span></li>
-        <li data-cue="0.665"><span class="k">Volume</span><span class="v" data-val="volume">750 ml</span></li>
-        <li data-cue="0.745"><span class="k">Edition</span><span class="v"><span data-val="sets">250</span> Sets</span></li>
+      <ul class="pour__ledger" data-cue="0.288" aria-label="Release specification">
+        <li data-cue="0.320"><span class="k">Style</span><span class="v">Kentucky Straight</span></li>
+        <li data-cue="0.400"><span class="k">Barrel</span><span class="v">Single</span></li>
+        <li data-cue="0.480"><span class="k">Age</span><span class="v" data-val="age">7 Years</span></li>
+        <li data-cue="0.560"><span class="k">Proof</span><span class="v" data-val="proof">120 Proof</span></li>
+        <li data-cue="0.640"><span class="k">Volume</span><span class="v" data-val="volume">750 ml</span></li>
+        <li data-cue="0.720"><span class="k">Edition</span><span class="v"><span data-val="sets">250</span> Sets</span></li>
       </ul>
     </div>
 

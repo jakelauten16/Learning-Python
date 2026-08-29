@@ -235,6 +235,39 @@ button, input, select, textarea { font: inherit; color: inherit; }
     linear-gradient(to right, rgba(8,6,5,.90) 0%, rgba(8,6,5,.74) 24%, rgba(8,6,5,.24) 46%, rgba(8,6,5,.10) 62%, rgba(8,6,5,.68) 100%),
     linear-gradient(to bottom, rgba(8,6,5,.72) 0%, transparent 26%, transparent 62%, rgba(8,6,5,.86) 100%);
 }
+/* ---------- firelight -----------------------------------------------------
+   The clip was shot in a tavern. The frames are graded towards firelight by
+   tools/build-frames.py; these two layers add what a grade cannot — a glow that
+   breathes and embers that drift. Both belong to the camp, so pour.js fades
+   them out (--camp) once the push has gone into the bottle. */
+.pour__fire {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: var(--camp, 0);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(58% 46% at 18% 92%, rgba(255,150,44,.40) 0%, rgba(255,120,30,.16) 42%, transparent 72%),
+    radial-gradient(38% 30% at 78% 96%, rgba(255,132,38,.22) 0%, transparent 70%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pour__fire { animation: firelight 3.7s ease-in-out infinite; }
+}
+@keyframes firelight {
+  0%, 100% { opacity: calc(var(--camp, 0) * 1);    transform: scale(1); }
+  17%      { opacity: calc(var(--camp, 0) * .82); }
+  31%      { opacity: calc(var(--camp, 0) * 1.05); transform: scale(1.015); }
+  52%      { opacity: calc(var(--camp, 0) * .88); }
+  71%      { opacity: calc(var(--camp, 0) * 1.02); transform: scale(1.008); }
+  86%      { opacity: calc(var(--camp, 0) * .9); }
+}
+
+/* Embers, drawn in pour.js. Its own canvas so the film underneath is only
+   repainted when the scroll actually moves. */
+.pour__embers {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: var(--camp, 0);
+  transition: opacity .3s linear;
+}
+
 /* Film grain. A tiny SVG turbulence tile, so it costs no request. */
 .pour__grain {
   position: absolute; inset: -50%;
@@ -386,6 +419,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pour--static .pour__stage { position: relative; height: auto; min-height: 0; }
 .pour--static .pour__shade,
 .pour--static .pour__grain,
+.pour--static .pour__embers,
+.pour--static .pour__fire,
 .pour--static .pour__canvas,
 .pour--static .pour__cue,
 .pour--static .pour__rail,

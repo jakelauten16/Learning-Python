@@ -28,7 +28,7 @@ window.AF = (function () {
     {
       id:    'box',
       name:  "The 250 Collector's Box",
-      price: 1250,
+      price: 250,
       blurb: 'The full presentation set, numbered and boxed.',
       includes: [
         'Single barrel, 7-year, cask strength bourbon — 750 ml',
@@ -42,7 +42,7 @@ window.AF = (function () {
     {
       id:    'bottle',
       name:  'The Bottle Alone',
-      price: 279,
+      price: 95,
       blurb: 'The same whiskey, without the box. For drinking, not shelving.',
       includes: [
         'Single barrel, 7-year, cask strength bourbon — 750 ml',

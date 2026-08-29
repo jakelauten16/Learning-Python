@@ -15,6 +15,7 @@ while the whiskey is still falling.
 | `collectors-box.html` | The five pieces in the box, and the box itself |
 | `bourbon.html` | Tasting notes, the full specification, how to drink it |
 | `heritage.html` | The 250th — the eagle, the Jefferson cup, the typeface |
+| `partnerships.html` | The makers, the SAR and DAR, and the Terre Haute organisations |
 | `reserve.html` | Reservation request with a printed receipt |
 
 ## How the scroll film works
@@ -75,9 +76,27 @@ screen. Both belong to the camp, and fade out as the push enters the bottle.
 
 **What is not there:** the encampment itself. See "The encampment shot" below.
 
+### Why it feels smooth
+
+Three things were making the scrub stutter, and all three are dealt with:
+
+1. **The film follows the scrollbar, it does not track it.** A wheel notch moves
+   the page in one jump. `pour.js` eases the drawn position toward the scroll
+   position — 15% of the remaining distance per animation frame — which turns
+   that jump into a glide. The loop runs only while it still has ground to
+   cover, so a page at rest costs nothing.
+2. **Frames are blended, not snapped to.** 144 frames spread over thousands of
+   pixels means landing on whole frames steps visibly. The canvas draws the
+   frame you are between at partial alpha, dissolving one into the next. On real
+   footage that already carries its own motion blur, that reads as movement.
+3. **The first pass is dense enough to scrub against.** Until the whole sequence
+   has arrived the canvas can only show what it holds, so a sparse first pass
+   looks like a slideshow. It now loads every 4th frame first, over 8 sockets,
+   and repaints when a sharper frame lands.
+
 ### Loading
 
-Frames load in two passes: every 6th frame first, which is enough to scrub
+Frames load in two passes: every 4th frame first, which is enough to scrub
 against within about a second, then the rest fill in behind it — pour first,
 since that is the part anyone actually watches. Until a frame arrives the
 canvas draws the nearest one it holds, so a half-loaded sequence still moves
@@ -173,11 +192,11 @@ some are **placeholders that need a pass from someone who knows the business**.
 
 **Real** — taken from the product and the existing site: the name, 7-year age
 statement, single barrel, cask strength, 120 proof / 60% ALC/VOL, 750ml, the
-250-set limit, and the six things in the box.
+250-set limit, the six things in the box, and the prices ($250 the set, $95 the
+bottle).
 
 **Placeholder — check these:**
 
-- **Prices.** `$1,250` for the box and `$279` for the bottle are invented.
 - **The allocation counter.** `claimed: 184` is invented. It is a plain number
   in `data.js`, not a live feed — it will not update itself.
 - **Mash bill, entry proof, "Kentucky", the rickhouse detail, and every tasting
@@ -190,6 +209,24 @@ statement, single barrel, cask strength, 120 proof / 60% ALC/VOL, 750ml, the
 - **"American Founders Distilling Co."** in the footer copyright.
 - **The 250th-anniversary and Jefferson-cup history** on `heritage.html` is
   broadly accurate but written as marketing, not as citation.
+- **What each partner does.** The organisations on `partnerships.html` are the
+  ones you listed, but the one-line description under each ("Barrel work for the
+  Heritage Select release", "Raising money for first responders") is inferred
+  from the name. Check every one.
+
+### Partner logos
+
+No logo artwork was supplied, so each card shows the partner's name set in type
+inside the box the logo will occupy. To add the real files:
+
+```html
+<div class="partner__mark"><img src="assets/img/partners/sar.png" alt="Sons of the American Revolution"></div>
+```
+
+The box is a fixed 5:3 and the image is fitted with `object-fit: contain`, so a
+tall crest and a wide wordmark both sit correctly inside it and **neither is
+ever stretched** — which is what was going wrong on the old site. Drop the files
+in `assets/img/partners/` at whatever size they come in; the box handles it.
 
 ## How reserving works right now
 

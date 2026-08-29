@@ -35,6 +35,12 @@
   /* the whiskey itself, sampled off the film */
   --whiskey:    #c8802f;
   --whiskey-lt: #e6ab55;
+  /* The amber above is a fine accent but too pale to set small text on paper:
+     #c8802f only reaches 2.4:1 on the parchment ground. This is the same hue
+     taken down until it clears 4.5:1 on both light grounds, and it is what the
+     uppercase labels and figures use there. On night and oxblood, --whiskey-lt
+     already clears 4.9:1 and stays. */
+  --whiskey-ink: #9c4a15;
   --pewter:     #b6b5ad;
   --pewter-d:   #8a8981;
 
@@ -67,7 +73,11 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-img, video, canvas { display: block; max-width: 100%; }
+/* height:auto is load-bearing: every <img> carries width/height attributes so
+   the browser can reserve its space before the file arrives, and without this
+   that height attribute stays fixed while CSS scales the width — which squashes
+   the picture instead of scaling it. */
+img, video, canvas { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 h1, h2, h3, h4 { margin: 0; font-weight: 400; line-height: 1.04; letter-spacing: -.012em; }
 p { margin: 0 0 1em; }
@@ -486,13 +496,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
    PAGE HEADS + SECTIONS
    ========================================================================= */
 .phead { padding-top: clamp(7rem, 14vw, 11rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
-.phead .label { color: var(--whiskey); display: block; margin-bottom: 1.4rem; }
-.night .phead .label, .oxblood .phead .label { color: var(--whiskey-lt); }
+.phead .label { color: var(--whiskey-ink); display: block; margin-bottom: 1.4rem; }
+/* On a dark ground the label takes the light amber instead. The ground class
+   sits on an ancestor section in some places and on the block itself in others
+   (a .phead IS the .night section), so both forms have to be named — a
+   descendant selector alone silently misses half of them. */
+.night .phead .label, .night-2 .phead .label, .oxblood .phead .label,
+.phead.night .label, .phead.night-2 .label, .phead.oxblood .label,
+.night .note h3, .night-2 .note h3, .oxblood .note h3,
+.night .partner .label, .night-2 .partner .label, .oxblood .partner .label {
+  color: var(--whiskey-lt);
+}
 .phead h1 { max-width: 16ch; }
 .phead .lede { margin-top: 1.6rem; max-width: 52ch; }
 
 .shead { display: grid; gap: 1.1rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); max-width: 40ch; }
-.shead .label { color: var(--whiskey); }
+.shead .label { color: var(--whiskey-ink); }
 .night .shead .label, .oxblood .shead .label, .night-2 .shead .label { color: var(--whiskey-lt); }
 
 /* fade-and-lift on entry, driven by IntersectionObserver in site.js */
@@ -534,7 +553,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .night .contents li:last-child, .oxblood .contents li:last-child { border-bottom-color: var(--rule-night); }
 .contents .n {
   font-family: var(--label); font-size: .68rem; font-weight: 600; letter-spacing: .1em;
-  color: var(--whiskey); padding-top: .35em; font-variant-numeric: tabular-nums;
+  color: var(--whiskey-ink); padding-top: .35em; font-variant-numeric: tabular-nums;
 }
 .night .contents .n, .oxblood .contents .n { color: var(--whiskey-lt); }
 .contents h3 { font-family: var(--display); font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); }
@@ -559,7 +578,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .notes { display: grid; gap: clamp(1.5rem, 3vw, 2.2rem); }
 @media (min-width: 48rem) { .notes { grid-template-columns: repeat(3, 1fr); } }
 .note { padding-top: 1.4rem; border-top: 2px solid var(--whiskey); }
-.note h3 { font-family: var(--label); font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--whiskey); }
+.note h3 { font-family: var(--label); font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--whiskey-ink); }
 .note p { margin-top: .8rem; font-size: 1.02rem; }
 
 /* a card for the two purchase routes */
@@ -736,6 +755,75 @@ body[data-gated="1"] { overflow: hidden; }
 .stack-lg > * + * { margin-top: 2.75rem; }
 .actions { display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: center; }
 
+/* =========================================================================
+   PARTNERS
+   Every mark sits in a fixed-ratio box and is fitted with object-fit:contain,
+   so a tall crest and a wide wordmark both sit correctly and neither is ever
+   stretched to fill. Until a real file is dropped in, the box holds the
+   partner's name set in type rather than a broken image.
+   ========================================================================= */
+.partners {
+  display: grid; gap: clamp(1.5rem, 3vw, 2.25rem);
+  /* auto-fit, not a media query: these grids sit inside columns of different
+     widths, and the viewport cannot tell you how much room the column has. */
+  /* Capped rather than 1fr: two partners in a wide row should sit as two
+     cards, not stretch to half the page each. */
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 21rem));
+  justify-content: start;
+}
+
+.partner {
+  display: grid; align-content: start; gap: 1.1rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: var(--parchment-2);
+  border: 1px solid var(--rule); border-radius: 3px;
+}
+.night .partner, .oxblood .partner, .night-2 .partner {
+  background: rgba(247,238,218,.05); border-color: var(--rule-night);
+}
+
+.partner__mark {
+  display: grid; place-items: center;
+  aspect-ratio: 5 / 3;
+  padding: 1.1rem;
+  background: #fdfaf3;
+  border-radius: 2px;
+  overflow: hidden;
+}
+/* The fit rule. width/height auto stops the intrinsic attributes forcing a
+   shape, and contain keeps the mark's own proportions whatever the box does. */
+.partner__mark img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+}
+/* Stand-in until the artwork arrives — see README. */
+.partner__mark span {
+  font-family: var(--display); font-size: clamp(1.1rem, .95rem + .7vw, 1.6rem);
+  line-height: 1.12; text-align: center; color: var(--oxblood);
+  text-wrap: balance; letter-spacing: .01em;
+  padding-bottom: .5rem; border-bottom: 2px solid var(--whiskey);
+}
+.partner h3 { font-family: var(--display); font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); }
+.partner p { margin: 0; font-size: .96rem; color: var(--ink-soft); }
+.night .partner p, .oxblood .partner p, .night-2 .partner p { color: var(--cream-soft); }
+.partner .label { color: var(--whiskey-ink); font-size: .62rem; }
+.night .partner .label, .oxblood .partner .label, .night-2 .partner .label { color: var(--whiskey-lt); }
+.partner a { color: inherit; }
+
+/* a plain list of named organisations, where there is no mark to show */
+.orglist { display: grid; gap: 0; }
+.orglist li {
+  padding-block: 1rem; border-bottom: 1px solid var(--rule);
+  font-family: var(--display); font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem);
+}
+.night .orglist li, .oxblood .orglist li { border-bottom-color: var(--rule-night); }
+.orglist small {
+  display: block; margin-top: .3rem;
+  font-family: var(--text); font-size: .92rem; color: var(--ink-soft);
+}
+.night .orglist small, .oxblood .orglist small { color: var(--cream-soft); }
+
 /* The demo is one page, so the header's "past the film" test needs an anchor. */
 #top { position: absolute; top: 0; }
 </style>
@@ -789,6 +877,7 @@ body[data-gated="1"] { overflow: hidden; }
       <a href="#box">The Box</a>
       <a href="#bourbon">The Bourbon</a>
       <a href="#heritage">The 250th</a>
+      <a href="#partners">Partners</a>
       <a class="btn btn--whiskey" href="#reserve">Reserve</a>
     </nav>
   </div>
@@ -1001,7 +1090,7 @@ body[data-gated="1"] { overflow: hidden; }
       <article class="buy__card buy__card--lead" data-reveal="stagger">
         <span class="label">Limited to <span data-val="sets">250</span> sets</span>
         <h3 class="d-2">The 250 Collector's Box</h3>
-        <p class="buy__price"><span data-val="box-price">$1,250</span><small>Per numbered set</small></p>
+        <p class="buy__price"><span data-val="box-price">$250</span><small>Per numbered set</small></p>
         <ul>
           <li>Single barrel, 7-year, cask strength bourbon — 750 ml</li>
           <li>Handcrafted engraved wooden presentation box</li>
@@ -1015,7 +1104,7 @@ body[data-gated="1"] { overflow: hidden; }
       <article class="buy__card" data-reveal="stagger">
         <span class="label">Individual release</span>
         <h3 class="d-2">The Bottle Alone</h3>
-        <p class="buy__price"><span data-val="bottle-price">$279</span><small>Per bottle</small></p>
+        <p class="buy__price"><span data-val="bottle-price">$95</span><small>Per bottle</small></p>
         <ul>
           <li>The same whiskey, from the same barrel — 750 ml</li>
           <li>Numbered neck tag</li>
@@ -1050,8 +1139,132 @@ body[data-gated="1"] { overflow: hidden; }
   </div>
 </section>
 
+
+
+
+
+<!-- ------------------------------------------------------------- the makers -->
+<section class="section" id="partners">
+  <div class="wrap">
+    <div class="shead" data-reveal>
+      <span class="label">The makers</span>
+      <h2 class="d-2">Who builds it.</h2>
+      <p class="muted">The whiskey is one part of the set. The barrel and the box
+         are somebody&rsquo;s craft, and they are named here.</p>
+    </div>
+    <div class="partners">
+      <article class="partner" data-reveal="stagger">
+        <div class="partner__mark"><span>T&amp;P Hooper</span></div>
+        <div>
+          <span class="label">Cooperage</span>
+          <h3>T&amp;P Hooper</h3>
+        </div>
+        <p>Barrel work for the Heritage Select release.</p>
+      </article>
+      <article class="partner" data-reveal="stagger">
+        <div class="partner__mark"><span>Deer Ridge Woodcraft</span></div>
+        <div>
+          <span class="label">Presentation boxes</span>
+          <h3>Deer Ridge Woodcraft LLC</h3>
+        </div>
+        <p>The handcrafted engraved box each of the 250 sets ships in.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------- the nation's history -->
+<section class="section night">
+  <div class="wrap cols cols--7-5">
+    <div data-reveal>
+      <div class="shead">
+        <span class="label">1776 &ndash; 2026</span>
+        <h2 class="d-2">Honoring our nation&rsquo;s history.</h2>
+      </div>
+      <p>Founders Bruce and Allen accepted membership in the Sons of the American
+         Revolution in April of 2025. Shortly after joining, they found the
+         programme of activities planned for the America 250 celebration &mdash;
+         an anniversary that deserved something made to honour the ancestors and
+         patriots who fought for us two hundred and fifty years ago.</p>
+      <p>Those patriots established the framework for the freedom, liberty and
+         independence we enjoy today. Bless our ancestors and their vision.</p>
+      <p>What better way to recognise them than raising a glass of American
+         Founders Heritage Select 250?</p>
+    </div>
+    <div class="partners" data-reveal>
+      <article class="partner">
+        <div class="partner__mark"><span>Sons of the American Revolution</span></div>
+        <div>
+          <span class="label">Member organisation</span>
+          <h3>SAR Foundation</h3>
+        </div>
+      </article>
+      <article class="partner">
+        <div class="partner__mark"><span>Daughters of the American Revolution</span></div>
+        <div>
+          <span class="label">Member organisation</span>
+          <h3>DAR</h3>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------- the bourbon community -->
+<section class="section parchment-2">
+  <div class="wrap cols cols--5-7">
+    <div class="partners" data-reveal>
+      <article class="partner">
+        <div class="partner__mark"><span>Responder Bourbon</span></div>
+        <div>
+          <span class="label">Bourbon community</span>
+          <h3>Responder Bourbon</h3>
+        </div>
+        <p>Raising money for first responders, one bottle at a time.</p>
+      </article>
+    </div>
+    <div data-reveal>
+      <div class="shead">
+        <span class="label">Supporting</span>
+        <h2 class="d-2">The bourbon community.</h2>
+      </div>
+      <p class="muted">Bourbon is a small industry that behaves like a large
+         family. We put weight behind the people in it who are using it to do
+         something beyond selling whiskey.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------------------------------------------------------- terre haute -->
+<section class="section night night-2">
+  <div class="wrap cols cols--5-7">
+    <div data-reveal>
+      <div class="shead">
+        <span class="label">Giving back</span>
+        <h2 class="d-2">Terre Haute.</h2>
+      </div>
+      <p class="muted">This is where we are from, and a share of what the release
+         raises stays here.</p>
+    </div>
+    <ul class="orglist" data-reveal>
+      <li>Vigo County History Center
+        <small>Keeping the county&rsquo;s record, and the rooms it is kept in.</small>
+      </li>
+      <li>John Martin Chapter of the SAR
+        <small>The local chapter, and its work around the America 250 programme.</small>
+      </li>
+      <li>Project Never Broken
+        <small><em>Nunquam Fractum.</em> Support for those who carry what the job left them.</small>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+
+
 <!-- ============================================================== reserve -->
-<section class="section section--tight night-2" id="reserve">
+<section class="section section--tight night night-2" id="reserve">
   <div class="wrap" style="text-align:center;display:grid;justify-items:center;gap:1.4rem">
     <span class="label" style="color:var(--whiskey-lt)">Now allocating</span>
     <h2 class="d-2" style="max-width:22ch"><span data-val="remaining">66</span> of <span data-val="sets">250</span> sets remain</h2>
@@ -1086,6 +1299,7 @@ body[data-gated="1"] { overflow: hidden; }
           <li><a href="#box">The Collector's Box</a></li>
           <li><a href="#bourbon">The Bourbon</a></li>
           <li><a href="#heritage">The 250th</a></li>
+          <li><a href="#partners">Partnerships</a></li>
           <li><a href="#reserve">Reserve</a></li>
         </ul>
       </div>
@@ -1146,7 +1360,7 @@ window.AF = (function () {
     {
       id:    'box',
       name:  "The 250 Collector's Box",
-      price: 1250,
+      price: 250,
       blurb: 'The full presentation set, numbered and boxed.',
       includes: [
         'Single barrel, 7-year, cask strength bourbon — 750 ml',
@@ -1160,7 +1374,7 @@ window.AF = (function () {
     {
       id:    'bottle',
       name:  'The Bottle Alone',
-      price: 279,
+      price: 95,
       blurb: 'The same whiskey, without the box. For drinking, not shelving.',
       includes: [
         'Single barrel, 7-year, cask strength bourbon — 750 ml',
@@ -1440,8 +1654,9 @@ window.AF = (function () {
 
 
   /* --- drawing ----------------------------------------------------------- */
+  var BAND = 0.58;   // share of a portrait stage the picture band occupies
   var ctx = canvas.getContext('2d', { alpha: false });
-  var cw = 0, ch = 0, drawn = -1, portrait = false;
+  var cw = 0, ch = 0, drawn = '', portrait = false;
 
   function resize() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1450,7 +1665,7 @@ window.AF = (function () {
     ch = Math.round(r.height * dpr);
     if (canvas.width !== cw || canvas.height !== ch) {
       canvas.width = cw; canvas.height = ch;
-      drawn = -1;                       // the buffer was cleared; force a repaint
+      drawn = '';                       // the buffer was cleared; force a repaint
     }
     // Covering a tall phone viewport with a 16:9 frame means showing about a
     // quarter of its width — the pour ends up cropped to a sliver of cup. On
@@ -1470,19 +1685,11 @@ window.AF = (function () {
     return -1;
   }
 
-  var BAND = 0.58;   // share of a portrait stage the picture band occupies
-
-  function paint(i) {
-    var use = nearest(i);
-    if (use < 0 || use === drawn) return;
-    var img = frames[use];
+  function drawCover(img) {
     var iw = img.naturalWidth, ih = img.naturalHeight;
-
     if (portrait) {
       var sp = Math.max(cw / iw, (ch * BAND) / ih);
       var pw = iw * sp, ph = ih * sp;
-      ctx.fillStyle = '#100e0c';
-      ctx.fillRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - pw) / 2, 0, pw, ph);
       // Feather the bottom edge into the ground so the band reads as light
       // falling off, not as a photograph stuck on a black rectangle.
@@ -1492,11 +1699,37 @@ window.AF = (function () {
       ctx.fillStyle = g;
       ctx.fillRect(0, ph * 0.62, cw, ph * 0.38 + 1);
     } else {
-      var s = Math.max(cw / iw, ch / ih);
-      var w = iw * s, h = ih * s;
+      var sc = Math.max(cw / iw, ch / ih);
+      var w = iw * sc, h = ih * sc;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     }
-    drawn = use;
+  }
+
+  // The sequence is 24fps of footage spread over thousands of pixels of scroll,
+  // so landing on whole frames makes the pour step. Drawing the frame we are
+  // between at partial alpha dissolves one into the next instead — which on
+  // real footage, already carrying its own motion blur, reads as movement
+  // rather than as two pictures.
+  function paintAt(pos) {
+    var i0 = Math.floor(pos);
+    if (i0 < 0) i0 = 0; else if (i0 > count - 1) i0 = count - 1;
+    var frac = pos - i0;
+    var i1 = i0 + 1 > count - 1 ? count - 1 : i0 + 1;
+
+    var a = nearest(i0);
+    if (a < 0) return;
+    var b = frac > 0.02 ? nearest(i1) : a;
+
+    var key = a + ':' + b + ':' + (frac * 60 | 0);
+    if (key === drawn) return;
+
+    drawCover(frames[a]);
+    if (b >= 0 && b !== a) {
+      ctx.globalAlpha = frac;
+      drawCover(frames[b]);
+      ctx.globalAlpha = 1;
+    }
+    drawn = key;
   }
 
   /* --- loading ----------------------------------------------------------- */
@@ -1508,7 +1741,8 @@ window.AF = (function () {
       frames[i] = img; ready[i] = true;
       loadedN++;
       if (loadEl) loadEl.style.setProperty('--loaded', loadedN / count);
-      if (drawn < 0) paint(i);
+      if (!drawn) paintAt(i);
+      else tick();     // a sharper frame just landed; redraw where we are
       done();
     };
     img.onerror = function () { done(); };
@@ -1519,7 +1753,7 @@ window.AF = (function () {
   // Fetch `order` a few at a time. Saturating the connection with 140 requests
   // makes the first frames arrive later, not sooner.
   function queue(order, width, onFirstPass) {
-    var next = 0, active = 0, LIMIT = 6, fired = false;
+    var next = 0, active = 0, LIMIT = 8, fired = false;
     function pump() {
       while (active < LIMIT && next < order.length) {
         active++;
@@ -1571,25 +1805,39 @@ window.AF = (function () {
     }
   }
 
-  var pending = false, lastP = -1;
-  function frame() {
-    pending = false;
-    var p = progress();
-    if (p !== lastP) {
-      lastP = p;
-      applyCues(p);
-      if (conf) {
-        var sh = conf.shots;
-        // The rail fills as the cup does: from the first drop to the last.
-        if (railEl) railEl.style.setProperty('--fill', smoothstep(sh.pour, sh.settle, p));
-        // Firelight and embers belong to the camp. Once the push has gone into
-        // the bottle we are inside the glass, and they would make no sense.
-        root.style.setProperty('--camp', String(1 - smoothstep(sh.through, sh.pour, p)));
-      }
+  /* --- the follow ---------------------------------------------------------
+     The film follows the scrollbar, it does not track it. A wheel notch moves
+     the page in one jump; easing toward that position turns the jump into a
+     glide, which is most of the difference between the pour stuttering and the
+     pour pouring. The loop runs only while it still has ground to cover, so a
+     page at rest costs nothing. */
+  var target = 0, shown = -1, running = false;
+  var EASE = 0.15;        // share of the remaining distance covered per frame
+  var SNAP = 0.00018;     // close enough to stop
+
+  function loop() {
+    target = progress();
+    if (shown < 0) shown = target;               // first paint lands where we are
+    var d = target - shown;
+    var done = Math.abs(d) < SNAP;
+    shown = done ? target : shown + d * EASE;
+
+    applyCues(shown);
+    if (conf) {
+      var sh = conf.shots;
+      // The rail fills as the cup does: from the first drop to the last.
+      if (railEl) railEl.style.setProperty('--fill', smoothstep(sh.pour, sh.settle, shown));
+      // Firelight and embers belong to the camp. Once the push has gone into
+      // the bottle we are inside the glass, and they would make no sense.
+      root.style.setProperty('--camp', String(1 - smoothstep(sh.through, sh.pour, shown)));
     }
-    if (count) paint(Math.min(count - 1, Math.round(p * (count - 1))));
+    if (count) paintAt(shown * (count - 1));
+
+    if (done) running = false;
+    else requestAnimationFrame(loop);
   }
-  function tick() { if (!pending) { pending = true; requestAnimationFrame(frame); } }
+
+  function tick() { if (!running) { running = true; requestAnimationFrame(loop); } }
 
   /* --- go ---------------------------------------------------------------- */
   (function () {

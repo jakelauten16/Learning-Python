@@ -51,11 +51,25 @@ for name in sorted(set(re.findall(r'src="assets/img/([^"]+\.jpg)"', body))):
 for a, b in [('reserve.html?offer=box', '#reserve'), ('reserve.html?offer=bottle', '#reserve'),
              ('reserve.html#form', '#reserve'), ('reserve.html', '#reserve'),
              ('collectors-box.html', '#box'), ('bourbon.html', '#bourbon'),
-             ('heritage.html', '#heritage'), ('index.html', '#top')]:
+             ('heritage.html', '#heritage'), ('partnerships.html', '#partners'),
+             ('index.html', '#top')]:
     body = body.replace('href="%s"' % a, 'href="%s"' % b)
+# Pull the partner sections in from their own page, so the one-file demo shows
+# what the nav points at instead of a dead anchor.
+partners = re.search(r'<main id="main">(.*?)</main>', read('partnerships.html'), re.S).group(1)
+partners = re.sub(r'<section class="section phead[^>]*>.*?</section>', '', partners, count=1, flags=re.S)
+partners = re.sub(r'<section class="section section--tight oxblood">.*?</section>', '', partners, flags=re.S)
+partners = partners.replace('<section class="section">',
+                            '<section class="section" id="partners">', 1)
+for a, b in [('reserve.html', '#reserve')]:
+    partners = partners.replace('href="%s"' % a, 'href="%s"' % b)
+body = body.replace('<!-- ============================================================== reserve -->',
+                    partners + '\n<!-- ============================================================== reserve -->')
+
 # the closing allocation band is where "Reserve" should land
-body = body.replace('<section class="section section--tight night-2">',
-                    '<section class="section section--tight night-2" id="reserve">', 1)
+body = body.replace('<section class="section section--tight night night-2">',
+                    '<section class="section section--tight night night-2" id="reserve">', 1)
+assert 'id="reserve"' in body, 'the reserve band moved — update this selector'
 
 # ---- js ------------------------------------------------------------------
 data_js = read('assets/js/data.js')

@@ -73,8 +73,9 @@
   }
 
   /* --- drawing ----------------------------------------------------------- */
+  var BAND = 0.58;   // share of a portrait stage the picture band occupies
   var ctx = canvas.getContext('2d', { alpha: false });
-  var cw = 0, ch = 0, drawn = -1, portrait = false;
+  var cw = 0, ch = 0, drawn = '', portrait = false;
 
   function resize() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -83,7 +84,7 @@
     ch = Math.round(r.height * dpr);
     if (canvas.width !== cw || canvas.height !== ch) {
       canvas.width = cw; canvas.height = ch;
-      drawn = -1;                       // the buffer was cleared; force a repaint
+      drawn = '';                       // the buffer was cleared; force a repaint
     }
     // Covering a tall phone viewport with a 16:9 frame means showing about a
     // quarter of its width — the pour ends up cropped to a sliver of cup. On
@@ -103,19 +104,11 @@
     return -1;
   }
 
-  var BAND = 0.58;   // share of a portrait stage the picture band occupies
-
-  function paint(i) {
-    var use = nearest(i);
-    if (use < 0 || use === drawn) return;
-    var img = frames[use];
+  function drawCover(img) {
     var iw = img.naturalWidth, ih = img.naturalHeight;
-
     if (portrait) {
       var sp = Math.max(cw / iw, (ch * BAND) / ih);
       var pw = iw * sp, ph = ih * sp;
-      ctx.fillStyle = '#100e0c';
-      ctx.fillRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - pw) / 2, 0, pw, ph);
       // Feather the bottom edge into the ground so the band reads as light
       // falling off, not as a photograph stuck on a black rectangle.
@@ -125,11 +118,37 @@
       ctx.fillStyle = g;
       ctx.fillRect(0, ph * 0.62, cw, ph * 0.38 + 1);
     } else {
-      var s = Math.max(cw / iw, ch / ih);
-      var w = iw * s, h = ih * s;
+      var sc = Math.max(cw / iw, ch / ih);
+      var w = iw * sc, h = ih * sc;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     }
-    drawn = use;
+  }
+
+  // The sequence is 24fps of footage spread over thousands of pixels of scroll,
+  // so landing on whole frames makes the pour step. Drawing the frame we are
+  // between at partial alpha dissolves one into the next instead — which on
+  // real footage, already carrying its own motion blur, reads as movement
+  // rather than as two pictures.
+  function paintAt(pos) {
+    var i0 = Math.floor(pos);
+    if (i0 < 0) i0 = 0; else if (i0 > count - 1) i0 = count - 1;
+    var frac = pos - i0;
+    var i1 = i0 + 1 > count - 1 ? count - 1 : i0 + 1;
+
+    var a = nearest(i0);
+    if (a < 0) return;
+    var b = frac > 0.02 ? nearest(i1) : a;
+
+    var key = a + ':' + b + ':' + (frac * 60 | 0);
+    if (key === drawn) return;
+
+    drawCover(frames[a]);
+    if (b >= 0 && b !== a) {
+      ctx.globalAlpha = frac;
+      drawCover(frames[b]);
+      ctx.globalAlpha = 1;
+    }
+    drawn = key;
   }
 
   /* --- loading ----------------------------------------------------------- */
@@ -141,7 +160,8 @@
       frames[i] = img; ready[i] = true;
       loadedN++;
       if (loadEl) loadEl.style.setProperty('--loaded', loadedN / count);
-      if (drawn < 0) paint(i);
+      if (!drawn) paintAt(i);
+      else tick();     // a sharper frame just landed; redraw where we are
       done();
     };
     img.onerror = function () { done(); };
@@ -152,7 +172,7 @@
   // Fetch `order` a few at a time. Saturating the connection with 140 requests
   // makes the first frames arrive later, not sooner.
   function queue(order, width, onFirstPass) {
-    var next = 0, active = 0, LIMIT = 6, fired = false;
+    var next = 0, active = 0, LIMIT = 8, fired = false;
     function pump() {
       while (active < LIMIT && next < order.length) {
         active++;
@@ -204,25 +224,39 @@
     }
   }
 
-  var pending = false, lastP = -1;
-  function frame() {
-    pending = false;
-    var p = progress();
-    if (p !== lastP) {
-      lastP = p;
-      applyCues(p);
-      if (conf) {
-        var sh = conf.shots;
-        // The rail fills as the cup does: from the first drop to the last.
-        if (railEl) railEl.style.setProperty('--fill', smoothstep(sh.pour, sh.settle, p));
-        // Firelight and embers belong to the camp. Once the push has gone into
-        // the bottle we are inside the glass, and they would make no sense.
-        root.style.setProperty('--camp', String(1 - smoothstep(sh.through, sh.pour, p)));
-      }
+  /* --- the follow ---------------------------------------------------------
+     The film follows the scrollbar, it does not track it. A wheel notch moves
+     the page in one jump; easing toward that position turns the jump into a
+     glide, which is most of the difference between the pour stuttering and the
+     pour pouring. The loop runs only while it still has ground to cover, so a
+     page at rest costs nothing. */
+  var target = 0, shown = -1, running = false;
+  var EASE = 0.15;        // share of the remaining distance covered per frame
+  var SNAP = 0.00018;     // close enough to stop
+
+  function loop() {
+    target = progress();
+    if (shown < 0) shown = target;               // first paint lands where we are
+    var d = target - shown;
+    var done = Math.abs(d) < SNAP;
+    shown = done ? target : shown + d * EASE;
+
+    applyCues(shown);
+    if (conf) {
+      var sh = conf.shots;
+      // The rail fills as the cup does: from the first drop to the last.
+      if (railEl) railEl.style.setProperty('--fill', smoothstep(sh.pour, sh.settle, shown));
+      // Firelight and embers belong to the camp. Once the push has gone into
+      // the bottle we are inside the glass, and they would make no sense.
+      root.style.setProperty('--camp', String(1 - smoothstep(sh.through, sh.pour, shown)));
     }
-    if (count) paint(Math.min(count - 1, Math.round(p * (count - 1))));
+    if (count) paintAt(shown * (count - 1));
+
+    if (done) running = false;
+    else requestAnimationFrame(loop);
   }
-  function tick() { if (!pending) { pending = true; requestAnimationFrame(frame); } }
+
+  function tick() { if (!running) { running = true; requestAnimationFrame(loop); } }
 
   /* --- go ---------------------------------------------------------------- */
   fetch('assets/media/frames/manifest.json')
@@ -237,11 +271,13 @@
 
       resize();
 
-      // Two passes. The first is every 6th frame, which is enough to scrub
+      // Two passes. The first is every 4th frame, which is enough to scrub
       // against within a second or so; the rest fill in behind it, pour first,
-      // because that is the part anyone actually watches.
+      // because that is the part anyone actually watches. Until that second
+      // pass lands the scrub can only show what has arrived, so it is the
+      // difference between a smooth pour and a slideshow.
       var coarse = [], fine = [], i;
-      for (i = 0; i < count; i++) (i % 6 === 0 || i === count - 1 ? coarse : fine).push(i);
+      for (i = 0; i < count; i++) (i % 4 === 0 || i === count - 1 ? coarse : fine).push(i);
 
       var mid = Math.round(((m.shots.pour + m.shots.settle) / 2) * count);
       fine.sort(function (a, b) { return Math.abs(a - mid) - Math.abs(b - mid); });

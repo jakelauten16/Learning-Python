@@ -55,6 +55,12 @@
   /* the whiskey itself, sampled off the film */
   --whiskey:    #c8802f;
   --whiskey-lt: #e6ab55;
+  /* The amber above is a fine accent but too pale to set small text on paper:
+     #c8802f only reaches 2.4:1 on the parchment ground. This is the same hue
+     taken down until it clears 4.5:1 on both light grounds, and it is what the
+     uppercase labels and figures use there. On night and oxblood, --whiskey-lt
+     already clears 4.9:1 and stays. */
+  --whiskey-ink: #9c4a15;
   --pewter:     #b6b5ad;
   --pewter-d:   #8a8981;
 
@@ -87,7 +93,11 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-img, video, canvas { display: block; max-width: 100%; }
+/* height:auto is load-bearing: every <img> carries width/height attributes so
+   the browser can reserve its space before the file arrives, and without this
+   that height attribute stays fixed while CSS scales the width — which squashes
+   the picture instead of scaling it. */
+img, video, canvas { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 h1, h2, h3, h4 { margin: 0; font-weight: 400; line-height: 1.04; letter-spacing: -.012em; }
 p { margin: 0 0 1em; }
@@ -506,13 +516,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
    PAGE HEADS + SECTIONS
    ========================================================================= */
 .phead { padding-top: clamp(7rem, 14vw, 11rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
-.phead .label { color: var(--whiskey); display: block; margin-bottom: 1.4rem; }
-.night .phead .label, .oxblood .phead .label { color: var(--whiskey-lt); }
+.phead .label { color: var(--whiskey-ink); display: block; margin-bottom: 1.4rem; }
+/* On a dark ground the label takes the light amber instead. The ground class
+   sits on an ancestor section in some places and on the block itself in others
+   (a .phead IS the .night section), so both forms have to be named — a
+   descendant selector alone silently misses half of them. */
+.night .phead .label, .night-2 .phead .label, .oxblood .phead .label,
+.phead.night .label, .phead.night-2 .label, .phead.oxblood .label,
+.night .note h3, .night-2 .note h3, .oxblood .note h3,
+.night .partner .label, .night-2 .partner .label, .oxblood .partner .label {
+  color: var(--whiskey-lt);
+}
 .phead h1 { max-width: 16ch; }
 .phead .lede { margin-top: 1.6rem; max-width: 52ch; }
 
 .shead { display: grid; gap: 1.1rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); max-width: 40ch; }
-.shead .label { color: var(--whiskey); }
+.shead .label { color: var(--whiskey-ink); }
 .night .shead .label, .oxblood .shead .label, .night-2 .shead .label { color: var(--whiskey-lt); }
 
 /* fade-and-lift on entry, driven by IntersectionObserver in site.js */
@@ -554,7 +573,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .night .contents li:last-child, .oxblood .contents li:last-child { border-bottom-color: var(--rule-night); }
 .contents .n {
   font-family: var(--label); font-size: .68rem; font-weight: 600; letter-spacing: .1em;
-  color: var(--whiskey); padding-top: .35em; font-variant-numeric: tabular-nums;
+  color: var(--whiskey-ink); padding-top: .35em; font-variant-numeric: tabular-nums;
 }
 .night .contents .n, .oxblood .contents .n { color: var(--whiskey-lt); }
 .contents h3 { font-family: var(--display); font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); }
@@ -579,7 +598,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .notes { display: grid; gap: clamp(1.5rem, 3vw, 2.2rem); }
 @media (min-width: 48rem) { .notes { grid-template-columns: repeat(3, 1fr); } }
 .note { padding-top: 1.4rem; border-top: 2px solid var(--whiskey); }
-.note h3 { font-family: var(--label); font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--whiskey); }
+.note h3 { font-family: var(--label); font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--whiskey-ink); }
 .note p { margin-top: .8rem; font-size: 1.02rem; }
 
 /* a card for the two purchase routes */
@@ -755,3 +774,72 @@ body[data-gated="1"] { overflow: hidden; }
 .stack-md > * + * { margin-top: 1.75rem; }
 .stack-lg > * + * { margin-top: 2.75rem; }
 .actions { display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: center; }
+
+/* =========================================================================
+   PARTNERS
+   Every mark sits in a fixed-ratio box and is fitted with object-fit:contain,
+   so a tall crest and a wide wordmark both sit correctly and neither is ever
+   stretched to fill. Until a real file is dropped in, the box holds the
+   partner's name set in type rather than a broken image.
+   ========================================================================= */
+.partners {
+  display: grid; gap: clamp(1.5rem, 3vw, 2.25rem);
+  /* auto-fit, not a media query: these grids sit inside columns of different
+     widths, and the viewport cannot tell you how much room the column has. */
+  /* Capped rather than 1fr: two partners in a wide row should sit as two
+     cards, not stretch to half the page each. */
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 21rem));
+  justify-content: start;
+}
+
+.partner {
+  display: grid; align-content: start; gap: 1.1rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: var(--parchment-2);
+  border: 1px solid var(--rule); border-radius: 3px;
+}
+.night .partner, .oxblood .partner, .night-2 .partner {
+  background: rgba(247,238,218,.05); border-color: var(--rule-night);
+}
+
+.partner__mark {
+  display: grid; place-items: center;
+  aspect-ratio: 5 / 3;
+  padding: 1.1rem;
+  background: #fdfaf3;
+  border-radius: 2px;
+  overflow: hidden;
+}
+/* The fit rule. width/height auto stops the intrinsic attributes forcing a
+   shape, and contain keeps the mark's own proportions whatever the box does. */
+.partner__mark img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+}
+/* Stand-in until the artwork arrives — see README. */
+.partner__mark span {
+  font-family: var(--display); font-size: clamp(1.1rem, .95rem + .7vw, 1.6rem);
+  line-height: 1.12; text-align: center; color: var(--oxblood);
+  text-wrap: balance; letter-spacing: .01em;
+  padding-bottom: .5rem; border-bottom: 2px solid var(--whiskey);
+}
+.partner h3 { font-family: var(--display); font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); }
+.partner p { margin: 0; font-size: .96rem; color: var(--ink-soft); }
+.night .partner p, .oxblood .partner p, .night-2 .partner p { color: var(--cream-soft); }
+.partner .label { color: var(--whiskey-ink); font-size: .62rem; }
+.night .partner .label, .oxblood .partner .label, .night-2 .partner .label { color: var(--whiskey-lt); }
+.partner a { color: inherit; }
+
+/* a plain list of named organisations, where there is no mark to show */
+.orglist { display: grid; gap: 0; }
+.orglist li {
+  padding-block: 1rem; border-bottom: 1px solid var(--rule);
+  font-family: var(--display); font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem);
+}
+.night .orglist li, .oxblood .orglist li { border-bottom-color: var(--rule-night); }
+.orglist small {
+  display: block; margin-top: .3rem;
+  font-family: var(--text); font-size: .92rem; color: var(--ink-soft);
+}
+.night .orglist small, .oxblood .orglist small { color: var(--cream-soft); }

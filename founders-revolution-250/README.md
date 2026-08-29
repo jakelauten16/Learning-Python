@@ -217,6 +217,21 @@ python3 -m http.server 8000
 Then open <http://localhost:8000/founders-revolution-250/>. Any static host
 works — GitHub Pages, Netlify, Cloudflare Pages — since there is nothing to build.
 
+## Demoing it without a server
+
+`demo.html` is the whole home page as **one self-contained file**: the frame
+sequence, the poster and the section photographs are all inlined as data URIs,
+and the nav walks the page instead of loading others. Open it by double-clicking
+it, email it, put it on a USB stick, or drop it in a deck — it needs no server
+and no network beyond Google Fonts. It is ~2.2MB, so give it a second on a slow
+connection.
+
+Rebuild it after re-cutting the frames, or it will still show the old cut:
+
+```
+python3 tools/build-demo.py
+```
+
 ## Design notes
 
 - **Type.** Caslon, because the Declaration was set in it — Libre Caslon Display

@@ -1,11 +1,38 @@
 # Campaign
 
-`campaign.html` is the launch playbook — open it in a browser. It holds the social
+`september-2026.html` is the dated plan for the month — sixteen posting days and five
+emails across three acts. Start there.
+
+`campaign.html` is the evergreen playbook — open it in a browser. It holds the social
 posts, the email sequences, the six-week calendar, and the compliance constraints
 that shape all of it. Every post has a copy button.
 
 It is versioned here so edits are tracked alongside the site, and so the prices,
 the store URL and the product facts stay in step with `assets/js/data.js`.
+
+## Why September
+
+Two things land in the same thirty days, and both are documented facts rather than
+marketing angles:
+
+- **National Bourbon Heritage Month.** S.Res. 294, 110th Congress, agreed 2 August 2007,
+  sponsored by Sen. Jim Bunning of Kentucky. The resolution reinforces the 1964
+  concurrent resolution recognising bourbon as "a distinctive product of the United
+  States", and it closes by asking Americans who enjoy bourbon to do so "responsibly and
+  in moderation" — which makes the responsible-drinking line on-brand rather than
+  boilerplate.
+- **Constitution Week, 17–23 September.** Created at the request of the Daughters of the
+  American Revolution, who petitioned Congress in 1955; signed into Public Law 915 by
+  President Eisenhower on 2 August 1956. Constitution Day itself, 17 September, falls on
+  a Thursday in 2026 — directly on a posting slot.
+
+Also in the month: the Kentucky Bourbon Festival, 10–13 September 2026 in Bardstown, its
+35th year.
+
+**Correction on file:** the first version of the playbook told you to work backwards to
+4 July 2026. That date has passed. The release is now framed as *for the 250th year*
+rather than *before the Fourth* — a longer and more durable claim, since the Revolution's
+250th anniversaries run to 2033 (Yorktown 2031, Treaty of Paris 2033).
 
 ## Posture
 

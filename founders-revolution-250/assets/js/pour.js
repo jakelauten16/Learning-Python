@@ -92,9 +92,13 @@
   }
 
   /* --- drawing ---------------------------------------------------------- */
-  var BAND = 0.52;   // share of a portrait stage the picture band occupies
   var ctx = canvas.getContext('2d', { alpha: false });
   var cw = 0, ch = 0, drawn = '', portrait = false;
+  // Portrait band geometry, in canvas pixels. Computed in resize() and mirrored
+  // onto the element as CSS custom properties, so the <video> at rest and the
+  // <canvas> during the pour occupy exactly the same rectangle — otherwise the
+  // cut between them would jump.
+  var bandTop = 0, bandH = 0;
 
   function resize() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -105,10 +109,26 @@
       canvas.width = cw; canvas.height = ch;
       drawn = '';
     }
-    // Covering a phone's width with a 16:9 still means cropping the sides, and
-    // the taller the band the harder that crop bites. A band across the top
-    // shows far more of the frame and leaves the copy room below.
     portrait = r.height > r.width * 1.3;
+
+    // On a phone the frame is shown WHOLE, not cropped to fill. Covering a
+    // portrait viewport with 16:9 footage means throwing away half the width —
+    // and the width is where this film lives: the tents, the fires, the army
+    // along the river. So the band is fitted to the full width and letterboxed
+    // into the ground, which costs height and keeps the picture.
+    if (portrait) {
+      var topCss = Math.max(76, r.height * 0.11);   // clear of the fixed header
+      var hCss = r.width * 9 / 16;
+      bandTop = Math.round(topCss * dpr);
+      bandH = Math.round(hCss * dpr);
+      root.style.setProperty('--band-top', topCss.toFixed(1) + 'px');
+      root.style.setProperty('--band-h', hCss.toFixed(1) + 'px');
+      root.style.setProperty('--band-bottom', (topCss + hCss).toFixed(1) + 'px');
+    } else {
+      root.style.removeProperty('--band-top');
+      root.style.removeProperty('--band-h');
+      root.style.removeProperty('--band-bottom');
+    }
   }
 
   function nearest(i) {
@@ -123,14 +143,16 @@
   function drawCover(img) {
     var iw = img.naturalWidth, ih = img.naturalHeight;
     if (portrait) {
-      var sp = Math.max(cw / iw, (ch * BAND) / ih);
-      var pw = iw * sp, ph = ih * sp;
-      ctx.drawImage(img, (cw - pw) / 2, 0, pw, ph);
-      var g = ctx.createLinearGradient(0, ph * 0.62, 0, ph);
+      // Full width, nothing cropped, sitting in the band resize() measured.
+      ctx.drawImage(img, 0, bandTop, cw, bandH);
+      // Feather only the last sliver into the ground, so the letterbox edge is
+      // a fade rather than a hard line.
+      var fade = bandH * 0.16;
+      var g = ctx.createLinearGradient(0, bandTop + bandH - fade, 0, bandTop + bandH);
       g.addColorStop(0, 'rgba(16,14,12,0)');
       g.addColorStop(1, 'rgba(16,14,12,1)');
       ctx.fillStyle = g;
-      ctx.fillRect(0, ph * 0.62, cw, ph * 0.38 + 1);
+      ctx.fillRect(0, bandTop + bandH - fade, cw, fade + 1);
     } else {
       var sc = Math.max(cw / iw, ch / ih);
       ctx.drawImage(img, (cw - iw * sc) / 2, (ch - ih * sc) / 2, iw * sc, ih * sc);

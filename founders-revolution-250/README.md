@@ -110,8 +110,28 @@ page picks one at load and keeps it.
   fact shown at once, and **nothing is downloaded**: no frames, no video.
 - **No JavaScript** — a `<noscript>` block does the same, and hides the age gate,
   which otherwise could never be dismissed.
-- **Portrait phones** — the picture runs as a band across the top, feathered into
-  the ground, with the copy below.
+- **Portrait phones** — see below.
+
+### Portrait shows the whole frame, not a crop
+
+Covering a phone with 16:9 footage means throwing away **half the width** — on
+every common handset it worked out to almost exactly 50%. That is the half this
+film lives in: the tents, the campfires, the army along the river. So on portrait
+the band is **fitted to the full width and letterboxed** into the ground. It
+costs height (about 26% of the screen instead of 52%) and keeps the picture.
+
+The geometry is measured in `pour.js` and written out as `--band-top`,
+`--band-h` and `--band-bottom` custom properties. The `<video>` at rest and the
+`<canvas>` during the pour then read the same numbers, so both occupy exactly
+the same rectangle and the cut between them does not jump. The copy sits
+directly under the measured band edge rather than hanging off the bottom.
+
+**A note for anyone editing these rules.** The portrait overrides are split
+across two `@media (max-aspect-ratio: 10/13)` blocks in `site.css`, and that is
+deliberate: the band rules sit after `.pour__video` / `.pour__poster` /
+`.pour__shade`, and the copy rules sit after `.pour__copy`. They are the same
+specificity as the rules they override, so **source order is what decides** —
+put them earlier in the file and they silently do nothing.
 
 ### Where the copy sits
 

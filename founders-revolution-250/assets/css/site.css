@@ -218,16 +218,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
   background: var(--night);
 }
 @media (max-width: 47.99rem) { .pour { height: 300vh; } }
-/* Portrait runs the film as a band across the top (see paint() in pour.js);
-   the poster underneath has to sit the same way or it shows through wrong. */
-@media (max-aspect-ratio: 10/13) {
-  .pour__poster, .pour__video { height: 52%; object-position: 50% 0; }
-  .pour__shade {
-    background:
-      linear-gradient(to bottom, rgba(8,6,5,.62) 0%, rgba(8,6,5,.06) 18%,
-                      rgba(8,6,5,0) 34%, rgba(12,10,9,.88) 50%, #0c0a09 57%);
-  }
-}
 .pour__stage {
   position: sticky; top: 0;
   height: 100svh; min-height: 34rem;
@@ -266,6 +256,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
    underneath carries the rest state on its own. */
 .pour[data-lead="stalled"] .pour__video { opacity: 0; }
 
+
+
 /* Vignette + a wash under the copy columns. Both sides are darkened so the
    Caslon stays legible over a moving picture without flattening the film. */
 .pour__shade {
@@ -286,6 +278,35 @@ button, input, select, textarea { font: inherit; color: inherit; }
     /* A gentle close-down at the corners only. There are no side curtains any
        more — the middle of the frame, where the men are, is left alone. */
     radial-gradient(132% 108% at 50% 42%, transparent 60%, rgba(8,6,5,.52) 100%);
+}
+
+/* Portrait shows the frame WHOLE rather than cropping it to fill. Covering a
+   phone with 16:9 footage throws away half the width, and the width is where
+   this film lives — the tents, the fires, the army along the river. So the band
+   is fitted to the full width and letterboxed into the ground.
+
+   The geometry is measured in pour.js and written here as --band-*, because the
+   <video> at rest and the <canvas> during the pour must occupy exactly the same
+   rectangle or the cut between them jumps. */
+@media (max-aspect-ratio: 10/13) {
+  .pour__poster, .pour__video {
+    top: var(--band-top, 11%);
+    height: var(--band-h, 26%);
+    bottom: auto;
+    object-fit: cover;      /* the box is already the frame's aspect */
+    object-position: 50% 50%;
+  }
+  /* Dark above the band, solid below it. Keyed to the measured edge so the
+     letterbox never shows as a grey step. */
+  .pour__shade {
+    background:
+      linear-gradient(to bottom,
+        rgba(8,6,5,.55) 0px,
+        rgba(8,6,5,.30) var(--band-top, 11%),
+        rgba(8,6,5,0)   calc(var(--band-top, 11%) + 12px),
+        rgba(8,6,5,0)   calc(var(--band-bottom, 37%) - 22px),
+        #0c0a09         var(--band-bottom, 37%));
+  }
 }
 
 /* Film grain. A tiny SVG turbulence tile, so it costs no request. */
@@ -408,6 +429,20 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @media (max-width: 26rem) {
   .pour__ledger { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Portrait, continued. The band above is letterboxed rather than cropped, so
+   the picture is shorter and the copy moves up to sit under it instead of
+   hanging off the bottom of the screen with dead ground between them. These
+   have to live here, after the rules they override — same specificity, so
+   source order is what decides. --band-bottom is measured in pour.js. */
+@media (max-aspect-ratio: 10/13) {
+  .pour__copy {
+    top: calc(var(--band-bottom, 37%) + 1.25rem);
+    bottom: auto;
+    align-content: start;
+  }
+  .pour__beat { top: 0; bottom: auto; }
 }
 
 /* ---------- the fill rail: a thin column that fills as the cup does ------ */

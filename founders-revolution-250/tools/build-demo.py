@@ -29,6 +29,15 @@ for i in range(1, man['count'] + 1):
         uris.append('data:image/webp;base64,' + base64.b64encode(fh.read()).decode())
 poster = base64.b64encode(open(os.path.join(SITE, 'assets/media/poster.jpg'), 'rb').read()).decode()
 
+def b64(rel):
+    with open(os.path.join(SITE, rel), 'rb') as fh:
+        return base64.b64encode(fh.read()).decode()
+
+# Both codecs ride along: VP9 for Chromium builds without H.264, H.264 for
+# Safari. A demo that fails on the laptop it is being shown from is worthless.
+lead_webm = b64('assets/media/hero-lead.webm')
+lead_mp4  = b64('assets/media/hero-lead.mp4')
+
 # ---- css: swap self-hosted faces for the one font host artifacts allow ----
 css = read('assets/css/site.css')
 css = re.sub(r"@font-face \{.*?\}\n", "", css, flags=re.S)
@@ -39,6 +48,12 @@ css = css.replace("'Caslon Text'", "'Libre Caslon Text'")
 body = re.search(r'<body>(.*)</body>', read('index.html'), re.S).group(1)
 body = re.sub(r'\s*<script src="[^"]+"></script>', '', body)
 body = body.replace('src="assets/media/poster.jpg"', 'src="data:image/jpeg;base64,%s"' % poster)
+body = body.replace('poster="assets/media/poster.jpg"', 'poster="data:image/jpeg;base64,%s"' % poster)
+body = body.replace('data-src-webm="assets/media/hero-lead.webm"',
+                    'data-src-webm="data:video/webm;base64,%s"' % lead_webm)
+body = body.replace('data-src-mp4="assets/media/hero-lead.mp4"',
+                    'data-src-mp4="data:video/mp4;base64,%s"' % lead_mp4)
+assert 'data:video/webm' in body and 'data:video/mp4' in body, 'lead-in did not inline'
 
 # The section photographs are relative paths; a one-file page has to carry them.
 for name in sorted(set(re.findall(r'src="assets/img/([^"]+\.jpg)"', body))):
@@ -87,42 +102,30 @@ pour_js = read('assets/js/pour.js')
 
 # The frames are already in the document, so there is nothing to fetch and only
 # one width to choose from.
+# The frames are already in the document, so there is nothing to fetch and
+# only one width to choose from.
 pour_js = pour_js.replace(
     """  function srcFor(i, w) {
-    // manifest indexes from 0; ffmpeg numbered the files from 1
     return 'assets/media/frames/' + w + '/f' + String(i + 1).padStart(3, '0') + '.webp';
   }""",
     """  function srcFor(i) { return window.AF_FRAMES[i]; }""")
 pour_js = pour_js.replace("img.src = srcFor(i, width);", "img.src = srcFor(i);")
-pour_js = re.sub(r"  // One width for the life of the page.*?\n  \}\n", "", pour_js, flags=re.S)
+pour_js = re.sub(r"  function pickWidth\(widths\) \{.*?\n  \}\n", "", pour_js, flags=re.S)
+pour_js = pour_js.replace("      width = pickWidth(m.widths);\n", "")
 
-start = pour_js.index("  fetch('assets/media/frames/manifest.json')")
-end   = pour_js.index("  /* --- embers ---")
-pour_js = pour_js[:start] + """  (function () {
-    var m = window.AF_MANIFEST;
-    conf = m;
-    count = m.count;
-    resize();
-
-    var coarse = [], fine = [], i;
-    for (i = 0; i < count; i++) (i % 6 === 0 || i === count - 1 ? coarse : fine).push(i);
-    var mid = Math.round(((m.shots.pour + m.shots.settle) / 2) * count);
-    fine.sort(function (a, b) { return Math.abs(a - mid) - Math.abs(b - mid); });
-
-    queue(coarse, 0, function () {
-      root.setAttribute('data-ready', '1');
-      tick();
-      queue(fine, 0);
-    });
-
-    startEmbers();
-    window.addEventListener('scroll', tick, { passive: true });
-    window.addEventListener('resize', function () { resize(); lastP = -1; tick(); }, { passive: true });
-    if (window.ResizeObserver) new ResizeObserver(function () { resize(); tick(); }).observe(canvas);
-    tick();
-  })();
-
-""" + pour_js[end:]
+# Swap the manifest request for the copy embedded in the page.
+a = pour_js.index("  fetch('assets/media/frames/manifest.json')")
+body_start = pour_js.index("    .then(function (m) {", a) + len("    .then(function (m) {")
+body_end = pour_js.index("    })\n    .catch(function (err) {", body_start)
+inner = pour_js[body_start:body_end]
+END = "      goStatic();\n    });\n"
+tail = pour_js.index(END, body_end) + len(END)
+pour_js = (pour_js[:a]
+           + "  (function () {\n    var m = window.AF_MANIFEST;\n"
+           + inner
+           + "  })();\n"
+           + pour_js[tail:])
+assert 'AF_MANIFEST' in pour_js and 'fetch(' not in pour_js, 'manifest swap failed'
 
 html = """<title>Heritage Select 250</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -143,7 +146,8 @@ window.AF_FRAMES = %s;
 <script>%s</script>
 <script>%s</script>
 """ % (css, body,
-       json.dumps({'count': man['count'], 'shots': man['shots']}),
+       json.dumps({'count': man['count'], 'handoff': man['handoff'],
+                   'leadEnd': man['leadEnd'], 'widths': man['widths']}),
        json.dumps(uris), data_js, site_js, pour_js)
 
 open(OUT, 'w').write(html)

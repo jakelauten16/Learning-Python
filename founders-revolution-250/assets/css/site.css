@@ -211,16 +211,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
    ========================================================================= */
 .pour {
   position: relative;
-  /* Height IS the scrub length: 560vh of scroll spread over 140 frames.
-     Phones get a shorter track — the same film, fewer swipes to get through. */
-  height: 560vh;
+  /* Height IS the scrub length, and it now covers only the pour: the lead-in
+     plays on its own clock and spends no scroll at all. 85 frames over ~260vh
+     of travel is about 27px of scroll per frame. */
+  height: 360vh;
   background: var(--night);
 }
-@media (max-width: 47.99rem) { .pour { height: 400vh; } }
+@media (max-width: 47.99rem) { .pour { height: 300vh; } }
 /* Portrait runs the film as a band across the top (see paint() in pour.js);
    the poster underneath has to sit the same way or it shows through wrong. */
 @media (max-aspect-ratio: 10/13) {
-  .pour__poster { height: 52%; object-position: 50% 0; }
+  .pour__poster, .pour__video { height: 52%; object-position: 50% 0; }
   .pour__shade {
     background:
       linear-gradient(to bottom, rgba(8,6,5,.62) 0%, rgba(8,6,5,.06) 18%,
@@ -245,8 +246,19 @@ button, input, select, textarea { font: inherit; color: inherit; }
   width: 100%; height: 100%; object-fit: cover;
   filter: saturate(.96);
 }
-.pour__canvas { opacity: 0; transition: opacity .5s var(--ease); }
-.pour[data-ready="1"] .pour__canvas { opacity: 1; }
+.pour__video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+/* The canvas is revealed at the handoff. Coming off the video's own cut the
+   two pictures are identical, so it appears instantly; when a scroll cuts the
+   lead-in short mid-shot, it dissolves instead. */
+.pour__canvas { opacity: 0; }
+.pour[data-phase="scrub"] .pour__canvas { opacity: 1; }
+.pour[data-phase="scrub-cut"] .pour__canvas { opacity: 1; transition: opacity .28s var(--ease); }
+.pour[data-phase="scrub"] .pour__video,
+.pour[data-phase="scrub-cut"] .pour__video { opacity: 0; transition: opacity .28s var(--ease); }
+.pour[data-phase="static"] .pour__video { display: none; }
 
 /* Vignette + a wash under the copy columns. Both sides are darkened so the
    Caslon stays legible over a moving picture without flattening the film. */
@@ -268,39 +280,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
     /* A gentle close-down at the corners only. There are no side curtains any
        more — the middle of the frame, where the men are, is left alone. */
     radial-gradient(132% 108% at 50% 42%, transparent 60%, rgba(8,6,5,.52) 100%);
-}
-
-/* ---------- firelight -----------------------------------------------------
-   The clip was shot in a tavern. The frames are graded towards firelight by
-   tools/build-frames.py; these two layers add what a grade cannot — a glow that
-   breathes and embers that drift. Both belong to the camp, so pour.js fades
-   them out (--camp) once the push has gone into the bottle. */
-.pour__fire {
-  position: absolute; inset: 0; pointer-events: none;
-  opacity: var(--camp, 0);
-  mix-blend-mode: screen;
-  background:
-    radial-gradient(58% 46% at 18% 92%, rgba(255,150,44,.40) 0%, rgba(255,120,30,.16) 42%, transparent 72%),
-    radial-gradient(38% 30% at 78% 96%, rgba(255,132,38,.22) 0%, transparent 70%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .pour__fire { animation: firelight 3.7s ease-in-out infinite; }
-}
-@keyframes firelight {
-  0%, 100% { opacity: calc(var(--camp, 0) * 1);    transform: scale(1); }
-  17%      { opacity: calc(var(--camp, 0) * .82); }
-  31%      { opacity: calc(var(--camp, 0) * 1.05); transform: scale(1.015); }
-  52%      { opacity: calc(var(--camp, 0) * .88); }
-  71%      { opacity: calc(var(--camp, 0) * 1.02); transform: scale(1.008); }
-  86%      { opacity: calc(var(--camp, 0) * .9); }
-}
-
-/* Embers, drawn in pour.js. Its own canvas so the film underneath is only
-   repainted when the scroll actually moves. */
-.pour__embers {
-  position: absolute; inset: 0; pointer-events: none;
-  opacity: var(--camp, 0);
-  transition: opacity .3s linear;
 }
 
 /* Film grain. A tiny SVG turbulence tile, so it costs no request. */
@@ -484,8 +463,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pour--static .pour__stage { position: relative; height: auto; min-height: 0; }
 .pour--static .pour__shade,
 .pour--static .pour__grain,
-.pour--static .pour__embers,
-.pour--static .pour__fire,
+.pour--static .pour__video,
 .pour--static .pour__canvas,
 .pour--static .pour__cue,
 .pour--static .pour__rail,

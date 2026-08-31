@@ -19,113 +19,86 @@ while the whiskey is still falling.
 | `founders.html` | Bruce Lautenschlager and Allen Hayne |
 | `buy.html` | Both products, and the handoff to the store |
 
-## How the scroll film works
+## How the hero works
 
-The hero is **not a playing video**. It is 173 stills painted onto a `<canvas>`,
-with the frame picked from how far down the track you have scrolled.
+It runs in **two phases**, and they use different machinery on purpose.
 
-Scrubbing a real `<video>` by writing `currentTime` is jittery on most phones and
-unreliable on iOS. Drawing decoded images is neither, and it means the whiskey
-stops dead when the scroll does — which is the whole effect.
+### Phase A — the camp, 0 to 6.47s
 
-### The shot list
+An ordinary muted `<video>` plays the lead-in: two soldiers at a fire with the
+Continental Army's tents and campfires stretching along the river behind them,
+and the bottle coming out. **Linear playback needs no seeking**, so it is
+perfectly smooth and keeps the source's full quality. This is the part that
+plays by itself when the page loads.
 
-Scrolling walks one continuous move: **the two of them at the fire → the cork
-coming out → in on the bottle → through the glass → the pour → the finished
-set.** That move is cut in `tools/build-frames.py`, which names a source clip, a
-time range, a sampling rate and a zoom/centre pair per shot, then crops and
-rescales every frame to match. The camera move is therefore **baked into the
-frames** — real footage re-framed, not a CSS transform over a still — so it
-costs the page nothing and cannot drift out of sync with the scroll.
+### Phase B — the pour, 6.47s to the end
 
-| Shot | Source | Sampled | Share of the scroll |
-| --- | --- | --- | --- |
-| The two of them, wide | `camp.mp4` 0.05–0.8s | 12fps | 0 – 5% |
-| Moving in on his hands | `camp.mp4` 0.8–1.2s | 12fps | 5 – 8% |
-| **The cork comes out** | `camp.mp4` 1.2–2.05s | **24fps** | 8 – 20% |
-| He presents the bottle | `camp.mp4` 2.05–2.6s | 24fps | 20 – 27% |
-| Push in, to the shoulder | `camp.mp4` 2.6–3.25s | 24fps | 27 – 36% |
-| **Through the glass** | `camp.mp4` 3.25–3.44s | 24fps | 36 – 39% |
-| **The pour begins** | `camp.mp4` 3.47–5.4s | 24fps | 39 – 66% |
-| **The pour completes** | `pour.mp4` 6.1–7.4s | 24fps | 66 – 85% |
-| The whiskey settles | `pour.mp4` 7.4–8.65s | 12fps | 85 – 94% |
-| The finished set | `pour.mp4` 8.7–10.0s | 8fps | 94 – 100% |
+At the handoff the video pauses and a `<canvas>` takes over, painting 85 stills
+chosen by how far down the track you have scrolled. Scrubbing a `<video>` by
+writing `currentTime` is jittery and unreliable — these clips carry only a
+handful of keyframes across ten seconds, and the pour section contains none —
+so the pour is stills instead.
 
-Two rules govern that list, and both matter more than they look:
+**The join is a cut in the source itself.** At 6.47s the camera cuts to the tight
+close-up with the stream already running, so pausing the video on that frame and
+revealing a canvas showing the same frame is invisible.
 
-- **The sampling rate steps by at most one level between neighbours** — 12 → 12
-  → 24 → … → 12 → 8. Scroll distance is spent per *frame*, so a shot sampled at
-  8fps sitting next to one sampled at 24fps makes the action appear to drop to a
-  third speed the moment you cross the boundary. Ramping the density instead of
-  stepping it is most of what makes the whole thing read as one take.
-- **Anything the eye is meant to follow runs at the source's full 24fps and is
-  framed tight enough to see it.** The cork pull used to sit at 8fps inside the
-  wide shot, which is exactly why it did not read as a cork coming out.
+### Why it looks sharper than it used to
 
-Two joins needed care:
+Three things, in order of how much they mattered:
 
-- **The pour spans both clips.** `camp.mp4` burns in a caption from 5.55s, so
-  the pour finishes on the original clip. Both cups are at the same level and
-  framed the same way at the join, so it reads as one continuous pour.
-- **Through the glass is a match cut, not a dissolve.** The push ends on the
-  amber in the bottle's shoulder and goes soft; the close-up cuts in with the
-  bottle still in frame, and the move comes back out of the same amber before
-  pulling back to find the cup.
+1. **Nothing is zoom-cropped.** The previous cut faked camera moves by cropping
+   2–4× into a 1280px source and upscaling back out, which is what made it soft.
+   This clip does its own cuts — wide, medium, close — so every frame ships at
+   native framing.
+2. **The grade is almost nothing.** `eq=contrast=1.04:saturation=1.03` and no
+   vignette. The footage is already golden hour and firelight; the old heavy
+   grade was fighting it. The synthetic embers and firelight glow are gone too —
+   this clip has real fires in it.
+3. **Higher webp quality** (88 at 1280px, up from 76). These are frames someone
+   stares at while scrubbing, and compression mush reads as "blurry video".
 
-`assets/js/pour.js` reads the shot boundaries out of `frames/manifest.json`, so
-the copy is pinned to the cut rather than to guessed numbers.
+### Scrolling is never blocked
 
-### Why it feels smooth
+Any scroll during the lead-in ends it early and dissolves into the pour. Trapping
+someone on an autoplaying video is a worse sin than cutting a shot short. The
+`data-phase` attribute distinguishes the two: `scrub` swaps instantly (the
+pictures are identical), `scrub-cut` cross-fades over 280ms (they are not).
 
-Four things, and all four are dealt with:
+### When the video will not play
 
-1. **The film follows the scrollbar, it does not track it.** A wheel notch moves
-   the page in one jump. `pour.js` eases the drawn position toward the scroll
-   position — 15% of the remaining distance per 60Hz frame — which turns that
-   jump into a glide. The easing is scaled by elapsed time, so it closes the gap
-   at the same wall-clock rate on a 120Hz display as on a 60Hz one, and a
-   backgrounded tab handing back a gap of seconds cannot snap the whole film in
-   one frame. The loop runs only while it still has ground to cover, so a page
-   at rest costs nothing.
-2. **Frames are blended, not snapped to.** 173 frames spread over thousands of
-   pixels means landing on whole frames steps visibly. The canvas draws the
-   frame you are between at partial alpha, dissolving one into the next. On real
-   footage that already carries its own motion blur, that reads as movement.
-3. **The first pass is dense enough to scrub against.** Until the whole sequence
-   has arrived the canvas can only show what it holds, so a sparse first pass
-   looks like a slideshow. It now loads every 4th frame first, over 8 sockets,
-   and repaints when a sharper frame lands.
-4. **The cut itself is denser and its density ramps.** 173 frames rather than
-   144 is ~24px of scroll per frame instead of ~29, and no boundary changes the
-   apparent speed by more than one step. See the shot list above.
+A watchdog hands over to the pour if the clock has not moved 1.8s after load.
+Autoplay can be refused silently — iOS low power mode, data saver — and a
+Chromium built without the proprietary H.264 decoder sits at `readyState 0`
+forever without firing an error. Either way nobody is left on a frozen poster.
 
-**What was tried and rejected:** motion interpolation (`ffmpeg minterpolate`,
-`mi_mode=mci`) to synthesise in-between frames. It is clean on the cork, where
-the motion is a hand and a bottle, but on the pour it smears the stream into a
-soft column — the synthesised frames lose its shape, so the sequence alternates
-crisp and blurry and reads as pulsing. Worse than the stepping it fixes. The
-canvas cross-fade in (2) gets the same smoothing with none of the artefacts,
-because it dissolves rather than inventing motion.
+Two encodes ship for the same reason: **VP9 WebM first** (smaller, and covers
+codec-less Chromium), **H.264 MP4 second** (Safari). Sources are attached by
+`pour.js` rather than sitting in the markup, so a reduced-motion visitor never
+fetches a film they will not watch.
 
-Scrubbing a `<video>` with `currentTime` was also tried and rejected: both
-source clips carry only 2–3 keyframes across their whole ten seconds, and the
-pour section contains none at all, so every seek inside it costs the browser a
-decode from up to 3.5 seconds earlier. Re-encoding all-intra fixes the seeking
-but costs 5.3MB for one clip — more than the 3.2MB frame sequence costs for
-both.
+### Frames still blend and the scroll still eases
+
+Both from the previous build and both still load-bearing: the canvas draws the
+frame you are *between* at partial alpha, and the drawn position eases toward
+the scroll position (15% of the remaining distance per 60Hz frame, scaled by
+elapsed time so 120Hz behaves the same).
 
 ### Loading
 
-Frames load in two passes: every 4th frame first, which is enough to scrub
-against within about a second, then the rest fill in behind it — pour first,
-since that is the part anyone actually watches. Until a frame arrives the
-canvas draws the nearest one it holds, so a half-loaded sequence still moves
-instead of blinking. Six requests run at a time; saturating the connection with
-173 makes the *first* frames arrive later, not sooner.
+85 frames, nearest-the-start first, eight at a time. The lead-in buys several
+seconds of cover, so by the time anyone reaches the pour the sequence is
+normally complete. Two widths are built (1280px ≈ 2.7MB, 720px ≈ 1.0MB); the
+page picks one at load and keeps it.
 
-Two widths are built (1280px and 720px, ~3.2MB and ~1.6MB). The page picks one
-from the viewport at load and keeps it — re-picking on resize would throw away
-everything already decoded for no visible gain.
+### When it doesn't run
+
+- **`prefers-reduced-motion`** — the hero collapses to the poster with every
+  fact shown at once, and **nothing is downloaded**: no frames, no video.
+- **No JavaScript** — a `<noscript>` block does the same, and hides the age gate,
+  which otherwise could never be dismissed.
+- **Portrait phones** — the picture runs as a band across the top, feathered into
+  the ground, with the copy below.
 
 ### Where the copy sits
 
@@ -195,19 +168,23 @@ rows so it is not graded twice.
 
 ## Rebuilding the frames
 
-The two source clips live at `assets/media/camp.mp4` (the two men, and their
-pour) and `assets/media/pour.mp4` (the original close-up, used for the pour's
-back half and the clean tail). Replace either and re-run:
+One source clip now, at `assets/media/camp.mp4` — the encampment film, which
+carries the whole hero from the fire through to the finished pour. Replace it
+and re-run:
 
 ```
 pip install imageio-ffmpeg     # or just have ffmpeg on PATH
 python3 tools/build-frames.py
 ```
 
-That rewrites `assets/media/frames/` (both widths plus `manifest.json`),
-`poster.jpg`, and `og.jpg`. Commit what it produces. If your film has a
-different shape, edit `SHOTS` at the top of the script — and move the
-`data-cue` values in `index.html` to match the new boundaries it prints.
+That rewrites `hero-lead.mp4`, `hero-lead.webm`, `assets/media/frames/` (both
+widths plus `manifest.json`), `poster.jpg` and `og.jpg`. Commit what it produces.
+
+**The one number that matters is `HANDOFF`** at the top of the script: the second
+at which the lead-in stops and the scroll takes over. It must land on the cut to
+the pour, or the join will show. If you swap the film, find that cut first.
+`LEAD_SHARE` in `pour.js` says how much of the cue timeline the lead-in owns
+(0.40) — the `data-cue` values in `index.html` are on that same 0–1 scale.
 
 The section photographs in `assets/img/` are stills pulled from the same film
 (see the `shot` calls in the git history, or just grab new ones with ffmpeg).

@@ -108,7 +108,7 @@
     <!-- The sources are assigned by pour.js rather than sitting in the markup,
          so a reduced-motion visitor — who will never see the lead-in play —
          does not pay for it. -->
-    <video class="pour__video" muted playsinline preload="auto" aria-hidden="true"
+    <video class="pour__video" muted loop playsinline preload="auto" aria-hidden="true"
            poster="assets/media/poster.jpg"
            data-src-webm="assets/media/hero-lead.webm"
            data-src-mp4="assets/media/hero-lead.mp4"></video>
@@ -119,41 +119,41 @@
     <div class="pour__copy">
       <div class="pour__stack">
 
-        <div class="pour__beat" data-cue="-0.06,0.150">
+        <div class="pour__beat" data-cue="-0.06,0.135">
           <span class="label">Kentucky Straight Bourbon Whiskey</span>
           <h1 class="d-hero pour__title">Heritage<br>Select <em>250</em></h1>
           <p>Two hundred and fifty years ago an army wintered on what it had.
              This is what we put away for the anniversary.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.170,0.330">
+        <div class="pour__beat" data-cue="0.155,0.300">
           <span class="label">Drawn from a single cask</span>
           <h2 class="d-1 pour__title">One barrel. One cut.</h2>
           <p>Nothing was added on the way to the glass, and nothing was taken out.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.355,0.475">
+        <div class="pour__beat" data-cue="0.320,0.455">
           <span class="label">Aged Seven Years</span>
           <h2 class="d-1 pour__title">Seven summers on the top floor.</h2>
           <p>New charred American oak, high in the rickhouse where the heat works
              hardest. It came out the colour it is now.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.495,0.630">
+        <div class="pour__beat" data-cue="0.475,0.615">
           <span class="label">Cask Strength</span>
           <h2 class="d-1 pour__title">Bottled at barrel proof.</h2>
           <p>One hundred and twenty proof, uncut and non-chill filtered.
              Add water if you like &mdash; it opens the fruit.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.650,0.800">
+        <div class="pour__beat" data-cue="0.635,0.790">
           <span class="label">Limited Release</span>
           <h2 class="d-1 pour__title">Two hundred and fifty sets.</h2>
           <p>Then the barrel is empty. Each set is numbered, and the number
              is yours.</p>
         </div>
 
-        <div class="pour__beat" data-cue="0.870">
+        <div class="pour__beat" data-cue="0.860">
           <span class="label">Now Allocating</span>
           <h2 class="d-1 pour__title">Take your number.</h2>
           <p><strong data-val="remaining">66</strong> of <strong data-val="sets">250</strong>
@@ -167,19 +167,19 @@
       </div>
 
       <!-- The ledger fills line by line as the cup does. -->
-      <ul class="pour__ledger" data-cue="0.410" aria-label="Release specification">
-        <li data-cue="0.430"><span class="k">Style</span><span class="v">Kentucky Straight</span></li>
-        <li data-cue="0.505"><span class="k">Barrel</span><span class="v">Single</span></li>
-        <li data-cue="0.580"><span class="k">Age</span><span class="v" data-val="age">7 Years</span></li>
-        <li data-cue="0.655"><span class="k">Proof</span><span class="v" data-val="proof">120 Proof</span></li>
-        <li data-cue="0.730"><span class="k">Volume</span><span class="v" data-val="volume">750 ml</span></li>
-        <li data-cue="0.800"><span class="k">Edition</span><span class="v"><span data-val="sets">250</span> Sets</span></li>
+      <ul class="pour__ledger" data-cue="0.150" aria-label="Release specification">
+        <li data-cue="0.170"><span class="k">Style</span><span class="v">Kentucky Straight</span></li>
+        <li data-cue="0.290"><span class="k">Barrel</span><span class="v">Single</span></li>
+        <li data-cue="0.400"><span class="k">Age</span><span class="v" data-val="age">7 Years</span></li>
+        <li data-cue="0.510"><span class="k">Proof</span><span class="v" data-val="proof">120 Proof</span></li>
+        <li data-cue="0.620"><span class="k">Volume</span><span class="v" data-val="volume">750 ml</span></li>
+        <li data-cue="0.730"><span class="k">Edition</span><span class="v"><span data-val="sets">250</span> Sets</span></li>
       </ul>
     </div>
 
     <div class="pour__rail" aria-hidden="true"></div>
 
-    <div class="pour__cue" data-cue="0.360,0.470" aria-hidden="true">
+    <div class="pour__cue" data-cue="-0.06,0.070" aria-hidden="true">
       <span>Scroll to pour</span>
       <i></i>
     </div>

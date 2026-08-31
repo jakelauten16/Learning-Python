@@ -23,25 +23,38 @@ while the whiskey is still falling.
 
 It runs in **two phases**, and they use different machinery on purpose.
 
-### Phase A — the camp, 0 to 6.47s
+### At rest — the camp loops
 
-An ordinary muted `<video>` plays the lead-in: two soldiers at a fire with the
-Continental Army's tents and campfires stretching along the river behind them,
-and the bottle coming out. **Linear playback needs no seeking**, so it is
-perfectly smooth and keeps the source's full quality. This is the part that
-plays by itself when the page loads.
+While the page sits at the top, a muted `<video>` **loops**: two soldiers at a
+fire with the Continental Army's tents and campfires stretching along the river
+behind them, and the bottle coming out. **Linear playback needs no seeking**, so
+it is smooth and keeps the source's full quality.
 
-### Phase B — the pour, 6.47s to the end
+The lead-in is cut to end **exactly on the edit at 6.47s** — the frame before the
+camera cuts to the pour. That matters: a loop that ran even a few frames past it
+would flash the payoff on every repeat, before anyone had scrolled for it.
 
-At the handoff the video pauses and a `<canvas>` takes over, painting 85 stills
-chosen by how far down the track you have scrolled. Scrubbing a `<video>` by
-writing `currentTime` is jittery and unreliable — these clips carry only a
-handful of keyframes across ten seconds, and the pour section contains none —
-so the pour is stills instead.
+### On scroll — the pour
 
-**The join is a cut in the source itself.** At 6.47s the camera cuts to the tight
-close-up with the stream already running, so pausing the video on that frame and
-revealing a canvas showing the same frame is invisible.
+The first scroll cuts to a `<canvas>` painting 85 stills chosen by how far down
+the track you have scrolled. Scrubbing a `<video>` by writing `currentTime` is
+jittery and unreliable — these clips carry only a handful of keyframes across
+ten seconds, and the pour section contains none — so the pour is stills instead.
+
+**Scroll back to the top and the loop resumes.** The phase is decided by scroll
+position alone, never by the video clock: the film at rest is ambient, and
+nothing about it should decide when the customer sees the whiskey. There is 8px
+of travel before the cut commits and 2px before it returns, so a trackpad twitch
+at the top cannot flicker between the two.
+
+Because the film loops, **the copy cannot ride the video clock** — it would march
+through its beats on every repeat. All the `data-cue` values are on a plain 0–1
+scroll scale across the pour, and the opening beat is simply the one showing at
+progress 0.
+
+**To shorten the loop** — so it never shows the bottle reaching the cup, and
+restarts on the source's own earlier edit instead — set `LEAD_END = 4.15` in
+`tools/build-frames.py` and rebuild. `HANDOFF` stays at 6.47 either way.
 
 ### Why it looks sharper than it used to
 

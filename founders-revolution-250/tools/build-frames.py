@@ -4,19 +4,18 @@ Cut the hero: a lead-in film, then the frames the scroll scrubs.
 
 The hero runs in two phases, and they use different machinery on purpose.
 
-  Phase A — the camp.  0 to HANDOFF plays as an ordinary muted <video>. Linear
-  playback needs no seeking, so it is perfectly smooth and keeps the source's
-  full quality. This is where the two men sit at the fire with the encampment
-  behind them, and where the bottle comes out.
+  Phase A — the camp.  0 to HANDOFF plays as an ordinary muted <video>, and
+  loops for as long as the page sits at the top. Linear playback needs no
+  seeking, so it is smooth and keeps the source's full quality.
 
-  Phase B — the pour.  From HANDOFF to the end, the film is a frame sequence
-  painted onto a <canvas> and driven by the scrollbar. Scrubbing a <video> with
+  Phase B — the pour.  The first scroll cuts here. From HANDOFF to the end the
+  film is a frame sequence painted onto a <canvas> and driven by the scrollbar. Scrubbing a <video> with
   currentTime is jittery and unreliable — these clips carry only a handful of
   keyframes across ten seconds — so the pour is stills instead.
 
 The join is a cut in the source itself: at HANDOFF the camera cuts to the tight
-close-up with the stream already running, so pausing the video on that frame and
-revealing the canvas showing the same frame is invisible.
+close-up with the stream already running, so the handoff lands on a real edit
+rather than in the middle of a shot.
 
 Nothing is zoomed. The earlier version faked camera moves by cropping 2-4x into
 a 1280px source, which is what made it soft; this clip does its own cuts, so
@@ -36,7 +35,10 @@ SOURCE  = os.path.join(MEDIA, "camp.mp4")
 
 SRC_FPS = 24.0
 HANDOFF = 6.47     # the cut to the tight pour — the stream is already running
-LEAD_END = 6.63    # trim the lead-in just past the cut so its last frame is stable
+# The lead-in ends exactly ON that cut, never past it. It loops while the page
+# sits at the top, so a single frame of the pour spilling into the loop would
+# flash the payoff before anyone has scrolled for it.
+LEAD_END = HANDOFF
 END     = 10.00
 
 WIDTHS  = [1280, 720]

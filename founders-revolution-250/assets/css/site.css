@@ -253,12 +253,18 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* The canvas is revealed at the handoff. Coming off the video's own cut the
    two pictures are identical, so it appears instantly; when a scroll cuts the
    lead-in short mid-shot, it dissolves instead. */
-.pour__canvas { opacity: 0; }
+/* At rest the film shows; the first scroll cuts to the canvas, and scrolling
+   back to the top cuts back. A short dissolve rather than a hard swap, because
+   the two shots are different framings and a hard cut on a scroll gesture
+   reads as a glitch rather than as an edit. */
+.pour__canvas { opacity: 0; transition: opacity .22s var(--ease); }
+.pour__video  { opacity: 1; transition: opacity .22s var(--ease); }
 .pour[data-phase="scrub"] .pour__canvas { opacity: 1; }
-.pour[data-phase="scrub-cut"] .pour__canvas { opacity: 1; transition: opacity .28s var(--ease); }
-.pour[data-phase="scrub"] .pour__video,
-.pour[data-phase="scrub-cut"] .pour__video { opacity: 0; transition: opacity .28s var(--ease); }
+.pour[data-phase="scrub"] .pour__video  { opacity: 0; }
 .pour[data-phase="static"] .pour__video { display: none; }
+/* If the film never started — autoplay refused, no decoder — the poster
+   underneath carries the rest state on its own. */
+.pour[data-lead="stalled"] .pour__video { opacity: 0; }
 
 /* Vignette + a wash under the copy columns. Both sides are darkened so the
    Caslon stays legible over a moving picture without flattening the film. */

@@ -1,24 +1,20 @@
 /* =========================================================================
    The hero, in two phases.
 
-   PHASE A — the camp.  A muted <video> plays the lead-in: two men at a fire
-   with the Continental encampment behind them, and the bottle coming out.
-   Linear playback needs no seeking, so it is smooth and keeps the source's
-   full quality.
+   AT REST — the camp.  While the page sits at the top, a muted <video> loops:
+   two men at a fire with the Continental encampment behind them. Linear
+   playback needs no seeking, so it is smooth and keeps the source's full
+   quality. It is cut to end exactly on the edit before the pour, so the loop
+   never spoils the payoff.
 
-   PHASE B — the pour.  At the handoff the video pauses and a <canvas> takes
-   over, painting a frame sequence chosen by how far down the track you have
-   scrolled. Scrubbing a <video> with currentTime is jittery and unreliable —
-   these clips carry only a few keyframes across ten seconds — so the pour is
-   stills instead.
+   ON SCROLL — the pour.  The first scroll cuts to a <canvas> painting a frame
+   sequence chosen by how far down the track you have scrolled. Scrubbing a
+   <video> with currentTime is jittery and unreliable — these clips carry only
+   a few keyframes across ten seconds — so the pour is stills instead.
 
-   The join is a cut in the source itself: at the handoff the camera cuts to
-   the tight close-up with the stream already running, so pausing on that frame
-   and revealing a canvas showing the same frame is invisible.
-
-   Scrolling during phase A is never blocked. It ends the lead-in early and
-   dissolves into the pour, because trapping someone on an autoplaying video is
-   a worse sin than cutting a shot short.
+   Scroll back to the top and the loop resumes. The phase is decided by scroll
+   position alone, never by the video clock: the film at rest is ambient, and
+   nothing about it should decide when the customer sees the whiskey.
    ========================================================================= */
 (function () {
   'use strict';
@@ -32,11 +28,12 @@
   var loadEl = root.querySelector('.pour__loading');
   var cues   = Array.prototype.slice.call(root.querySelectorAll('[data-cue]'));
 
-  // How much of the cue timeline the lead-in owns. The video drives 0 → this,
-  // the scrollbar drives this → 1. It is a story proportion, not a time one:
-  // the lead-in is most of the film's seconds but none of its scroll.
-  var LEAD_SHARE = 0.40;
+  // Scroll alone drives the cue timeline, 0 to 1 across the pour. The loop is
+  // ambient: it must not march the copy through its beats on every repeat.
   var FADE = 0.032;
+  var ENTER = 8;   // px of scroll that commits to the pour
+  var REST  = 2;   // px at or under which the loop resumes — small hysteresis
+                   // so a trackpad twitch at the top cannot flicker the phase
 
   cues.forEach(function (el) {
     var parts = el.getAttribute('data-cue').split(',');
@@ -238,34 +235,44 @@
   }
 
   /* --- the two phases --------------------------------------------------- */
-  var phase = 'lead';
+  var phase = 'rest';
+  root.setAttribute('data-phase', 'rest');
   var target = 0, shown = -1, running = false, lastT = 0;
   var EASE = 0.15, SNAP = 0.00018;
 
   function paintChrome(p) {
     applyCues(p);
-    if (railEl) railEl.style.setProperty('--fill', smoothstep(LEAD_SHARE, 0.94, p));
+    if (railEl) railEl.style.setProperty('--fill', smoothstep(0.04, 0.94, p));
   }
 
-  function toScrub(viaScroll) {
+  function toScrub() {
     if (phase === 'scrub') return;
     phase = 'scrub';
     if (video) { try { video.pause(); } catch (e) {} }
-    // Paint the first pour frame before revealing the canvas, so the swap
-    // lands on a picture rather than on an empty buffer.
+    // Paint the first pour frame before revealing the canvas, so the cut lands
+    // on a picture rather than on an empty buffer.
     resize();
     paintAt(0);
-    root.setAttribute('data-phase', viaScroll ? 'scrub-cut' : 'scrub');
+    root.setAttribute('data-phase', 'scrub');
     shown = -1;
     tick();
   }
 
-  function loop(now) {
-    if (phase === 'lead') {
-      running = false;
-      return;   // the lead-in drives itself from the video clock
+  function toRest() {
+    if (phase === 'rest') return;
+    phase = 'rest';
+    running = false;
+    root.setAttribute('data-phase', 'rest');
+    paintChrome(0);
+    if (video) {
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
     }
-    target = LEAD_SHARE + (1 - LEAD_SHARE) * scrollFraction();
+  }
+
+  function loop(now) {
+    if (phase !== 'scrub') { running = false; return; }
+    target = scrollFraction();
     if (shown < 0) shown = target;
     if (!lastT) lastT = now - 16.7;
 
@@ -281,10 +288,7 @@
     shown = done ? target : shown + d * k;
 
     paintChrome(shown);
-    if (count) {
-      var within = (shown - LEAD_SHARE) / (1 - LEAD_SHARE);
-      paintAt(Math.max(0, Math.min(1, within)) * (count - 1));
-    }
+    if (count) paintAt(Math.max(0, Math.min(1, shown)) * (count - 1));
 
     if (done) running = false;
     else requestAnimationFrame(loop);
@@ -315,42 +319,37 @@
       for (var i = 0; i < count; i++) order.push(i);
       queue(order, function () { root.setAttribute('data-ready', '1'); });
 
-      /* phase A: let the video run, and watch its clock for the handoff */
+      /* at rest: loop the camp. Nothing here watches the clock — the film
+         is ambient, and only the scrollbar decides when the pour is shown. */
       if (video) {
-        var watch = function () {
-          if (phase !== 'lead') return;
-          if (video.currentTime >= m.handoff) { toScrub(false); return; }
-          paintChrome((video.currentTime / m.leadEnd) * LEAD_SHARE);
-          requestAnimationFrame(watch);
-        };
-        video.addEventListener('loadeddata', function () { requestAnimationFrame(watch); });
-        video.addEventListener('ended', function () { toScrub(false); });
-        video.addEventListener('error', function () { toScrub(false); });
-
+        video.loop = true;
+        video.addEventListener('error', function () { toScrub(); });
         var play = video.play();
-        if (play && play.catch) play.catch(function () { toScrub(false); });
-        if (video.readyState >= 2) requestAnimationFrame(watch);
+        if (play && play.catch) play.catch(function () {});
 
         // Watchdog. Autoplay can be refused silently (iOS low power mode, data
         // saver), and a Chromium built without the proprietary H.264 decoder
-        // will sit at readyState 0 forever without ever firing an error. Either
-        // way nobody should be left staring at a frozen poster: if the clock
-        // has not moved shortly after load, hand over to the pour.
+        // sits at readyState 0 forever without ever firing an error. Either
+        // way, fall back to the poster rather than leaving a dead rectangle —
+        // the pour still waits for a real scroll.
         setTimeout(function () {
-          if (phase === 'lead' && video.currentTime < 0.05) toScrub(false);
+          if (video.currentTime < 0.05) root.setAttribute('data-lead', 'stalled');
         }, 1800);
-      } else {
-        toScrub(false);
       }
 
-      /* any scroll ends the lead-in — never trap someone on a playing video */
+      /* scroll decides everything, in both directions */
       window.addEventListener('scroll', function () {
-        if (phase === 'lead') {
-          if (window.scrollY > 6) toScrub(true);
+        var y = window.scrollY || window.pageYOffset || 0;
+        if (phase === 'rest') {
+          if (y > ENTER) toScrub();
           return;
         }
+        if (y <= REST) { toRest(); return; }
         tick();
       }, { passive: true });
+
+      // A reload can restore a scroll position part-way down the track.
+      if ((window.scrollY || 0) > ENTER) toScrub(); else toRest();
 
       window.addEventListener('resize', function () {
         resize(); shown = -1; drawn = ''; tick();

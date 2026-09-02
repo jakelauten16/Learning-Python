@@ -149,12 +149,16 @@
       if (v != null) el.textContent = v;
     });
 
-    // Every buy button points at the store named in data.js. The real URL is
-    // in the markup too, so the links still work with scripting off; this just
-    // keeps one place to change it.
+    // Every buy button points into the store named in data.js. A button that
+    // names an offer ( data-store="box" ) deep-links to that product page so
+    // the customer lands on the item rather than the shop's front door; a bare
+    // data-store falls back to the storefront. The real URL is in the markup
+    // too, so the links still work with scripting off; this just keeps one
+    // place to change them.
     if (AF.store) {
       document.querySelectorAll('[data-store]').forEach(function (a) {
-        a.href = AF.store;
+        var offer = AF.offer(a.getAttribute('data-store'));
+        a.href = (offer && offer.url) || AF.store;
       });
     }
 

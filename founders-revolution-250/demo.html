@@ -1097,7 +1097,7 @@ body[data-gated="1"] { overflow: hidden; }
           <p><strong data-val="remaining">66</strong> of <strong data-val="sets">250</strong>
              sets remain unclaimed.</p>
           <div class="actions" style="margin-top:1.6rem">
-            <a class="btn btn--whiskey ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
+            <a class="btn btn--whiskey ext" data-store="box" href="https://foundersrevolution250.kybourbondirect.com/products/american-founders-heritage-select-250-kit" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
             <a class="tlink" href="#box">See what's inside</a>
           </div>
         </div>
@@ -1251,7 +1251,7 @@ body[data-gated="1"] { overflow: hidden; }
           <li>Two pewter Jefferson cups</li>
           <li>Numbered certificate of authenticity</li>
         </ul>
-        <a class="btn btn--cream ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
+        <a class="btn btn--cream ext" data-store="box" href="https://foundersrevolution250.kybourbondirect.com/products/american-founders-heritage-select-250-kit" target="_blank" rel="noopener noreferrer">Buy the set<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
       </article>
 
       <article class="buy__card" data-reveal="stagger">
@@ -1263,7 +1263,7 @@ body[data-gated="1"] { overflow: hidden; }
           <li>Numbered neck tag</li>
           <li>No box, stopper, or cups</li>
         </ul>
-        <a class="btn btn--solid ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer">Buy a bottle<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
+        <a class="btn btn--solid ext" data-store="bottle" href="https://foundersrevolution250.kybourbondirect.com/products/american-founders-heritage-select-250-bourbon-750ml" target="_blank" rel="noopener noreferrer">Buy a bottle<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
       </article>
     </div>
   </div>
@@ -1494,7 +1494,7 @@ body[data-gated="1"] { overflow: hidden; }
         <span><span data-val="sets">250</span> total</span>
       </div>
     </div>
-    <a class="btn btn--whiskey ext" data-store href="https://foundersrevolution250.kybourbondirect.com/" target="_blank" rel="noopener noreferrer" style="margin-top:.6rem">Buy now<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
+    <a class="btn btn--whiskey ext" data-store="box" href="https://foundersrevolution250.kybourbondirect.com/products/american-founders-heritage-select-250-kit" target="_blank" rel="noopener noreferrer" style="margin-top:.6rem">Buy now<span class="vh"> at Kentucky Bourbon Direct (opens in a new tab)</span></a>
   </div>
 </section>
 
@@ -1564,6 +1564,11 @@ window.AF = (function () {
   // here; nothing is transacted on this site itself.
   var STORE = 'https://foundersrevolution250.kybourbondirect.com/';
 
+  // The two product pages inside that store. Buy buttons deep-link to the
+  // right one so the customer lands on the item, not the shop's front door.
+  // If a handle ever changes at the store, change it here and nowhere else.
+  var PRODUCT = STORE + 'products/';
+
   var RELEASE = {
     name:     'Heritage Select 250',
     brand:    'American Founders',
@@ -1585,6 +1590,7 @@ window.AF = (function () {
       id:    'box',
       name:  "The 250 Collector's Box",
       // listed on the store as "American Founders Heritage Select 250 Special Bundle"
+      url:   PRODUCT + 'american-founders-heritage-select-250-kit',
       price: 250,
       blurb: 'The full presentation set, numbered and boxed.',
       includes: [
@@ -1600,6 +1606,7 @@ window.AF = (function () {
       id:    'bottle',
       name:  'The Bottle Alone',
       // listed on the store as "American Founders Heritage Select 250 Bourbon 750ml"
+      url:   PRODUCT + 'american-founders-heritage-select-250-bourbon-750ml',
       price: 95,
       blurb: 'The same whiskey, without the box. For drinking, not shelving.',
       includes: [
@@ -1797,12 +1804,16 @@ window.AF = (function () {
       if (v != null) el.textContent = v;
     });
 
-    // Every buy button points at the store named in data.js. The real URL is
-    // in the markup too, so the links still work with scripting off; this just
-    // keeps one place to change it.
+    // Every buy button points into the store named in data.js. A button that
+    // names an offer ( data-store="box" ) deep-links to that product page so
+    // the customer lands on the item rather than the shop's front door; a bare
+    // data-store falls back to the storefront. The real URL is in the markup
+    // too, so the links still work with scripting off; this just keeps one
+    // place to change them.
     if (AF.store) {
       document.querySelectorAll('[data-store]').forEach(function (a) {
-        a.href = AF.store;
+        var offer = AF.offer(a.getAttribute('data-store'));
+        a.href = (offer && offer.url) || AF.store;
       });
     }
 

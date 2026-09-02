@@ -322,8 +322,33 @@ real checkout, and anyone who used it would never have received a bottle.
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000/founders-revolution-250/>. Any static host
-works — GitHub Pages, Netlify, Cloudflare Pages — since there is nothing to build.
+Note that Python's `http.server` does not answer HTTP Range requests, which
+`<video>` needs — the looping camp film will not play under it. Everything else
+does. `tools/` has a range-capable server if you need the film locally.
+
+## Publishing it
+
+Any static host works, since there is nothing to build. **See `DEPLOY.md`** —
+it covers the one thing that is not obvious: `foundersrevolution250.com` is
+already serving a different (Squarespace) site, so the domain is a decision
+before it is an upload. It also lists what ships (6.7 MB) and what does not
+(`camp.mp4`, `demo.html`), and the pre-launch checklist.
+
+If the site is published on a host other than `foundersrevolution250.com`,
+change `HOST` in `tools/build-sitemap.py` and run it — that keeps
+`sitemap.xml`, `robots.txt` and the pages' canonical URLs pointing at one
+place. `python3 tools/build-sitemap.py --check` names anything still stale.
+
+## Buy buttons
+
+Every buy button carries `data-store="box"` or `data-store="bottle"` and
+deep-links to that product at Kentucky Bourbon Direct, so a customer lands on
+the item rather than the shop's front door. The URLs live in `assets/js/data.js`
+and in the markup, so the links work with scripting off; `site.js` re-applies
+them from `data.js` at load so there is one place to change them. **If a
+product handle changes at the store, the deep link 404s** — the two handles are
+`american-founders-heritage-select-250-kit` and
+`american-founders-heritage-select-250-bourbon-750ml`.
 
 ## Demoing it without a server
 

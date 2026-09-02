@@ -55,13 +55,6 @@ body = body.replace('data-src-mp4="assets/media/hero-lead.mp4"',
                     'data-src-mp4="data:video/mp4;base64,%s"' % lead_mp4)
 assert 'data:video/webm' in body and 'data:video/mp4' in body, 'lead-in did not inline'
 
-# The section photographs are relative paths; a one-file page has to carry them.
-for name in sorted(set(re.findall(r'src="assets/img/([^"]+\.jpg)"', body))):
-    with open(os.path.join(SITE, 'assets/img', name), 'rb') as fh:
-        b64 = base64.b64encode(fh.read()).decode()
-    body = body.replace('src="assets/img/%s"' % name,
-                        'src="data:image/jpeg;base64,%s"' % b64)
-    print('  inlined', name)
 # one page, so the nav walks the page instead of loading others
 for a, b in [('buy.html#offers', '#buy'), ('buy.html', '#buy'),
              ('collectors-box.html', '#box'), ('bourbon.html', '#bourbon'),
@@ -94,6 +87,31 @@ for anchor in ('#box', '#bourbon', '#heritage', '#founders', '#partners', '#buy'
     assert 'id="%s"' % anchor[1:] in body, 'nothing for the nav to reach at ' + anchor
 
 assert 'kybourbondirect.com' in body, 'the store links did not make it into the demo'
+
+# ---- images -> data URIs -------------------------------------------------
+# Runs last, after every section is in the body: the founder portraits and
+# partner logos come in with the sections injected above, and inlining before
+# that left them as relative paths resolving to nothing in a one-file page.
+MIME = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
+        'webp': 'image/webp', 'svg': 'image/svg+xml'}
+missing = []
+for name in sorted(set(re.findall(r'src="assets/img/([^"]+\.(?:jpg|jpeg|png|webp|svg))"', body))):
+    path = os.path.join(SITE, 'assets/img', name)
+    ref = 'src="assets/img/%s"' % name
+    if not os.path.exists(path):
+        # Artwork that has not been supplied yet: drop the <img> outright rather
+        # than shipping a request that can only 404. The typographic stand-in
+        # behind it is what should show, and this way nothing fails to load.
+        body = re.sub(r'\s*<img[^>]*' + re.escape(ref) + r'[^>]*>', '', body)
+        missing.append(name)
+        continue
+    with open(path, 'rb') as fh:
+        b64 = base64.b64encode(fh.read()).decode()
+    body = body.replace(ref, 'src="data:%s;base64,%s"' % (MIME[name.rsplit('.', 1)[1].lower()], b64))
+    print('  inlined %s  %.0f KB' % (name, os.path.getsize(path) / 1024))
+if missing:
+    print('  not supplied, <img> dropped: ' + ', '.join(missing))
+assert 'src="assets/img/' not in body, 'an image reference survived inlining'
 
 # ---- js ------------------------------------------------------------------
 data_js = read('assets/js/data.js')

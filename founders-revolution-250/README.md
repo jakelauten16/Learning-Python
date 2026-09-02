@@ -328,13 +328,20 @@ works — GitHub Pages, Netlify, Cloudflare Pages — since there is nothing to 
 ## Demoing it without a server
 
 `demo.html` is the whole home page as **one self-contained file**: the frame
-sequence, the poster and the section photographs are all inlined as data URIs,
+sequence, the lead-in film (both encodes), the poster, the section photographs
+and the founder portraits are all inlined as data URIs,
 and the nav walks the page instead of loading others. Open it by double-clicking
 it, email it, put it on a USB stick, or drop it in a deck — it needs no server
 and no network beyond Google Fonts. It is ~2.2MB, so give it a second on a slow
 connection.
 
-Rebuild it after re-cutting the frames, or it will still show the old cut:
+Artwork that has not been supplied yet — the partner logos — has its `<img>`
+dropped at build time rather than shipped as a request that can only fail, so
+the typographic stand-in shows and nothing 404s. Add the file and rebuild and it
+appears.
+
+Rebuild it after re-cutting the frames or adding artwork, or it will still show
+the old one:
 
 ```
 python3 tools/build-demo.py

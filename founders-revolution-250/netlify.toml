@@ -1,0 +1,25 @@
+# Netlify reads this from the site's base directory. In the Netlify UI set:
+#
+#   Base directory      founders-revolution-250
+#   Build command       (leave empty — this file supplies it)
+#   Publish directory   founders-revolution-250
+#   Production branch   claude/founders-revolution-bourbon-site-finnzq
+#
+# The base directory matters because this site lives in a subdirectory of a
+# repository whose root holds an unrelated project.
+#
+# Redirects live in _redirects and headers in _headers. Both files use a format
+# Cloudflare Pages reads too, so the site moves hosts without a rewrite.
+
+[build]
+  publish = "."
+  # There is nothing to compile. The one job here is to drop assets/media/camp.mp4
+  # from the deploy: 3.1 MB of raw source footage that no page references, kept in
+  # the repository only so tools/build-frames.py can rebuild the hero. This deletes
+  # it from the build machine's checkout, never from the repository.
+  command = "rm -f assets/media/camp.mp4"
+
+[build.processing]
+  # Everything here is already minified, sized and encoded deliberately — the hero
+  # frames especially. Netlify's asset optimization would re-encode them.
+  skip_processing = true

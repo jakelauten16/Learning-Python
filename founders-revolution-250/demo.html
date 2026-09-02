@@ -971,6 +971,33 @@ body[data-gated="1"] { overflow: hidden; }
 /* the ↗ on anything that leaves for the store */
 .ext::after { content: '\2197'; font-size: .9em; line-height: 1; margin-left: .1em; }
 
+/* ------------------------------------------------------------------ prose
+   Long-form legal copy — the privacy policy. One measured column, headings
+   that separate without shouting. Nothing here is used anywhere else, so it
+   sits at the end of the file where it cannot get in front of anything. */
+.prose { max-width: 68ch; display: grid; gap: 1.1rem; }
+.prose h2 {
+  margin-top: 2.4rem; padding-top: 1.4rem;
+  border-top: 1px solid var(--rule-night);
+}
+.prose > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.prose h3 {
+  margin-top: .8rem;
+  font-family: var(--label); font-size: .72rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--whiskey-lt);
+}
+.prose p  { line-height: 1.65; color: var(--cream-soft); }
+.prose ul { display: grid; gap: .5rem; margin-block: .2rem; padding-left: 0; }
+.prose li {
+  position: relative; padding-left: 1.3rem;
+  line-height: 1.6; color: var(--cream-soft);
+}
+.prose li::before {
+  content: ''; position: absolute; left: 0; top: .68em;
+  width: .34rem; height: .34rem; border-radius: 50%; background: var(--whiskey-lt);
+}
+.prose strong { color: var(--cream); font-weight: 600; }
+
 /* The demo is one page, so the header's "past the film" test needs an anchor. */
 #top { position: absolute; top: 0; }
 </style>
@@ -1528,6 +1555,7 @@ body[data-gated="1"] { overflow: hidden; }
         <ul>
           <li><a href="mailto:allocations@foundersrevolution250.com">allocations@foundersrevolution250.com</a></li>
           <li><a href="#buy">Where to buy</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
     </div>

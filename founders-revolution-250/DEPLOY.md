@@ -64,15 +64,74 @@ Squarespace  =  registrar + DNS        (keep, ~$20/yr)
 Netlify or Cloudflare Pages  =  hosting  (free at this size)
 ```
 
-Steps, in order:
+### The actual steps
 
-1. Publish to the host's free URL and check it on a phone.
-2. In Squarespace, add the custom DNS records your host gives you — Domains →
-   the domain → DNS → DNS Settings → Custom Records. An **A** record for the
-   apex, a **CNAME** for `www`. Your host prints the exact values; use theirs,
-   not any you find in a tutorial.
-3. Disconnect the domain from the Squarespace *site* so it stops claiming it.
-4. Watch it for a day. Then, and only then, consider the site subscription.
+**1 — Put the site on Netlify (about ten minutes).**
+
+Sign in at netlify.com with GitHub, then *Add new site → Import an existing
+project* and pick `jakelauten16/Learning-Python`. Four settings matter:
+
+| Field | Value |
+|---|---|
+| Branch to deploy | `claude/founders-revolution-bourbon-site-finnzq` |
+| Base directory | `founders-revolution-250` |
+| Build command | leave empty — `netlify.toml` supplies it |
+| Publish directory | `founders-revolution-250` |
+
+The branch is not `main` because this repository has no `main`: its default
+branch is the unrelated coffee project. Netlify is happy to treat any branch as
+production; pick this one from the dropdown.
+
+Deploy. You get a URL like `radiant-praline-9f2c31.netlify.app`. **Open it on
+your phone before going any further** — that is the whole point of doing this
+before touching DNS. Nothing about the live site has changed yet.
+
+Cloudflare Pages works identically: same repo, same branch, build output
+directory `founders-revolution-250`, no build command. `_redirects` and
+`_headers` are read by both.
+
+**2 — Point the domain (about five minutes, plus waiting).**
+
+In Netlify: *Domain management → Add a domain →* `foundersrevolution250.com`.
+Netlify will print the exact records it wants — typically an **A** record for
+the apex and a **CNAME** for `www`. Use the values Netlify prints, not any
+found in a tutorial.
+
+In Squarespace: *Domains → foundersrevolution250.com → DNS → DNS Settings →
+Custom Records*. Delete the four Squarespace A records (`198.185.159.144/145`,
+`198.49.23.144/145`) and the `www` CNAME pointing at `ext-sq.squarespace.com`,
+then add Netlify's. Also **disconnect the domain from the Squarespace site**,
+or Squarespace will keep trying to claim it.
+
+DNS takes anywhere from ten minutes to a few hours. The old site keeps serving
+until it propagates; there is no moment where nothing works.
+
+**3 — Leave Squarespace alone for a week.**
+
+The subscription still runs, the site is still there, and if something is wrong
+you put the old DNS records back and you are exactly where you started. Only
+once you are sure — and once merchandise has somewhere to live, see below —
+cancel the website subscription. **Keep the domain subscription.** It is
+separate, and cancelling the site does not touch it.
+
+### The old URLs keep working
+
+`_redirects` in this folder maps every URL the old site published. Netlify and
+Cloudflare Pages both read it, same format:
+
+```
+/bourbon          /bourbon.html    200      <- the one you have been sharing
+/privacy-policy   /privacy.html    200
+/home             /               301
+/contact          /buy.html        301
+```
+
+`/bourbon` is a rewrite, not a redirect: the address bar keeps saying
+`/bourbon` and the new page is served underneath. Anything printed, linked or
+posted with that URL keeps working unchanged.
+
+`/merchandise` and `/cart` are the exception — see below. They are the two
+lines in `_redirects` you must decide about.
 
 ### Read this before cancelling the Squarespace subscription
 
@@ -103,25 +162,20 @@ The `<link rel="canonical">` and `og:url` tags in the seven pages still say
 
 ## 2. Pick a host
 
-All three below serve static files over HTTPS with a free certificate, deploy
-straight from this GitHub repository, and redeploy on every push. Any of them
-is fine. Differences that matter here:
+Netlify and Cloudflare Pages both serve static files over HTTPS with a free
+certificate, deploy straight from GitHub, redeploy on every push, and read the
+`_redirects` and `_headers` files in this folder. Either is fine; the
+walkthrough above uses Netlify because its base-directory setting handles a
+site living in a subdirectory with one field.
 
-- **Netlify** or **Cloudflare Pages** — connect the repo, set the *base
-  directory* to `founders-revolution-250`, leave the build command empty, and
-  set the publish directory to the same folder. This is the shortest path,
-  because this site lives in a subdirectory of a repo whose root holds a
-  different project (Lucy Lou's Coffee) and both handle that with one setting.
-  Custom domain is a field in the dashboard.
-- **GitHub Pages** — free and closest to the code, but it publishes a *repo*,
-  not a folder: the coffee project would land at the root and this site at
-  `/founders-revolution-250/`. Workable only with a GitHub Actions workflow
-  that copies this folder up, or by splitting this folder into its own repo.
-  If you want Pages, split the repo first; it is cleaner than fighting it.
+**GitHub Pages is the one to avoid here.** It publishes a *repository*, not a
+folder: the coffee project would land at the root and this site at
+`/founders-revolution-250/`. It also ignores `_redirects`, so every old
+Squarespace URL would 404. If you ever want Pages, split this folder into its
+own repository first.
 
-Nothing about the site needs Node, Python or a build server at run time. The
-scripts under `tools/` are authoring tools — they run on your machine, never
-on the host.
+Nothing needs Node or Python at run time. The scripts under `tools/` are
+authoring tools — they run on your machine, never on the host.
 
 ## 3. What ships and what does not
 
@@ -135,19 +189,31 @@ assets/img/                   428 KB
 assets/fonts/                 160 KB
 ```
 
-Two files in this folder are **not** part of the published site:
+`assets/media/camp.mp4` (3.1 MB) is the raw source clip. No page references
+it; it is kept only so the hero can be rebuilt with `tools/build-frames.py`.
+The build command in `netlify.toml` deletes it from the deploy — from the build
+machine's checkout, never from the repository.
 
-- `assets/media/camp.mp4` (3.1 MB) — the raw source clip. Nothing references
-  it; it is kept only so the hero can be rebuilt with `tools/build-frames.py`.
-- `demo.html` (5.4 MB) — the self-contained one-file preview. Useful for
-  sending someone a link; not a page for customers.
+`demo.html` (5.4 MB) is the self-contained one-file preview. It *does* deploy,
+which is useful — it gives you a shareable link that works with no server — but
+it is not a page for customers and it is deliberately absent from `sitemap.xml`.
+A deploy is about **11.8 MB** all told, comfortably inside every free tier here.
 
-Excluding those keeps the site under the free tier of every host listed.
+Three files configure the host rather than the site:
+
+```
+_redirects     old Squarespace URLs -> these pages   (Netlify + Cloudflare)
+_headers       cache policy, hard on media, none on HTML
+netlify.toml   base directory, no build, drop camp.mp4
+```
 
 ## 4. Before you point customers at it
 
 - [ ] **Set a real contact address.** `allocations@foundersrevolution250.com`
-      appears on `buy.html` and in the footer. It must exist and be read.
+      appears on `buy.html` and in every footer. The only address the old site
+      publishes is `bruce@foundersrevolution250.com` (in its privacy policy), so
+      either create `allocations@` or change the site to `bruce@` — one string
+      in seven files. Do not launch pointing at a mailbox nobody reads.
 - [ ] **Confirm the allocation counter.** `claimed: 184` in
       `assets/js/data.js` is a placeholder. A number that never moves reads as
       decoration; a wrong one reads worse. Either keep it current or remove it.
@@ -156,9 +222,9 @@ Excluding those keeps the site under the free tier of every host listed.
 - [ ] **Age-gate the social accounts** before any campaign traffic arrives:
       Facebook Page and Instagram both have an alcohol age-restriction setting,
       and leaving it off is the most common compliance miss.
-- [ ] **Redirect or retire the old Squarespace URLs** — `/bourbon`,
-      `/merchandise`, `/contact`, `/privacy-policy`. Anything printed or linked
-      that points at them breaks the day the domain moves.
+- [ ] **Decide the two merchandise lines in `_redirects`.** Everything else in
+      the old URL map is handled; `/merchandise` and `/cart` are not, because
+      only you know where merch is going.
 - [ ] **Five partner logos** are still absent (`assets/img/partners/` — see the
       README for filenames). The slots degrade to text, so this is not
       blocking, but the page is better with them.
@@ -174,6 +240,8 @@ Excluding those keeps the site under the free tier of every host listed.
 - Re-run the link audit against the live URL, not just locally. The buy
   buttons point into a store you do not control — if a product handle changes
   there, the deep link 404s. The two handles are in `assets/js/data.js`.
+- Check the old URLs by hand once DNS has moved: `/bourbon`, `/privacy-policy`,
+  `/home`, `/contact`. Each should land somewhere sensible, not on the 404.
 
 ---
 

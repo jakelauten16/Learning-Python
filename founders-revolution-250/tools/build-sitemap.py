@@ -27,6 +27,7 @@ PAGES = [
     ('heritage.html',       '0.7'),
     ('founders.html',       '0.7'),
     ('partnerships.html',   '0.6'),
+    ('privacy.html',        '0.3'),
 ]
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent

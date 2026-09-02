@@ -173,6 +173,23 @@
     });
   }
 
+  /* ---- portraits and logos that have not been supplied yet ---------------
+     Each slot holds the artwork and a typographic stand-in in the same cell.
+     If the file is not there, drop the <img> so the stand-in shows rather than
+     the browser's broken-image glyph. Adding a photograph is then just putting
+     the file in the folder — no markup to edit. */
+  document.querySelectorAll('.founder__portrait img, .partner__mark img').forEach(function (img) {
+    var standIn = img.parentNode.querySelector('span');
+    // A logo is fitted with object-fit:contain, so it does not cover its box —
+    // the stand-in behind it has to be hidden outright, not just painted over.
+    var arrived = function () { if (standIn) standIn.hidden = true; };
+    var missing = function () { img.remove(); };
+    img.addEventListener('load', arrived);
+    img.addEventListener('error', missing);
+    // It may have resolved either way before this ran.
+    if (img.complete) { img.naturalWidth ? arrived() : missing(); }
+  });
+
   /* ---- current year in the footer --------------------------------------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = String(new Date().getFullYear());

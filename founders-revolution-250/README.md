@@ -263,27 +263,29 @@ bottle).
   Heritage Select release", "Raising money for first responders") is inferred
   from the name. Check every one.
 
-### Founder portraits
+### Founder portraits and partner logos
 
-Same arrangement as the partner logos, in `assets/img/founders/`. Each portrait
-is a circle fitted with `object-fit: cover`, so a photograph crops to the circle
-rather than squashing into it, whatever shape it arrives in. Until the files are
-added, each shows the founder's initials. Swap the `<span>` for an `<img>` in
-`founders.html` — the comment above each one shows the exact line.
+**Both are drop-in. There is no markup to edit for either.**
 
-### Partner logos
+Every slot already holds an `<img>` at the expected path, sitting in the same
+grid cell as a typographic stand-in — the founder's initials, or the partner's
+name. When the file exists the artwork covers the stand-in and `site.js` hides
+it; when the file is missing, `site.js` removes the broken `<img>` and the
+stand-in shows through. No broken-image glyphs, and adding a photograph is
+putting a file in a folder.
 
-No logo artwork was supplied, so each card shows the partner's name set in type
-inside the box the logo will occupy. To add the real files:
+Paths and filenames are listed in `assets/img/founders/README.md` and
+`assets/img/partners/README.md`.
 
-```html
-<div class="partner__mark"><img src="assets/img/partners/sar.png" alt="Sons of the American Revolution"></div>
-```
+One thing worth knowing for portraits: **supply the original rectangular
+photograph, not a pre-cropped circle.** The frame is a circle and the image is
+fitted with `object-fit: cover`, so the site does the cropping — handing it a
+circle already cut out of a dark square gives you a circle inside a circle.
 
-The box is a fixed 5:3 and the image is fitted with `object-fit: contain`, so a
-tall crest and a wide wordmark both sit correctly inside it and **neither is
-ever stretched** — which is what was going wrong on the old site. Drop the files
-in `assets/img/partners/` at whatever size they come in; the box handles it.
+The partner box is a fixed 5:3 fitted with `object-fit: contain`, so a tall
+crest and a wide wordmark both sit correctly inside it and **neither is ever
+stretched** — which is what was going wrong on the old site. Drop files in at
+whatever size they come in.
 
 ## Buying
 

@@ -865,10 +865,12 @@ body[data-gated="1"] { overflow: hidden; }
 }
 /* The fit rule. width/height auto stops the intrinsic attributes forcing a
    shape, and contain keeps the mark's own proportions whatever the box does. */
+.partner__mark > * { grid-area: 1 / 1; }
 .partner__mark img {
   max-width: 100%; max-height: 100%;
   width: auto; height: auto;
   object-fit: contain;
+  place-self: center;
 }
 /* Stand-in until the artwork arrives — see README. */
 .partner__mark span {
@@ -915,7 +917,15 @@ body[data-gated="1"] { overflow: hidden; }
   background: var(--oxblood);
   border: 1px solid var(--rule-night);
 }
-.founder__portrait img { width: 100%; height: 100%; object-fit: cover; }
+/* The artwork and its typographic stand-in share one grid cell, so the image
+   simply covers the initials when the file exists. site.js drops the <img> when
+   it does not, and the stand-in shows through — no broken-image glyph, and
+   nobody has to edit markup to add a photograph. */
+.founder__portrait > * { grid-area: 1 / 1; }
+.founder__portrait span[hidden], .partner__mark span[hidden] { display: none; }
+.founder__portrait img {
+  width: 100%; height: 100%; object-fit: cover; place-self: stretch;
+}
 .founder__portrait span {
   font-family: var(--display); font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
   color: var(--cream); letter-spacing: .04em;
@@ -1287,8 +1297,10 @@ body[data-gated="1"] { overflow: hidden; }
     <div class="founders">
 
       <article class="founder" data-reveal>
-        <!-- Swap the <span> for <img src="assets/img/founders/bruce.jpg" alt="Dr. Bruce Lautenschlager"> -->
-        <div class="founder__portrait"><span>BL</span></div>
+        <div class="founder__portrait">
+          <span>BL</span>
+          <img src="assets/img/founders/bruce.jpg" alt="Dr. Bruce Lautenschlager">
+        </div>
         <div>
           <span class="label">Co-founder</span>
           <h2>Dr. Bruce Lautenschlager</h2>
@@ -1309,8 +1321,10 @@ body[data-gated="1"] { overflow: hidden; }
       </article>
 
       <article class="founder" data-reveal>
-        <!-- Swap the <span> for <img src="assets/img/founders/allen.jpg" alt="Allen Hayne"> -->
-        <div class="founder__portrait"><span>AH</span></div>
+        <div class="founder__portrait">
+          <span>AH</span>
+          <img src="assets/img/founders/allen.jpg" alt="Allen Hayne">
+        </div>
         <div>
           <span class="label">Co-founder</span>
           <h2>Allen Hayne</h2>
@@ -1349,7 +1363,10 @@ body[data-gated="1"] { overflow: hidden; }
     </div>
     <div class="partners">
       <article class="partner" data-reveal="stagger">
-        <div class="partner__mark"><span>T&amp;P Hooper</span></div>
+        <div class="partner__mark">
+          <span>T&amp;P Hooper</span>
+          <img src="assets/img/partners/tp-hooper.png" alt="T&P Hooper">
+        </div>
         <div>
           <span class="label">Cooperage</span>
           <h3>T&amp;P Hooper</h3>
@@ -1357,7 +1374,10 @@ body[data-gated="1"] { overflow: hidden; }
         <p>Barrel work for the Heritage Select release.</p>
       </article>
       <article class="partner" data-reveal="stagger">
-        <div class="partner__mark"><span>Deer Ridge Woodcraft</span></div>
+        <div class="partner__mark">
+          <span>Deer Ridge Woodcraft</span>
+          <img src="assets/img/partners/deer-ridge.png" alt="Deer Ridge Woodcraft LLC">
+        </div>
         <div>
           <span class="label">Presentation boxes</span>
           <h3>Deer Ridge Woodcraft LLC</h3>
@@ -1388,14 +1408,20 @@ body[data-gated="1"] { overflow: hidden; }
     </div>
     <div class="partners" data-reveal>
       <article class="partner">
-        <div class="partner__mark"><span>Sons of the American Revolution</span></div>
+        <div class="partner__mark">
+          <span>Sons of the American Revolution</span>
+          <img src="assets/img/partners/sar.png" alt="Sons of the American Revolution">
+        </div>
         <div>
           <span class="label">Member organisation</span>
           <h3>SAR Foundation</h3>
         </div>
       </article>
       <article class="partner">
-        <div class="partner__mark"><span>Daughters of the American Revolution</span></div>
+        <div class="partner__mark">
+          <span>Daughters of the American Revolution</span>
+          <img src="assets/img/partners/dar.png" alt="Daughters of the American Revolution">
+        </div>
         <div>
           <span class="label">Member organisation</span>
           <h3>DAR</h3>
@@ -1410,7 +1436,10 @@ body[data-gated="1"] { overflow: hidden; }
   <div class="wrap cols cols--5-7">
     <div class="partners" data-reveal>
       <article class="partner">
-        <div class="partner__mark"><span>Responder Bourbon</span></div>
+        <div class="partner__mark">
+          <span>Responder Bourbon</span>
+          <img src="assets/img/partners/responder-bourbon.png" alt="Responder Bourbon">
+        </div>
         <div>
           <span class="label">Bourbon community</span>
           <h3>Responder Bourbon</h3>
@@ -1796,6 +1825,23 @@ window.AF = (function () {
       el.style.width = Math.round((r.claimed / r.sets) * 100) + '%';
     });
   }
+
+  /* ---- portraits and logos that have not been supplied yet ---------------
+     Each slot holds the artwork and a typographic stand-in in the same cell.
+     If the file is not there, drop the <img> so the stand-in shows rather than
+     the browser's broken-image glyph. Adding a photograph is then just putting
+     the file in the folder — no markup to edit. */
+  document.querySelectorAll('.founder__portrait img, .partner__mark img').forEach(function (img) {
+    var standIn = img.parentNode.querySelector('span');
+    // A logo is fitted with object-fit:contain, so it does not cover its box —
+    // the stand-in behind it has to be hidden outright, not just painted over.
+    var arrived = function () { if (standIn) standIn.hidden = true; };
+    var missing = function () { img.remove(); };
+    img.addEventListener('load', arrived);
+    img.addEventListener('error', missing);
+    // It may have resolved either way before this ran.
+    if (img.complete) { img.naturalWidth ? arrived() : missing(); }
+  });
 
   /* ---- current year in the footer --------------------------------------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {

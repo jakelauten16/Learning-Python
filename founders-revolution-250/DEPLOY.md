@@ -22,13 +22,71 @@ There are three honest options:
 
 | Option | What the customer sees | What it costs you |
 |---|---|---|
-| **A. Replace** the Squarespace site | This site at `foundersrevolution250.com` | Repoint DNS; cancel Squarespace once you are happy. The old site's URLs (`/bourbon`, `/merchandise`, `/contact`) stop working unless you redirect them. |
+| **A. Replace** the Squarespace site | This site at `foundersrevolution250.com` | Repoint DNS at Squarespace — the domain stays registered there. The old URLs (`/bourbon`, `/merchandise`, `/contact`) stop working unless redirected, and **`/merchandise` is a live Squarespace store** — see below before cancelling anything. |
 | **B. Subdomain** — e.g. `shop.` or `250.foundersrevolution250.com` | Both sites live at once | One DNS record. No disruption. But two sites to keep in step, and search engines split between them. |
 | **C. Staging first** — the host's free URL (`*.netlify.app`, `*.pages.dev`) | Only people you send the link to | Nothing. This is the right first step regardless of which you end at. |
 
 **Recommendation: C, then A.** Publish to the host's free URL today, look at it
 on a real phone, then repoint the domain when you are satisfied. Repointing DNS
 is a five-minute change you can reverse.
+
+### Keeping the domain at Squarespace
+
+You can, and you should. **Keep `foundersrevolution250.com` registered with
+Squarespace and simply point it here.** A Squarespace domain registration is
+independent of the website subscription: cancelling the site does not cancel or
+expire the domain — it stays yours and keeps auto-renewing, and you edit its DNS
+from the Domains panel like any registrar. So the domain never moves, never has
+a transfer window, and never risks lapsing.
+
+What you cannot do is put *this* site inside Squarespace's hosting. Squarespace
+is a CMS, not a file host: there is no way to upload a folder of HTML pages and
+have them served at their own URLs. Three things rule it out for this site in
+particular:
+
+- **The site is 7.1.** Squarespace's Developer Platform — the one path that
+  gives you real template files — is *only available in version 7.0*. That door
+  is closed before the plan question is even asked.
+- **No self-hosted video, and a 20 MB per-file cap.** The hero is 85 JPEG
+  frames plus an MP4 and a WebM, served from paths that JavaScript addresses
+  frame by frame. Squarespace wants video on YouTube or Vimeo, which cannot be
+  scrubbed by scroll. The hero *is* the site; without it there is no reason to
+  rebuild.
+- **Custom JS only through Code Injection**, on Core and above, and Squarespace
+  states plainly that code you add "falls outside the scope of Squarespace
+  support." Rebuilding the scroll engine inside a code block would mean
+  reimplementing the whole thing in the one place nobody will help you debug it.
+
+So the shape of it is: **domain stays at Squarespace, hosting moves.**
+
+```
+Squarespace  =  registrar + DNS        (keep, ~$20/yr)
+Netlify or Cloudflare Pages  =  hosting  (free at this size)
+```
+
+Steps, in order:
+
+1. Publish to the host's free URL and check it on a phone.
+2. In Squarespace, add the custom DNS records your host gives you — Domains →
+   the domain → DNS → DNS Settings → Custom Records. An **A** record for the
+   apex, a **CNAME** for `www`. Your host prints the exact values; use theirs,
+   not any you find in a tutorial.
+3. Disconnect the domain from the Squarespace *site* so it stops claiming it.
+4. Watch it for a day. Then, and only then, consider the site subscription.
+
+### Read this before cancelling the Squarespace subscription
+
+**The old site sells merchandise.** `/merchandise` is a Squarespace Commerce
+page and `/cart` is a live Squarespace cart. Cancelling the website
+subscription takes that store down with it — the bourbon checkout is unaffected
+(it lives at Kentucky Bourbon Direct), but the merch is not.
+
+So: move the merchandise to the Kentucky Bourbon Direct store first, or keep
+paying for the Squarespace plan purely to run the merch store on a subdomain.
+Do not cancel and find out afterwards. Note also that the old URLs `/bourbon`,
+`/merchandise`, `/contact` and `/privacy-policy` will 404 once the domain
+points here — anything printed, linked or shared pointing at those needs a
+redirect or an update.
 
 If you land on B or on a different domain entirely, run this first — it keeps
 the sitemap, `robots.txt` and every page's canonical URL pointing at the same
@@ -98,6 +156,9 @@ Excluding those keeps the site under the free tier of every host listed.
 - [ ] **Age-gate the social accounts** before any campaign traffic arrives:
       Facebook Page and Instagram both have an alcohol age-restriction setting,
       and leaving it off is the most common compliance miss.
+- [ ] **Redirect or retire the old Squarespace URLs** — `/bourbon`,
+      `/merchandise`, `/contact`, `/privacy-policy`. Anything printed or linked
+      that points at them breaks the day the domain moves.
 - [ ] **Five partner logos** are still absent (`assets/img/partners/` — see the
       README for filenames). The slots degrade to text, so this is not
       blocking, but the page is better with them.

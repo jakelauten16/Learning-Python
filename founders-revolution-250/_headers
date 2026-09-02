@@ -1,0 +1,33 @@
+# Cache policy. Read by Netlify and by Cloudflare Pages, same format on both.
+#
+# The hero is 85 numbered frames plus two video encodes — about 5.9 MB of the
+# site's 6.7. They are content-addressed by name and only ever change when the
+# hero is rebuilt under new filenames, so they can be cached hard. The HTML
+# must not be, or a customer sees yesterday's prices.
+
+/assets/media/frames/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/*
+  Cache-Control: public, max-age=604800
+
+# CSS and JS carry prices and the allocation count. A week is too long.
+/assets/css/*
+  Cache-Control: public, max-age=3600
+
+/assets/js/*
+  Cache-Control: public, max-age=3600
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN

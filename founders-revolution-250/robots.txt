@@ -1,0 +1,8 @@
+# American Founders Heritage Select 250
+# The whole site is public. Nothing here is transacted; checkout lives at
+# the Kentucky Bourbon Direct store, which runs its own robots policy.
+User-agent: *
+Allow: /
+
+# Change the host below if the site is published on a different domain.
+Sitemap: https://foundersrevolution250.com/sitemap.xml

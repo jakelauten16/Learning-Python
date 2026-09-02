@@ -1,0 +1,557 @@
+<title>September Campaign 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#f4e8d2; --paper-2:#ece0c7; --card:#fbf4e6;
+  --ink:#241a13; --ink-2:#5c4a3c; --ink-3:#7d6a58;
+  --oxblood:#7a2318; --amber:#9c4a15; --amber-lt:#c8802f;
+  --rule:rgba(36,26,19,.16); --rule-2:rgba(36,26,19,.09);
+  --warn-bg:#fdf0e6; --warn-br:#c8802f;
+  --display:'Libre Caslon Display',Georgia,serif;
+  --text:'Libre Caslon Text',Georgia,serif;
+  --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#15120f; --paper-2:#1c1815; --card:#211c17;
+    --ink:#f2e7d2; --ink-2:#c3b295; --ink-3:#9d8c73;
+    --oxblood:#c4553f; --amber:#e0a44a; --amber-lt:#e6ab55;
+    --rule:rgba(242,231,210,.15); --rule-2:rgba(242,231,210,.08);
+    --warn-bg:#2a1d12; --warn-br:#c8802f;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15120f; --paper-2:#1c1815; --card:#211c17;
+  --ink:#f2e7d2; --ink-2:#c3b295; --ink-3:#9d8c73;
+  --oxblood:#c4553f; --amber:#e0a44a; --amber-lt:#e6ab55;
+  --rule:rgba(242,231,210,.15); --rule-2:rgba(242,231,210,.08);
+  --warn-bg:#2a1d12; --warn-br:#c8802f;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{width:min(74rem,100% - 3rem);margin-inline:auto}
+h1,h2,h3,h4{margin:0;font-weight:400;line-height:1.12;text-wrap:balance}
+p{margin:0 0 .9em}
+p:last-child{margin-bottom:0}
+ul,ol{margin:0;padding-left:1.15rem}
+li{margin-bottom:.4em}
+a{color:var(--amber)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
+  background:var(--paper-2);padding:.12em .38em;border-radius:3px}
+.lbl{font-family:var(--ui);font-size:.66rem;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--amber)}
+.ui{font-family:var(--ui)}
+
+header.top{background:var(--oxblood);color:#f7eeda;padding:clamp(2.5rem,6vw,4.5rem) 0}
+header.top .lbl{color:#e6ab55}
+header.top h1{font-family:var(--display);font-size:clamp(2.2rem,1.4rem+3.4vw,4rem);margin:.7rem 0 .9rem}
+header.top p{max-width:60ch;color:#e8dcc4;font-size:1.08rem}
+header.top p.spine{margin-top:1.7rem;padding-top:1.5rem;
+  border-top:1px solid rgba(247,238,218,.25);
+  font-family:var(--display);font-size:clamp(1.35rem,1.05rem+1.1vw,2rem);
+  line-height:1.3;color:#f7eeda;max-width:34ch}
+
+section{padding:clamp(2.5rem,5vw,4rem) 0;border-bottom:1px solid var(--rule-2)}
+.shd{display:grid;gap:.5rem;margin-bottom:1.8rem;max-width:56ch}
+.shd h2{font-family:var(--display);font-size:clamp(1.5rem,1.2rem+1.5vw,2.3rem)}
+.shd p{color:var(--ink-2)}
+
+.grid{display:grid;gap:1.1rem}
+@media(min-width:52rem){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  padding:clamp(1.1rem,2.2vw,1.6rem)}
+.card h3{font-family:var(--display);font-size:1.22rem;margin-bottom:.5rem}
+.card p,.card li{color:var(--ink-2);font-size:.97rem}
+
+.warn{background:var(--warn-bg);border-left:3px solid var(--warn-br);
+  border-radius:0 4px 4px 0;padding:1.1rem 1.3rem}
+.warn h3{font-family:var(--ui);font-size:.82rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:.5rem}
+.warn p,.warn li{font-size:.95rem;color:var(--ink-2)}
+.warn strong{color:var(--ink)}
+
+/* a post: the copy block plus a copy button */
+.post{background:var(--card);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.post__hd{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;
+  padding:.85rem 1.2rem;border-bottom:1px solid var(--rule);background:var(--paper-2)}
+.post__hd b{font-family:var(--ui);font-size:.78rem;font-weight:700;letter-spacing:.03em}
+.post__hd span{font-family:var(--ui);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.post__hd .cp{margin-left:auto;font-family:var(--ui);font-size:.68rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--rule);
+  color:var(--ink-2);padding:.34em .7em;border-radius:3px;cursor:pointer;transition:.15s}
+.post__hd .cp:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+.post__bd{padding:1.1rem 1.2rem;white-space:pre-wrap;font-size:.99rem;line-height:1.62}
+.post__ft{padding:.7rem 1.2rem 1rem;font-family:var(--ui);font-size:.76rem;
+  color:var(--ink-3);border-top:1px dashed var(--rule-2)}
+.post__ft b{color:var(--ink-2);font-weight:600}
+
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--rule-2);vertical-align:top}
+th{font-family:var(--ui);font-size:.68rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+td.wk{font-family:var(--ui);font-weight:600;white-space:nowrap;color:var(--ink)}
+tbody tr:hover{background:var(--paper-2)}
+
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:1rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:1rem}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--ui);
+  font-size:.74rem;font-weight:700;color:var(--amber);padding-top:.25em}
+.steps b{display:block;font-family:var(--text);font-weight:700;margin-bottom:.15rem}
+.steps p{color:var(--ink-2);font-size:.96rem;margin:0}
+
+footer{padding:2.5rem 0 3.5rem;color:var(--ink-3);font-family:var(--ui);font-size:.8rem}
+
+/* --- month grid ------------------------------------------------------- */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:var(--rule-2);
+  border:1px solid var(--rule);border-radius:4px;overflow:hidden;min-width:44rem}
+.cal .dow{background:var(--paper-2);padding:.5rem .6rem;font-family:var(--ui);
+  font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.cal .day{background:var(--card);padding:.55rem .6rem;min-height:6.6rem;display:grid;
+  align-content:start;gap:.3rem}
+.cal .day.pad{background:var(--paper-2);opacity:.4}
+.cal .num{font-family:var(--ui);font-size:.72rem;font-weight:700;color:var(--ink-3)}
+.cal .day.hot .num{color:var(--oxblood)}
+.cal .ev{font-family:var(--ui);font-size:.63rem;line-height:1.3;padding:.22rem .35rem;
+  border-radius:2px;border-left:2px solid}
+.ev.a1{background:rgba(200,128,47,.13);border-color:var(--amber-lt);color:var(--ink)}
+.ev.a2{background:rgba(122,35,24,.13);border-color:var(--oxblood);color:var(--ink)}
+.ev.a3{background:rgba(36,26,19,.08);border-color:var(--ink-3);color:var(--ink)}
+.ev.em{background:rgba(60,110,80,.14);border-color:#4a7c59;color:var(--ink)}
+.ev.mark{background:none;border:0;border-left:2px solid var(--ink-3);
+  font-style:italic;color:var(--ink-2);padding-left:.4rem}
+.key{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;margin-top:1rem;
+  font-family:var(--ui);font-size:.7rem;color:var(--ink-2)}
+.key i{display:inline-block;width:.7rem;height:.7rem;border-radius:2px;
+  margin-right:.4rem;vertical-align:-1px}
+.acts{display:grid;gap:1rem;margin-bottom:2rem}
+@media(min-width:52rem){.acts{grid-template-columns:repeat(3,1fr)}}
+.act{padding:1.2rem 1.3rem;border-radius:4px;border:1px solid var(--rule);background:var(--card)}
+.act .lbl{display:block;margin-bottom:.35rem}
+.act h3{font-family:var(--display);font-size:1.25rem;margin-bottom:.4rem}
+.act p{font-size:.94rem;color:var(--ink-2);margin:0}
+.act--peak{background:var(--oxblood);border-color:transparent}
+.act--peak h3,.act--peak p{color:#f7eeda}
+.act--peak .lbl{color:#e6ab55}
+.fix{background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;
+  padding:1.2rem 1.3rem;margin-bottom:2rem}
+.fix h3{font-family:var(--ui);font-size:.8rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--oxblood);margin-bottom:.5rem}
+.fix p{font-size:.95rem;color:var(--ink-2)}
+</style>
+<header class="top">
+  <div class="wrap">
+    <span class="lbl">September 2026 &middot; American Founders Heritage Select 250</span>
+    <h1>The month the<br>calendar hands you</h1>
+    <p>September is <strong>National Bourbon Heritage Month</strong> and it contains
+       <strong>Constitution Week</strong> &mdash; an observance the Daughters of the American
+       Revolution created themselves. For a bourbon made by two lineage-society members,
+       those two things landing in the same thirty days is the best gift the calendar has
+       to offer.</p>
+    <p class="spine">Bourbon is America&rsquo;s native spirit by act of Congress. Say so, in the month Congress set aside for it.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="fix">
+      <h3>A correction to the first playbook</h3>
+      <p>That playbook told you to work backwards to <strong>4 July 2026</strong>. That date
+         has passed &mdash; it was 57 days ago. Anything still framed as a countdown to the
+         Fourth is now wrong, and I have fixed it there too.</p>
+      <p style="margin-top:.6rem">The America 250 story is not over, though, and that matters
+         for how you talk about the number. The Revolution&rsquo;s 250th anniversaries run
+         to <strong>2033</strong> &mdash; Yorktown in 2031, the Treaty of Paris in 2033 &mdash;
+         and lineage-society chapters are programming against that whole arc. So the release
+         stops being <em>"before the Fourth"</em> and becomes <em>"for the 250th year"</em>,
+         which is a longer and more durable claim anyway.</p>
+    </div>
+
+    <div class="shd">
+      <span class="lbl">The shape of the month</span>
+      <h2>Three acts, and one peak</h2>
+      <p>Constitution Day falls on a Thursday, directly on a posting slot. Build toward it.</p>
+    </div>
+
+    <div class="acts">
+      <div class="act">
+        <span class="lbl">1&ndash;16 Sept</span>
+        <h3>Bourbon Heritage Month</h3>
+        <p>Own the liquid. This is the month the whole bourbon world is talking about bourbon,
+           and the one time of year a craft brand can enter that conversation without buying
+           its way in.</p>
+      </div>
+      <div class="act act--peak">
+        <span class="lbl">17&ndash;23 Sept</span>
+        <h3>Constitution Week</h3>
+        <p>The peak. Your audience observes this week formally &mdash; it exists because the
+           DAR asked Congress for it in 1955. Everything before it is setup.</p>
+      </div>
+      <div class="act">
+        <span class="lbl">24&ndash;30 Sept</span>
+        <h3>The turn to Q4</h3>
+        <p>A numbered box with two cups in it is a gift, and gift buyers start looking in
+           late September. Turn the language from history to object without dropping the story.</p>
+      </div>
+    </div>
+
+    <div class="warn">
+      <h3>Two dates that need care, not enthusiasm</h3>
+      <ul>
+        <li><strong>Friday 11 September.</strong> Post remembrance or post nothing. No product,
+            no link, no purchase language, no branded hashtag. Given your Responder Bourbon and
+            Project Never Broken partnerships a first-responder note is authentic &mdash; but
+            commercial messaging on 9/11 draws real backlash, and it deserves to.</li>
+        <li><strong>Constitution Week, 17&ndash;23 September.</strong> Acknowledging that the
+            DAR created this observance is public history and it is respectful to say so.
+            <strong>"In partnership with the DAR" is not true</strong> and must not appear.
+            The line is: they made this week, we observe it, our founders are members.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">The plan</span>
+      <h2>September, day by day</h2>
+      <p>Three posts a week, five emails, one silent day. Sixteen posting days total.</p>
+    </div>
+    <div class="scroll">
+<div class="cal"><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div><div class="dow">Sun</div><div class="day pad"></div><div class="day"><span class="num">1</span><div class="ev a1">FB-S1 · Heritage Month opener</div><div class="ev em">✉ A-1 chapters — SEND TODAY</div></div><div class="day"><span class="num">2</span></div><div class="day"><span class="num">3</span><div class="ev a1">IG-01 · pour reel</div></div><div class="day"><span class="num">4</span></div><div class="day"><span class="num">5</span><div class="ev a1">TT-02 · angels’ share</div></div><div class="day"><span class="num">6</span></div><div class="day"><span class="num">7</span><div class="ev mark">Labor Day</div><div class="ev a1">FB-S2 · the makers</div></div><div class="day"><span class="num">8</span><div class="ev a1">FB-02 · the founders</div></div><div class="day"><span class="num">9</span><div class="ev em">✉ B-1 bourbon clubs</div></div><div class="day"><span class="num">10</span><div class="ev mark">KY Bourbon Festival 10–13</div><div class="ev a1">IG-S1 · Heritage Month</div></div><div class="day hot"><span class="num">11</span><div class="ev mark">Patriot Day</div><div class="ev a3">FB-S3 · remembrance — NO SELL</div></div><div class="day"><span class="num">12</span><div class="ev a1">TT-04 · proving it</div></div><div class="day"><span class="num">13</span></div><div class="day"><span class="num">14</span></div><div class="day"><span class="num">15</span><div class="ev a1">FB-03 · the cup</div><div class="ev em">✉ D-2 consumer preview</div></div><div class="day"><span class="num">16</span></div><div class="day hot"><span class="num">17</span><div class="ev mark">CONSTITUTION DAY</div><div class="ev a2">FB-S4 · flagship</div><div class="ev a2">IG-S2 · Constitution Week</div></div><div class="day"><span class="num">18</span></div><div class="day"><span class="num">19</span><div class="ev a2">TT-S1 · who made Constitution Week</div></div><div class="day"><span class="num">20</span></div><div class="day"><span class="num">21</span><div class="ev em">✉ C-1 reviewers</div></div><div class="day"><span class="num">22</span><div class="ev a2">FB-S5 · the 39 signers</div></div><div class="day hot"><span class="num">23</span><div class="ev mark">Constitution Week ends</div><div class="ev a2">IG-03 · cork reel</div></div><div class="day"><span class="num">24</span><div class="ev a3">FB-S6 · the box, gifting</div></div><div class="day"><span class="num">25</span></div><div class="day"><span class="num">26</span><div class="ev a3">TT-03 · Jefferson’s cup</div></div><div class="day"><span class="num">27</span></div><div class="day"><span class="num">28</span><div class="ev em">✉ D-3 month close</div></div><div class="day"><span class="num">29</span><div class="ev a3">FB-05 · sets remaining</div></div><div class="day"><span class="num">30</span></div><div class="day pad"></div><div class="day pad"></div><div class="day pad"></div><div class="day pad"></div></div>    </div>
+    <div class="key">
+      <span><i style="background:var(--amber-lt)"></i>Bourbon Heritage Month</span>
+      <span><i style="background:var(--oxblood)"></i>Constitution Week</span>
+      <span><i style="background:var(--ink-3)"></i>Q4 turn</span>
+      <span><i style="background:#4a7c59"></i>Email</span>
+    </div>
+    <div class="warn" style="margin-top:1.6rem">
+      <h3>Send A-1 to chapters on 1 September, not later</h3>
+      <p>Chapters resume meetings after the summer recess in September and set their year's
+         programme then. If the letter arrives mid-month it misses that.</p>
+      <p style="margin-top:.6rem"><strong>Be realistic about this year:</strong> chapter
+         newsletters are typically laid up weeks ahead, so you are probably too late to be
+         <em>in</em> one for Constitution Week 2026. What is still open is a mention at a
+         September meeting, a forward from an officer, and being known in time for
+         <strong>Constitution Week 2027</strong> &mdash; which is the version of this that
+         actually compounds.</p>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Act I &middot; 1&ndash;16 September</span>
+      <h2>Bourbon Heritage Month</h2>
+      <p>New posts for this month. The evergreen ones on the calendar &mdash; FB-02, FB-03,
+         IG-01, IG-03, TT-02, TT-03, TT-04, FB-05 &mdash; are in the main playbook.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>FB-S1</b><span>Tue 1 Sept &middot; Heritage Month opener</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">In 1964, Congress passed a resolution declaring bourbon whiskey "a distinctive product of the United States." Not a style. Not a tradition. A product of this country, recognised by act of Congress.
+
+In 2007 the Senate went further and set aside September as National Bourbon Heritage Month. That resolution is worth reading, because of how it ends — it asks Americans who enjoy bourbon to do so "responsibly and in moderation."
+
+We will drink to that.
+
+American Founders Heritage Select 250 is a seven-year Kentucky straight bourbon, drawn from a single barrel and bottled at cask strength — 120 proof, uncut and non-chill filtered. 250 sets exist, one for each year of the republic. When the barrel is empty, it is finished.
+
+Happy Bourbon Heritage Month.
+
+🔗 foundersrevolution250.kybourbondirect.com
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Why this opens the month:</b> it earns the patriotic frame with a fact instead of a flag, and it quotes the moderation line before anyone can ask you to. <b>Image:</b> the bottle on the bar.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-S2</b><span>Mon 7 Sept &middot; Labor Day &middot; the makers</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">A bourbon is not made by a brand. It is made by people whose names are not on the label.
+
+The barrel came from a cooperage — T&P Hooper. Raising a barrel is a trade you learn from someone who already knows it, and it has not changed much in two hundred and fifty years.
+
+The box came from Deer Ridge Woodcraft, cut and engraved and fitted so that five pieces sit in it without moving.
+
+On the day this country sets aside for working people, those are the ones worth naming.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Tag both partners.</b> Labour Day content from brands is usually a sale; naming your suppliers instead is the opposite move and reads as such.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-S3</b><span>Fri 11 Sept &middot; remembrance &middot; no product, no link</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Today we are thinking about the people who went toward it.
+
+We support Project Never Broken and Responder Bourbon because the cost of that job does not end when the shift does. Nunquam fractum — never broken.
+
+No promotion today. Just that.</div>
+        <div class="post__ft"><b>Read this twice before posting.</b> No product image, no link, no price, no branded hashtag, no shop button. If that feels like a wasted slot, post nothing instead — that is also a correct answer.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>IG-S1</b><span>Thu 10 Sept &middot; Heritage Month &middot; KY Bourbon Festival week</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">September is Bourbon Heritage Month, and bourbon has been "a distinctive product of the United States" by act of Congress since 1964.
+
+Ours: 7 years. One barrel. 120 proof, uncut. 250 sets, numbered.
+
+🔗 in bio · 21+
+
+#bourbonheritagemonth #bourbon #kentuckybourbon #caskstrength #singlebarrel #kybourbonfestival #bardstown #whiskeycollector #americasnativespirit #bourbonhunter #whiskeylover</div>
+        <div class="post__ft"><b>Timed to the Kentucky Bourbon Festival</b> (10&ndash;13 Sept, Bardstown, its 35th year). You do not need to be there to be in the conversation, but do not imply you are.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Act II &middot; 17&ndash;23 September &middot; the peak</span>
+      <h2>Constitution Week</h2>
+      <p>The single best-matched week in the year for this brand. Everything in Act I is
+         setup for these four posts.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>FB-S4</b><span>Thu 17 Sept &middot; Constitution Day &middot; flagship</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Two hundred and thirty-nine years ago today, in a room in Philadelphia with the windows shut against the September heat and the eavesdroppers, thirty-nine men signed the Constitution of the United States.
+
+Forty-two were present. Three refused.
+
+That is the part worth remembering — that it was argued over, that men who had fought the same war disagreed to the end about what should replace the king, and that the document survived the argument. It has been amended twenty-seven times since. It was built to be.
+
+Constitution Week runs today through the 23rd. It exists because the Daughters of the American Revolution petitioned Congress for it in 1955, and President Eisenhower signed it into law the following year — Public Law 915. Our founders are members of the Sons of the American Revolution, and both had to document their own descent from a patriot before they could join.
+
+That is why this bourbon exists, and why there are exactly 250 sets of it.
+
+Read the thing this week. It is four pages.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Your best post of the year.</b> "Read the thing this week, it is four pages" is the line people will quote back. <b>Note:</b> DAR created the week — that is history, not endorsement. Do not add a partnership claim.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>IG-S2</b><span>Thu 17 Sept &middot; Constitution Day</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">17 September 1787. Forty-two men in the room. Thirty-nine signed. Three would not.
+
+It has been amended twenty-seven times since. It was built to be.
+
+Constitution Week, 17–23 September.
+
+#constitutionday #constitutionweek #america250 #americanhistory #foundingfathers #wethepeople #bourbon #sonsoftheamericanrevolution</div>
+        <div class="post__ft"><b>Image:</b> the eagle stopper, close and lit low &mdash; the Great Seal, not the bottle. Product-forward posts underperform on civic dates.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>TT-S1</b><span>Sat 19 Sept &middot; who made Constitution Week</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">HOOK (0–2s, on screen): "There's a national observance this week that a group of women had to ask Congress for."
+
+BEAT 1 (2–7s): "In 1955 the Daughters of the American Revolution petitioned Congress to set aside 17 to 23 September every year."
+BEAT 2 (7–13s): "Eisenhower signed it in 1956. Public Law 915. It's called Constitution Week."
+BEAT 3 (13–19s): "The point was simple — that people should actually read the thing."
+PAYOFF (19–25s): "It's four pages. You've scrolled longer than that today."
+
+CAPTION: Constitution Week, 17–23 September. Made by the DAR, in 1955. #constitutionweek #history #dar #america250
+
+ON-SCREEN: hold the dates as cards — 1787 / 1955 / 1956. Numbers are the visual.</div>
+        <div class="post__ft"><b>No product in this one at all.</b> It is a history video from a brand that has earned the right to tell it. The bio link does the selling.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-S5</b><span>Tue 22 Sept &middot; the signers</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Of the thirty-nine men who signed the Constitution, one had signed the Declaration eleven years earlier and would live to see the country he argued into existence reach its fiftieth year. Several were bankrupt within a decade. One was killed in a duel.
+
+They were not a monument. They were a committee that disagreed loudly and got something done anyway.
+
+This is Constitution Week — it runs through tomorrow. If you have never read the document straight through, this is the week.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Verify the specifics before posting</b> if you name individuals &mdash; this copy stays general on purpose. Franklin signed both; Hamilton died in the duel in 1804; Robert Morris was imprisoned for debt. Name them only if you want to check each.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Act III &middot; 24&ndash;30 September</span>
+      <h2>The turn to Q4</h2>
+      <p>Same story, different job. People start buying gifts in late September and a
+         numbered box with two cups in it is one.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+      <article class="post">
+        <div class="post__hd"><b>FB-S6</b><span>Thu 24 Sept &middot; the box as an object</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Here is what actually arrives.
+
+A hardwood box, engraved, hinged, with a fitted insert so nothing moves in transit. Inside it: the bottle, a pewter eagle stopper, two pewter Jefferson cups, and a certificate with a number on it that matches the number on the bottle's neck.
+
+The whiskey gets drunk. The rest of it does not. Somebody will still have the cups in fifty years, and the number will still say which of the 250 it was.
+
+That is a harder thing to buy than it sounds.
+
+The set — $250. The bottle alone — $95.
+🔗 foundersrevolution250.kybourbondirect.com
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>First gifting-adjacent post of the year</b> &mdash; note it never says "gift". Let the reader arrive at it. <b>Image:</b> the open box, overhead.</div>
+      </article>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Email</span>
+      <h2>Five sends</h2>
+      <p>A-1, B-1 and C-1 are in the main playbook and go out unchanged. The two consumer
+         notes below are written for this month.</p>
+    </div>
+
+    <div class="scroll" style="margin-bottom:2rem">
+    <table>
+      <thead><tr><th>Date</th><th>Send</th><th>To</th><th>Why then</th></tr></thead>
+      <tbody>
+        <tr><td class="wk">Tue 1</td><td>A-1</td><td>SAR / DAR chapter officers</td><td>Chapters resume and set their programme. Latest realistic date to matter this year.</td></tr>
+        <tr><td class="wk">Wed 9</td><td>B-1</td><td>Bourbon clubs &amp; societies</td><td>Kentucky Bourbon Festival week — the audience is already thinking about bourbon.</td></tr>
+        <tr><td class="wk">Tue 15</td><td>D-2</td><td>Consumer opt-in list</td><td>Two days before Constitution Day. Gives the week a reason to exist for them.</td></tr>
+        <tr><td class="wk">Mon 21</td><td>C-1</td><td>Reviewers &amp; influencers</td><td>Mid Constitution Week — the strongest version of your story is live.</td></tr>
+        <tr><td class="wk">Mon 28</td><td>D-3</td><td>Consumer opt-in list</td><td>Month close, and the first quiet nudge toward Q4.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>D-2</b><span>Tue 15 Sept &middot; consumer</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: There is a week for this, and it starts Thursday
+
+In 1955 the Daughters of the American Revolution asked Congress to set aside seven days a year for the Constitution. Congress agreed, and Eisenhower signed it into law in 1956. It runs 17 to 23 September, and it starts this Thursday.
+
+The idea behind it was not ceremony. It was that people should read the document. It is four pages.
+
+We mention it because it is the reason this bourbon exists. Both of our founders had to document their descent from a Revolutionary patriot before they could join the Sons of the American Revolution — birth, marriage and death records, generation by generation, back to a man who actually served. Having done that, an anniversary of this size seemed to deserve something made for it.
+
+So there are 250 sets. One for each year. Each numbered, and the number is yours.
+
+If you read one thing this week, make it the four pages. If you read two, the second can be this:
+🔗 foundersrevolution250.kybourbondirect.com
+
+Must be 21 or older. Please enjoy responsibly.
+[postal address] · [unsubscribe]</div>
+        <div class="post__ft"><b>The soft close is the point.</b> This letter earns attention by giving something away; the link is almost an afterthought, which is why it gets clicked.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>D-3</b><span>Mon 28 Sept &middot; consumer &middot; month close</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: What September was for
+
+September is National Bourbon Heritage Month, which exists because in 2007 the Senate decided America's native spirit deserved one. It also holds Constitution Week, which exists because the DAR asked for it in 1955.
+
+A month with both in it is a good month to be us.
+
+Where things stand: [N] of the 250 sets remain. Each holds a seven-year single barrel bourbon at cask strength, a handcrafted engraved box, a pewter eagle stopper, two pewter Jefferson cups, and a numbered certificate. When the barrel is empty there is no second run — that was the whole point of doing it this way.
+
+The whiskey gets drunk. The cups do not. Somebody will still have them in fifty years, and the certificate will still say which of the 250 it was.
+
+  The set — $250
+  The bottle — $95
+  foundersrevolution250.kybourbondirect.com
+
+Thank you for reading this month.
+
+Must be 21 or older. Please enjoy responsibly.
+[postal address] · [unsubscribe]</div>
+        <div class="post__ft"><b>Fill [N] honestly.</b> A number that never moves reads as fiction and costs you more than the urgency gains.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Before 1 September</span>
+      <h2>What has to be true first</h2>
+    </div>
+    <ol class="steps">
+      <li><div><b>Age-restrict the Facebook Page and Instagram account</b>
+        <p>21+ for the US, before the first post goes up. This is the one item that cannot be
+           fixed later without losing reach.</p></div></li>
+      <li><div><b>Put your postal address into the email footer</b>
+        <p>Legally required on every commercial email under CAN-SPAM, along with a working
+           unsubscribe. The bracketed placeholders in the letters are there for it.</p></div></li>
+      <li><div><b>Gather chapter contacts by hand this week</b>
+        <p>SAR and DAR publish officer contacts. A-1 goes out Tuesday and it is a personal
+           letter from Bruce, not a mail-merge — 40 careful sends, one follow-up, never two.</p></div></li>
+      <li><div><b>Confirm the [N] remaining and the Terre Haute giving claim</b>
+        <p>Both appear in copy this month. Neither should go out unverified.</p></div></li>
+      <li><div><b>Decide the 11 September call now, not on the day</b>
+        <p>Remembrance post or silence. Both are right. Deciding it under time pressure on the
+           morning is how a brand ends up posting a discount code.</p></div></li>
+      <li><div><b>Add a capture form to the site</b>
+        <p>Two of this month's five sends go to a consumer list. If that list is empty, this
+           is the fortnight to start it.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>American Founders Heritage Select 250 &middot; Kentucky Straight Bourbon Whiskey &middot;
+       60% ALC/VOL &middot; 750 ml. Must be 21 or older to purchase. Please enjoy responsibly.</p>
+    <p style="margin-top:.5rem">Every post and letter here is a draft for review. Bracketed
+       values need filling before sending. Sources: S.Res. 294 (110th Congress, 2007);
+       Public Law 915 (1956); Kentucky Bourbon Festival, 10&ndash;13 September 2026.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.cp').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var body = btn.closest('.post').querySelector('.post__bd').innerText;
+    var done = function () {
+      var was = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = was; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).then(done, fallback);
+    } else { fallback(); }
+    function fallback() {
+      var r = document.createRange();
+      r.selectNodeContents(btn.closest('.post').querySelector('.post__bd'));
+      var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = 'Select + copy';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
+    }
+  });
+});
+</script>

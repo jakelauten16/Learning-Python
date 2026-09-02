@@ -1,0 +1,752 @@
+<title>Founders Revolution 250 Campaign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#f4e8d2; --paper-2:#ece0c7; --card:#fbf4e6;
+  --ink:#241a13; --ink-2:#5c4a3c; --ink-3:#7d6a58;
+  --oxblood:#7a2318; --amber:#9c4a15; --amber-lt:#c8802f;
+  --rule:rgba(36,26,19,.16); --rule-2:rgba(36,26,19,.09);
+  --warn-bg:#fdf0e6; --warn-br:#c8802f;
+  --display:'Libre Caslon Display',Georgia,serif;
+  --text:'Libre Caslon Text',Georgia,serif;
+  --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#15120f; --paper-2:#1c1815; --card:#211c17;
+    --ink:#f2e7d2; --ink-2:#c3b295; --ink-3:#9d8c73;
+    --oxblood:#c4553f; --amber:#e0a44a; --amber-lt:#e6ab55;
+    --rule:rgba(242,231,210,.15); --rule-2:rgba(242,231,210,.08);
+    --warn-bg:#2a1d12; --warn-br:#c8802f;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15120f; --paper-2:#1c1815; --card:#211c17;
+  --ink:#f2e7d2; --ink-2:#c3b295; --ink-3:#9d8c73;
+  --oxblood:#c4553f; --amber:#e0a44a; --amber-lt:#e6ab55;
+  --rule:rgba(242,231,210,.15); --rule-2:rgba(242,231,210,.08);
+  --warn-bg:#2a1d12; --warn-br:#c8802f;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{width:min(74rem,100% - 3rem);margin-inline:auto}
+h1,h2,h3,h4{margin:0;font-weight:400;line-height:1.12;text-wrap:balance}
+p{margin:0 0 .9em}
+p:last-child{margin-bottom:0}
+ul,ol{margin:0;padding-left:1.15rem}
+li{margin-bottom:.4em}
+a{color:var(--amber)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
+  background:var(--paper-2);padding:.12em .38em;border-radius:3px}
+.lbl{font-family:var(--ui);font-size:.66rem;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--amber)}
+.ui{font-family:var(--ui)}
+
+header.top{background:var(--oxblood);color:#f7eeda;padding:clamp(2.5rem,6vw,4.5rem) 0}
+header.top .lbl{color:#e6ab55}
+header.top h1{font-family:var(--display);font-size:clamp(2.2rem,1.4rem+3.4vw,4rem);margin:.7rem 0 .9rem}
+header.top p{max-width:60ch;color:#e8dcc4;font-size:1.08rem}
+header.top p.spine{margin-top:1.7rem;padding-top:1.5rem;
+  border-top:1px solid rgba(247,238,218,.25);
+  font-family:var(--display);font-size:clamp(1.35rem,1.05rem+1.1vw,2rem);
+  line-height:1.3;color:#f7eeda;max-width:34ch}
+
+section{padding:clamp(2.5rem,5vw,4rem) 0;border-bottom:1px solid var(--rule-2)}
+.shd{display:grid;gap:.5rem;margin-bottom:1.8rem;max-width:56ch}
+.shd h2{font-family:var(--display);font-size:clamp(1.5rem,1.2rem+1.5vw,2.3rem)}
+.shd p{color:var(--ink-2)}
+
+.grid{display:grid;gap:1.1rem}
+@media(min-width:52rem){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  padding:clamp(1.1rem,2.2vw,1.6rem)}
+.card h3{font-family:var(--display);font-size:1.22rem;margin-bottom:.5rem}
+.card p,.card li{color:var(--ink-2);font-size:.97rem}
+
+.warn{background:var(--warn-bg);border-left:3px solid var(--warn-br);
+  border-radius:0 4px 4px 0;padding:1.1rem 1.3rem}
+.warn h3{font-family:var(--ui);font-size:.82rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:.5rem}
+.warn p,.warn li{font-size:.95rem;color:var(--ink-2)}
+.warn strong{color:var(--ink)}
+
+/* a post: the copy block plus a copy button */
+.post{background:var(--card);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.post__hd{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;
+  padding:.85rem 1.2rem;border-bottom:1px solid var(--rule);background:var(--paper-2)}
+.post__hd b{font-family:var(--ui);font-size:.78rem;font-weight:700;letter-spacing:.03em}
+.post__hd span{font-family:var(--ui);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.post__hd .cp{margin-left:auto;font-family:var(--ui);font-size:.68rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--rule);
+  color:var(--ink-2);padding:.34em .7em;border-radius:3px;cursor:pointer;transition:.15s}
+.post__hd .cp:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+.post__bd{padding:1.1rem 1.2rem;white-space:pre-wrap;font-size:.99rem;line-height:1.62}
+.post__ft{padding:.7rem 1.2rem 1rem;font-family:var(--ui);font-size:.76rem;
+  color:var(--ink-3);border-top:1px dashed var(--rule-2)}
+.post__ft b{color:var(--ink-2);font-weight:600}
+
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--rule-2);vertical-align:top}
+th{font-family:var(--ui);font-size:.68rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+td.wk{font-family:var(--ui);font-weight:600;white-space:nowrap;color:var(--ink)}
+tbody tr:hover{background:var(--paper-2)}
+
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:1rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:1rem}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--ui);
+  font-size:.74rem;font-weight:700;color:var(--amber);padding-top:.25em}
+.steps b{display:block;font-family:var(--text);font-weight:700;margin-bottom:.15rem}
+.steps p{color:var(--ink-2);font-size:.96rem;margin:0}
+
+footer{padding:2.5rem 0 3.5rem;color:var(--ink-3);font-family:var(--ui);font-size:.8rem}
+</style>
+<header class="top">
+  <div class="wrap">
+    <span class="lbl">Campaign Playbook &middot; American Founders Heritage Select 250</span>
+    <h1>250 sets. 250 years.<br>One for each.</h1>
+    <p>Everything below is written to be used as-is: paste the posts, load the emails,
+       follow the calendar. Nothing here is scheduled or sent automatically &mdash; every
+       item is a draft awaiting your approval, which is the right posture for a spirits
+       brand where one bad post can cost you an ad account.</p>
+    <p class="spine">The whiskey is good. The <em>number</em> is the campaign.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Read this first</span>
+      <h2>Four constraints that shape everything</h2>
+      <p>These are not cautions, they are rules that decide what the campaign can be.
+         Two of them will change how you spend money.</p>
+    </div>
+
+    <div class="grid g2">
+      <div class="warn">
+        <h3>TikTok: no paid alcohol ads. Anywhere.</h3>
+        <p>Alcohol is a <strong>globally prohibited advertising category</strong> on TikTok.
+           There is no age-gate, no exemption, no spend level that unlocks it. Your TikTok
+           presence is <strong>organic only</strong>.</p>
+        <p>Organic brand accounts for spirits do exist, but TikTok also restricts content
+           depicting alcohol consumption. So the TikTok posts below are built around
+           <strong>history, craft and objects</strong> &mdash; the barrel, the cup, the
+           certificate, the genealogy. Nobody drinks on camera.</p>
+      </div>
+
+      <div class="warn">
+        <h3>Meta: allowed, but gated</h3>
+        <p>Facebook and Instagram permit alcohol advertising with restrictions. You must
+           set <strong>21+ age targeting in the US</strong>, exclude countries where
+           alcohol ads are banned, and set an age restriction on the Page itself so the
+           organic feed is gated too.</p>
+        <p>Do the Page-level age gate <strong>before</strong> your first post. Retrofitting
+           it after you have an audience loses you reach.</p>
+      </div>
+
+      <div class="warn">
+        <h3>You cannot imply SAR or DAR endorse this</h3>
+        <p>Bruce and Allen are members, and you support these organisations. That is a
+           true and powerful story. <strong>"The official bourbon of the SAR" is not</strong>,
+           and neither is anything that reads that way.</p>
+        <p>Every line below is written as <em>membership and support</em>, never as
+           endorsement. Keep it that way &mdash; a lineage society that feels used will say
+           so loudly, to exactly the audience you are courting.</p>
+      </div>
+
+      <div class="warn">
+        <h3>TTB and CAN-SPAM apply</h3>
+        <p><strong>No health claims, no claims about the benefits of consumption</strong>,
+           and no strength claims framed as a selling point beyond the factual proof
+           statement. Age and proof statements must be accurate &mdash; yours are.</p>
+        <p>Every commercial email needs a real physical postal address and a working
+           one-click unsubscribe. Do not buy a list. See the email section for how to
+           build one legitimately.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Positioning</span>
+      <h2>Why this brand has an unfair advantage</h2>
+      <p>Most craft bourbons launch with a good liquid and no audience. You have the
+         opposite problem, which is a much better problem.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <h3>The number means something</h3>
+        <p>250 sets for 250 years is not a marketing device, it is the edition size. Scarcity
+           that carries an argument sells itself; scarcity for its own sake reads as a
+           tactic. Never explain the number without the year attached to it.</p>
+      </div>
+      <div class="card">
+        <h3>Your buyers are already organised</h3>
+        <p>The SAR has roughly 500+ chapters and the DAR is far larger. These are people who
+           have <em>documented</em> descent from a Revolutionary patriot, who meet monthly,
+           who publish newsletters, and who are actively planning America 250 events. Most
+           brands never find an audience this well matched. You can address it by chapter.</p>
+      </div>
+      <div class="card">
+        <h3>The founders are the proof</h3>
+        <p>A 39-year school superintendent and an inventor who traced their own genealogies
+           to Revolutionary patriots is not a brand story, it is two people's actual lives.
+           Lead with them. It is the one thing a competitor cannot copy.</p>
+      </div>
+    </div>
+
+    <div class="shd" style="margin-top:2.5rem">
+      <span class="lbl">Content pillars</span>
+      <h2>Five things to talk about, forever</h2>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Pillar</th><th>What it is</th><th>Where it works hardest</th></tr></thead>
+      <tbody>
+        <tr><td class="wk">The Patriot</td><td>One Revolutionary patriot, told properly, per post. There are 250 years to draw on and your audience knows these names.</td><td>Facebook, TikTok</td></tr>
+        <tr><td class="wk">The Craft</td><td>The barrel, the cooperage, the box, the pewter. Process content that never shows a drink being drunk.</td><td>Instagram, TikTok</td></tr>
+        <tr><td class="wk">The Founders</td><td>Bruce and Allen. The genealogy, the induction, the reason any of this exists.</td><td>Facebook, Instagram</td></tr>
+        <tr><td class="wk">The Object</td><td>The box, the eagle stopper, the Jefferson cups, the numbered certificate. Unboxing is the highest-performing format you have.</td><td>Instagram, TikTok</td></tr>
+        <tr><td class="wk">The Countdown</td><td>Sets remaining, tied to whichever 250th milestone is next. Use sparingly &mdash; scarcity posted weekly stops being scarcity.</td><td>Instagram, email</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Facebook</span>
+      <h2>Facebook</h2>
+      <p>Your strongest demographic match, and where the SAR and DAR audience actually
+         lives. Longer copy works here. Age-restrict the Page before you post.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>FB-01</b><span>Launch &middot; The Patriot</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Two hundred and fifty years ago, fifty-six men signed a document that made them traitors to a king. Most of them had families. All of them had something to lose.
+
+We put away 250 sets of bourbon to mark the anniversary. One for each year.
+
+Inside each: a seven-year-old Kentucky straight bourbon, drawn from a single barrel and bottled at cask strength — 120 proof, uncut and non-chill filtered. A handcrafted engraved box. A pewter eagle stopper. Two pewter Jefferson cups. And a numbered certificate that matches the number on your bottle.
+
+When the barrel is empty, it is finished. There is no second run.
+
+$250 the set. $95 the bottle.
+🔗 foundersrevolution250.kybourbondirect.com
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Image:</b> the full set with the box open. <b>Note:</b> the "fifty-six men" opener is the hook — do not cut it for length.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-02</b><span>The Founders</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">In April of 2025, Bruce Lautenschlager was inducted into the John Martin Chapter of the Sons of the American Revolution.
+
+You do not simply join the SAR. You prove it. Your genealogy has to be traced, documented and accepted — line by line, back to a patriot who actually served.
+
+Bruce did that. So did Allen Hayne, who spent thirty-nine years in Indiana education as a teacher, a swimming coach, a Dean of Students, a principal, and finally a superintendent, and who has multiple relatives on the Revolutionary rolls.
+
+Shortly after joining, they found the programme of events planned for America's 250th. And they decided the anniversary deserved something made for it.
+
+This is that. Two hundred and fifty sets, for two hundred and fifty years.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Image:</b> Bruce and Allen, the portraits from the site. <b>This is your highest-trust post</b> — pin it to the Page.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-03</b><span>The Craft &middot; The Cup</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Why a pewter cup, and not a glass?
+
+Thomas Jefferson had a set of straight-sided beakers made to his own drawing — sized to the hand, flat-bottomed so they would not tip on a writing table. They are still called Jefferson cups.
+
+Pewter does something glass cannot. It pulls heat out of your hand and into the whiskey, and at 120 proof that matters more than you would think. It takes the edge off a barrel-proof pour without a drop of water.
+
+Two of them come in every set. They are yours to keep long after the bottle is gone.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Image:</b> the filled cup, close. <b>Pillar:</b> Craft — this format works for the box, the stopper and the certificate too.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-04</b><span>Local &middot; Terre Haute</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">We are from Terre Haute, and a share of what this release raises stays here.
+
+The Vigo County History Center keeps this county's record, and the rooms it is kept in. The John Martin Chapter of the SAR is doing the local work for America's 250th. Project Never Broken supports those who carry what the job left them — nunquam fractum, never broken.
+
+A bourbon made to honour people who gave something up is not much of a tribute if it gives nothing back.
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Confirm before posting:</b> that a share genuinely is committed, and to whom. If not, cut the first line and post it as "organisations we support".</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>FB-05</b><span>Countdown</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">[N] of 250 sets remain.
+
+Each one carries a number, and the number is yours — stamped on the certificate and matched to the bottle. When they are gone there is no second barrel, no reissue, no "we found a few more in the back".
+
+That was the point of doing it this way.
+
+🔗 foundersrevolution250.kybourbondirect.com
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Use sparingly</b> — once a month at most until you are genuinely low. Scarcity posted weekly stops reading as scarcity.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Instagram</span>
+      <h2>Instagram</h2>
+      <p>Reels carry the account. You already have the strongest asset most spirits brands
+         never get: real footage of the pour, the cork and the set. Use it.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>IG-01</b><span>Reel &middot; The pour</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Seven years in new charred oak. One barrel. No adjustments on the way to the glass.
+
+120 proof, uncut and non-chill filtered — the strength it came out at.
+
+250 sets exist. Each numbered. 🔗 in bio
+
+#bourbon #kentuckybourbon #caskstrength #singlebarrel #whiskeycollector #bourbonhunter #america250 #smallbatchbourbon #bourbonlovers #whiskeylover #sonsoftheamericanrevolution #terrehaute</div>
+        <div class="post__ft"><b>Video:</b> the pour, 7–12s, no music over the sound of it if you can help it. <b>Hook frame:</b> the stream mid-air, not the bottle.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>IG-02</b><span>Carousel &middot; What's in the box</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">Five pieces. One number.
+
+1 — Seven-year single barrel bourbon, cask strength, 750ml
+2 — Handcrafted engraved presentation box
+3 — Pewter eagle bottle stopper
+4 — Two pewter Jefferson cups
+5 — A numbered certificate, matched to your bottle
+
+250 sets. Then the barrel is empty.
+
+#bourbon #whiskeycollector #bourbongifts #caskstrength #limitededition #america250 #bourbonlife #whiskeygifts #collectorsedition</div>
+        <div class="post__ft"><b>Format:</b> six slides — one per piece, then the full set. Shoot each piece on the same wood, same light.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>IG-03</b><span>Reel &middot; The cork</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">The cork comes out once.
+
+250 sets were filled from one cask. After that there is nothing left to open.
+
+🔗 in bio · 21+
+
+#bourbon #caskstrength #singlebarrel #bourbonporn #whiskeytok #firstpour #limitedrelease #kentuckystraightbourbon #bourbondaily</div>
+        <div class="post__ft"><b>Video:</b> the cork pull, tight, 4–6s, loop it. Short loops of a single tactile action are the best-performing Reel format for spirits.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>IG-04</b><span>Founders</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">You do not join the Sons of the American Revolution. You prove it — genealogy traced and documented, line by line, back to a patriot who served.
+
+Bruce did it. Allen did it. Then they made this.
+
+#sonsoftheamericanrevolution #america250 #genealogy #americanhistory #bourbon #familyhistory #revolutionarywar #foundingfathers</div>
+        <div class="post__ft"><b>Image:</b> the two portraits, or the two of them at the bar from the film. Highest save-rate post in the set.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">TikTok &middot; organic only</span>
+      <h2>TikTok</h2>
+      <p>No paid promotion is possible. These are built as history and craft pieces, with
+         a hook in the first two seconds and nobody drinking on camera. Each is written
+         as <em>on-screen text</em> plus a spoken or captioned line.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>TT-01</b><span>Why 250?</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">HOOK (0–2s, on screen): "We made exactly 250 bottles. On purpose."
+
+BEAT 1 (2–6s): "In 2026 the United States turns 250 years old."
+BEAT 2 (6–12s): "So we filled one set for every year. Numbered 1 to 250."
+BEAT 3 (12–18s): show the certificate, the number, the bottle's neck tag matching.
+PAYOFF (18–24s): "When the barrel's empty, that's it. No second run."
+
+CAPTION: 250 years. 250 sets. One for each. 🇺🇸 #america250 #bourbon #history
+
+ON-SCREEN TEXT: keep to 6 words a card. Number the cards 1/250 … 250/250 as a visual motif.</div>
+        <div class="post__ft"><b>Do not</b> show anyone drinking. <b>Do</b> show the number — the certificate is the whole video.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>TT-02</b><span>The angels' share</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">HOOK: "A barrel of bourbon loses about a third of itself before you ever taste it."
+
+BEAT 1: "It's called the angels' share — whiskey that evaporates through the wood."
+BEAT 2: "Seven years on the top floor of a rickhouse, where it's hottest, and the angels take more."
+BEAT 3: "What's left of one barrel is a few hundred bottles. Not a production run. A quantity."
+PAYOFF: "We could have stretched it by blending in other barrels. We'd rather it ran out."
+
+CAPTION: One barrel. No vatting. #bourbon #whiskeytok #distilling #angelsshare</div>
+        <div class="post__ft"><b>Best-performing pillar on TikTok.</b> Process explainers outperform product shots roughly two to one for spirits accounts.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>TT-03</b><span>Jefferson's cup</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">HOOK: "Thomas Jefferson designed a cup. We put two in every box."
+
+BEAT 1: "Straight sides. Flat bottom — so it wouldn't tip on a writing desk."
+BEAT 2: "Sized to the hand. He had a set made to his own drawing."
+BEAT 3: "Pewter pulls heat from your hand into the whiskey. At 120 proof, that matters."
+PAYOFF: hold on the cup. "Still called a Jefferson cup. Two hundred and fifty years later."
+
+CAPTION: Jefferson designed the cup. #history #foundingfathers #pewter #america250</div>
+        <div class="post__ft"><b>Object-history format.</b> Repeatable for the eagle stopper (Great Seal, 1782) and the typeface (Caslon, the Declaration).</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>TT-04</b><span>Proving it</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">HOOK: "You can't just say you're descended from a Revolutionary soldier. You have to prove it."
+
+BEAT 1: "The Sons of the American Revolution makes you document every generation."
+BEAT 2: "Birth, marriage, death. Line by line. Back to a patriot who actually served."
+BEAT 3: "Our founders both did it. One's a retired school superintendent. Thirty-nine years."
+PAYOFF: "Then they made a bourbon for the 250th."
+
+CAPTION: Prove it, then pour it. #genealogy #americanhistory #sar #familyhistory #america250</div>
+        <div class="post__ft"><b>Strongest hook in the set</b> — genealogy content travels far past a bourbon audience.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Calendar</span>
+      <h2>The first six weeks</h2>
+      <p>Three posts a week is a cadence two people can actually sustain. Publishing
+         twice as much for a month and then going quiet reads worse than never starting.
+         After week six the pillars repeat &mdash; there are 250 patriots to write about.</p>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Week</th><th>Tue</th><th>Thu</th><th>Sat</th><th>Email</th></tr></thead>
+      <tbody>
+        <tr><td class="wk">1 &middot; Launch</td><td>FB-01 launch</td><td>IG-01 pour reel</td><td>TT-01 why 250</td><td>&mdash; build list</td></tr>
+        <tr><td class="wk">2 &middot; Trust</td><td>FB-02 founders</td><td>IG-04 founders</td><td>TT-04 proving it</td><td>A-1 to chapters</td></tr>
+        <tr><td class="wk">3 &middot; Craft</td><td>FB-03 the cup</td><td>IG-02 what's inside</td><td>TT-03 Jefferson's cup</td><td>B-1 to societies</td></tr>
+        <tr><td class="wk">4 &middot; Object</td><td>FB Patriot #2</td><td>IG-03 cork reel</td><td>TT-02 angels' share</td><td>A-2 follow-up</td></tr>
+        <tr><td class="wk">5 &middot; Local</td><td>FB-04 Terre Haute</td><td>IG partner feature</td><td>TT eagle stopper</td><td>C-1 influencers</td></tr>
+        <tr><td class="wk">6 &middot; Scarcity</td><td>FB-05 countdown</td><td>IG certificate</td><td>TT Caslon typeface</td><td>D-1 consumer welcome</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="warn" style="margin-top:1.8rem">
+      <h3>The 250th did not end on 4 July</h3>
+      <p>The Fourth has passed. Anything framed as a countdown to it is now wrong &mdash; the
+         release is <strong>"for the 250th year"</strong>, not "before the Fourth", which is a
+         longer and more durable claim anyway.</p>
+      <p style="margin-top:.6rem">The Revolution's 250th anniversaries run to
+         <strong>2033</strong> &mdash; Yorktown in 2031, the Treaty of Paris in 2033 &mdash;
+         and lineage-society chapters programme against that whole arc. The nearest peak is
+         <strong>Constitution Week, 17&ndash;23 September</strong>, an observance the DAR
+         itself petitioned Congress for in 1955. September is also National Bourbon Heritage
+         Month. See the September plan for the day-by-day.</p>
+      <p style="margin-top:.6rem">Chapters plan <strong>months</strong> ahead and set their
+         programme when they resume in September, so officer outreach has to land at the
+         start of a season, not the week of an event.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Email</span>
+      <h2>Four audiences, four different letters</h2>
+      <p>The single biggest mistake here would be sending one blast to everybody. A chapter
+         registrar and a bourbon reviewer want opposite things from you.</p>
+    </div>
+
+    <div class="warn" style="margin-bottom:2rem">
+      <h3>Do not buy a list</h3>
+      <p>A purchased list will burn your sending domain inside a week and exposes you under
+         CAN-SPAM. Build it properly instead:</p>
+      <ul>
+        <li><strong>Chapters:</strong> SAR and DAR publish officer contacts publicly. Write to
+            them individually, by hand, as a member. This is relationship outreach, not bulk
+            mail — 40 good letters beat 4,000 sends.</li>
+        <li><strong>Consumers:</strong> a capture form on the site. That list is opt-in and
+            yours forever.</li>
+        <li><strong>Warm the domain</strong> before any volume: SPF, DKIM and DMARC set, then
+            ramp over two to three weeks. Skipping this is how new domains land in spam
+            permanently.</li>
+      </ul>
+      <p style="margin-top:.7rem"><strong>Alcohol and raffles:</strong> before you offer a set
+         for a chapter raffle or auction, check that state's rules. Raffling alcohol needs a
+         specific permit in most states and is flatly illegal in some. A chapter would not
+         thank you for the problem.</p>
+    </div>
+
+    <div class="grid" style="gap:1.4rem">
+
+      <article class="post">
+        <div class="post__hd"><b>A-1</b><span>SAR / DAR chapter officers &middot; the important one</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: A fellow compatriot, and something made for the 250th
+
+Dear [Chapter] compatriots,
+
+My name is Bruce Lautenschlager. I was inducted into the John Martin Chapter in April of 2025, after the same genealogical work all of us have done.
+
+Shortly after joining I found the programme of events planned for America's 250th, and it struck me that an anniversary of that size deserved something made deliberately for it. So my partner Allen Hayne — a retired Indiana school superintendent, also SAR, with several patriots in his own line — and I put away a single barrel of Kentucky straight bourbon and filled exactly 250 sets from it. One for each year.
+
+Each set holds a seven-year, cask strength single barrel bourbon, a handcrafted engraved box, a pewter eagle stopper, two pewter Jefferson cups, and a numbered certificate.
+
+I am not writing to sell your chapter anything. I am writing because if your chapter is marking the 250th and would find it useful, I am glad to:
+
+  • send details your newsletter editor can use
+  • arrange a member code for anyone who wants one
+  • talk to your programme chair about the 250th if that would help
+
+If none of that is useful, I will not write again — just say so and I will take the chapter off my list.
+
+With respect,
+Bruce Lautenschlager
+American Founders Distilling Co. · Terre Haute, Indiana
+[postal address] · [unsubscribe]
+
+Must be 21 or older to purchase. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Send from Bruce's own name, not a brand address.</b> Personalise <code>[Chapter]</code> every time. This is the email that decides whether the campaign works — treat 40 careful sends as the goal, not 4,000.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>A-2</b><span>Chapter follow-up &middot; 10 days later, only if no reply</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: Re: A fellow compatriot, and something made for the 250th
+
+Compatriots,
+
+Following up once, briefly, in case my note arrived in a busy week.
+
+The short version: two SAR members made a 250-set bourbon release for the 250th, and I would be glad to give your chapter whatever is useful — newsletter details, a member code, or nothing at all.
+
+One line if it is not for you and I will stop writing.
+
+Bruce Lautenschlager
+[postal address] · [unsubscribe]</div>
+        <div class="post__ft"><b>One follow-up. Never two.</b> This audience talks to each other; being remembered as persistent is worse than being forgotten.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>B-1</b><span>Bourbon clubs &amp; whiskey societies</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: A single barrel, 7 years, 120 proof — 250 sets, then it's done
+
+Hello [Club],
+
+Quick one for a group that actually cares about the details.
+
+American Founders Heritage Select 250: seven years old, single barrel, cask strength at 120 proof, uncut and non-chill filtered. 750ml. No vatting, no batching — one cask, emptied once.
+
+We bottled 250 sets for the nation's 250th and stopped there. Each comes in an engraved box with a pewter eagle stopper, two pewter Jefferson cups, and a numbered certificate. Bottles are also available on their own.
+
+If your group does tastings, I would rather it turned up on your table than sat in a warehouse. Happy to talk about what that could look like.
+
+  The set — $250
+  The bottle — $95
+  foundersrevolution250.kybourbondirect.com
+
+Allen Hayne
+American Founders Distilling Co.
+[postal address] · [unsubscribe]
+
+Must be 21 or older. Please enjoy responsibly.</div>
+        <div class="post__ft"><b>Lead with the spec, not the story.</b> This audience buys on the liquid; the history is a bonus, not the pitch.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>C-1</b><span>Reviewers &amp; influencers</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: 250 sets, 120 proof, and a genealogy requirement
+
+[Name] —
+
+I watched your [specific piece — name it, and mean it].
+
+Short pitch: American Founders Heritage Select 250. Seven-year Kentucky straight, single barrel, cask strength at 120 proof, uncut and non-chill filtered. 250 sets exist for the nation's 250th and that is the entire run.
+
+The part I think is actually your story: both founders had to document their genealogy back to a Revolutionary patriot to join the SAR before any of this existed. One of them spent thirty-nine years as an Indiana educator. It is a strange and specific reason to make a whiskey.
+
+If you would like a sample I will send one, no conditions and no approval over what you say. If you would rather not, that is a fine answer.
+
+Allen Hayne
+American Founders Distilling Co.
+[postal address] · [unsubscribe]
+
+21+ only.</div>
+        <div class="post__ft"><b>Name the specific piece or do not send it.</b> <b>Check before shipping samples:</b> alcohol to reviewers has state-by-state rules and needs an adult signature — your fulfilment partner will know.</div>
+      </article>
+
+      <article class="post">
+        <div class="post__hd"><b>D-1</b><span>Consumer welcome &middot; opt-in list</span>
+          <button class="cp" type="button">Copy</button></div>
+        <div class="post__bd">SUBJECT: One barrel, 250 sets, and why the number matters
+
+Thank you for asking to hear from us.
+
+The short version: in 2026 the United States turns 250. We filled 250 sets of a seven-year, single barrel, cask strength Kentucky straight bourbon to mark it — one for each year — and when the barrel is empty, it is finished.
+
+Each set carries a number. That number is on the certificate and on the bottle, and it is yours.
+
+Over the next few weeks we will send you a handful of notes: how the box is made, why there are two pewter cups in it, and the two men whose genealogies started this. No more than one a week, and you can stop them at any time with one click.
+
+  The set — $250
+  The bottle — $95
+  foundersrevolution250.kybourbondirect.com
+
+Must be 21 or older. Please enjoy responsibly.
+[postal address] · [unsubscribe]</div>
+        <div class="post__ft"><b>Then a four-note sequence</b> mapped to the pillars: the box, the cup, the founders, the countdown. One a week, as promised — keeping that promise is the whole point.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="shd">
+      <span class="lbl">Capabilities</span>
+      <h2>What you'd have to do to let Claude run this</h2>
+      <p>You asked what it takes. Here is the honest answer, including the parts that
+         are not currently possible.</p>
+    </div>
+
+    <div class="grid g2" style="margin-bottom:2rem">
+      <div class="card">
+        <h3>Email — this one works</h3>
+        <p>Klaviyo and Mailchimp both have Claude connectors. Connect one at
+           <strong>claude.ai → Settings → Connectors</strong>, then enable it for the chat
+           you are working in. After that Claude can draft campaigns straight into your
+           account, pull list and performance data, and revise from real results.</p>
+        <p style="margin-top:.6rem"><strong>You never paste an API key into a chat.</strong>
+           The connector handles authentication itself.</p>
+      </div>
+      <div class="card">
+        <h3>Social — this one does not</h3>
+        <p>There is <strong>no connector that posts organic content</strong> to Facebook,
+           Instagram or TikTok. The social entries in the directory are analytics
+           (Supermetrics, Windsor.ai, vidIQ) or paid-ads (AdWhispr). None of them publishes
+           a post.</p>
+        <p style="margin-top:.6rem">So social stays copy-and-paste, or goes through a
+           scheduler like Buffer or Metricool that you paste into. That is a real limit, not
+           a setup step you are missing.</p>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><div><b>Age-restrict the Facebook Page and the Instagram account first</b>
+        <p>Before the first post. Meta Business Suite → Settings → Page restrictions → 21+
+           for the US. Retrofitting this after you have followers costs you reach.</p></div></li>
+      <li><div><b>Set the sending domain up properly</b>
+        <p>SPF, DKIM and DMARC on the domain you will send from, then warm it over two to
+           three weeks before any volume. This is the single highest-consequence technical
+           step in the whole campaign.</p></div></li>
+      <li><div><b>Connect Klaviyo or Mailchimp</b>
+        <p>claude.ai → Settings → Connectors. Then turn it on for the chat. Tell me when it
+           is live and I will load these sequences in as drafts.</p></div></li>
+      <li><div><b>Put a capture form on the site</b>
+        <p>You have traffic arriving at a page with no way to stay in touch. One field and a
+           21+ checkbox on the buy page is worth more over a year than any single post here.</p></div></li>
+      <li><div><b>Decide who approves</b>
+        <p>You chose draft-only, which is right. Name one person who reviews the queue and
+           how often. An approval step nobody owns becomes an auto-post step by accident.</p></div></li>
+    </ol>
+
+    <div class="warn" style="margin-top:2rem">
+      <h3>What Claude still cannot do, with or without connectors</h3>
+      <ul>
+        <li><strong>Post to Facebook, Instagram or TikTok.</strong> No connector exists.</li>
+        <li><strong>Run unattended on a schedule from this session.</strong> This is a
+            temporary container that gets wiped. Recurring work needs a host — GitHub
+            Actions, a server, or a scheduling SaaS. You chose to skip that for now.</li>
+        <li><strong>Find or verify contact lists.</strong> Chapter officers must be gathered
+            from the organisations' own published directories, by a person.</li>
+        <li><strong>Approve its own outbound.</strong> By your instruction and by good sense,
+            everything above is a draft until you say otherwise.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>American Founders Heritage Select 250 &middot; Kentucky Straight Bourbon Whiskey &middot;
+       60% ALC/VOL &middot; 750 ml. Must be 21 or older to purchase. Please enjoy responsibly.</p>
+    <p style="margin-top:.5rem">Every post and letter here is a draft for review. Figures
+       marked in brackets need filling before sending.</p>
+  </div>
+</footer>
+
+<script>
+// Copy the post body, not the notes around it — that is what gets pasted.
+document.querySelectorAll('.cp').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var body = btn.closest('.post').querySelector('.post__bd').innerText;
+    var done = function () {
+      var was = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = was; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).then(done, fallback);
+    } else { fallback(); }
+    function fallback() {
+      // Clipboard API is blocked in some embedded contexts; select the text so
+      // the reader can still copy it by hand rather than getting nothing.
+      var r = document.createRange();
+      r.selectNodeContents(btn.closest('.post').querySelector('.post__bd'));
+      var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = 'Select + copy';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
+    }
+  });
+});
+</script>

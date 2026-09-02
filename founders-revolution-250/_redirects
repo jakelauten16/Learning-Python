@@ -1,0 +1,44 @@
+# Old Squarespace URLs -> this site.
+#
+# Read by Netlify and by Cloudflare Pages, same format on both. This file is
+# what keeps the links that are already in the wild working the day the domain
+# moves off Squarespace. The old site had exactly five indexed pages plus a
+# cart; every one of them is accounted for below.
+#
+#   200 = rewrite. The visitor keeps the old URL in the address bar and gets
+#         the new page. Use it where the page still exists here.
+#   301 = permanent move. Use it where the URL should be retired.
+
+# --- the pages that still exist -------------------------------------------
+# /bourbon is the one that has been shared most, so it stays a real URL.
+/bourbon              /bourbon.html          200
+/privacy-policy       /privacy.html          200
+
+# --- the pages that moved --------------------------------------------------
+/home                 /                      301
+/contact              /buy.html              301
+
+# --- clean URLs for this site's own pages ----------------------------------
+# Both hosts already serve /buy for buy.html, but saying so makes it certain
+# and means a link written either way works.
+/collectors-box       /collectors-box.html   200
+/heritage             /heritage.html         200
+/founders             /founders.html         200
+/partnerships         /partnerships.html     200
+/buy                  /buy.html              200
+/privacy              /privacy.html          200
+
+# --- MERCHANDISE: DECIDE THIS BEFORE YOU MOVE THE DOMAIN -------------------
+# /merchandise and /cart were a live Squarespace store. They stop working the
+# moment DNS points here. The 302s below are a stopgap, not an answer — 302 is
+# deliberate so nothing caches while you decide. Pick one:
+#
+#   a) merch moves to Kentucky Bourbon Direct
+#         /merchandise  https://foundersrevolution250.kybourbondirect.com/  301
+#   b) merch stays on Squarespace at a subdomain
+#         /merchandise  https://shop.foundersrevolution250.com/merchandise  301
+#         /cart         https://shop.foundersrevolution250.com/cart         301
+#   c) merch is retired — delete these two lines and let them 404 properly
+#
+/merchandise          /                      302
+/cart                 /                      302

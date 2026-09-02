@@ -1,0 +1,12 @@
+{
+  "count": 85,
+  "widths": [
+    1280,
+    720
+  ],
+  "pattern": "assets/media/frames/{width}/f{index:03d}.webp",
+  "lead": "assets/media/hero-lead.mp4",
+  "handoff": 6.47,
+  "leadEnd": 6.47,
+  "sourceFps": 24.0
+}

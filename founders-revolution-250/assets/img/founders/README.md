@@ -1,6 +1,10 @@
 # Founder portraits
 
-**Just drop the file in. There is no markup to edit.**
+`bruce.jpg` and `allen.jpg` are in place — pulled from the published headshots on
+foundersrevolution250.com/bourbon, cropped square on the face, resized to 640px
+and stripped of EXIF.
+
+**To replace either one, just drop the file in. There is no markup to edit.**
 
 | File | Founder |
 | --- | --- |

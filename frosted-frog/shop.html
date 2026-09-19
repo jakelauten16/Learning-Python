@@ -43,10 +43,11 @@
 <main>
   <section class="section section--tight" style="padding-top:3.5rem">
     <div class="wrap center">
-      <span class="eyebrow" data-reveal>The Bakery</span>
+      <span class="eyebrow" data-reveal>This Week's Menu</span>
       <h1 data-reveal style="font-size:clamp(2.4rem,5vw,3.8rem)">Everything on the board</h1>
       <div class="ornament" data-reveal><span></span><i></i><span></span></div>
-      <p class="lede" data-reveal>Prices are for standard flavors and finishes. Anything can be customized &mdash; leave a note when you add it, or ask for a quote.</p>
+      <p class="lede" data-reveal>Order Monday through Wednesday, pick up Friday or Saturday. Anything can be customized &mdash; leave a note when you add it, or ask for a quote.</p>
+      <div class="week__status" data-order-status data-reveal style="margin-top:1.6rem"></div>
     </div>
   </section>
 
@@ -78,6 +79,7 @@
       <div>
         <h4>Visit &amp; Order</h4>
         <ul>
+          <li data-schedule-summary></li>
           <li data-config="pickupLocation"></li>
           <li><a href="#" data-config="email"></a></li>
           <li><a href="#" data-config="phone"></a></li>
@@ -101,6 +103,7 @@
   </div>
 </footer>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/catalog.js"></script>

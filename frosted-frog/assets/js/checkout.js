@@ -6,35 +6,38 @@
   function money(n) { return "$" + Number(n).toFixed(2); }
   function $(sel) { return document.querySelector(sel); }
 
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function iso(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-
-  function earliestDate() {
-    var d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + SHOP_CONFIG.leadTimeDays);
-    return d;
-  }
-
-  function pickupDates() {
-    var out = [];
-    var d = earliestDate();
-    var end = new Date(d);
-    end.setDate(end.getDate() + SHOP_CONFIG.maxDaysOut);
-    while (d <= end) {
-      if (SHOP_CONFIG.pickupDays.indexOf(d.getDay()) !== -1) out.push(new Date(d));
-      d.setDate(d.getDate() + 1);
+  /* Demo builds run every page in one document, so navigation is by hash. */
+  var DEMO = !!window.FROSTED_DEMO;
+  function go(page) {
+    if (DEMO) {
+      window.location.hash = "#/" + page.replace(".html", "");
+      window.scrollTo(0, 0);
+    } else {
+      window.location.href = page;
     }
-    return out;
-  }
-
-  function prettyDate(d) {
-    return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     var form = $("[data-order-form]");
     if (!form) return;
+
+    /* --- is the order window open? --- */
+    var closedEl = $("[data-window-closed]");
+    var open = Schedule.isOrderingOpen();
+    if (closedEl) {
+      closedEl.hidden = open;
+      if (!open) {
+        var opens = Schedule.ordersOpen();
+        closedEl.innerHTML =
+          '<div class="panel center">' +
+            '<span class="eyebrow">Ordering is closed right now</span>' +
+            "<h3>The order book opens " + opens.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) + "</h3>" +
+            "<p>Orders are taken Monday through Wednesday, and everything is baked fresh for that week's Friday and Saturday pickups. " +
+            "Your cart is saved — come back Monday and it will still be here.</p>" +
+            '<a class="btn btn--ghost" href="' + window.pageHref("shop.html") + '">Browse this week\'s menu</a>' +
+          "</div>";
+      }
+    }
 
     var linesEl = $("[data-order-lines]");
     var totalsEl = $("[data-order-totals]");
@@ -67,16 +70,50 @@
       });
     }
 
-    /* --- date + window --- */
-    if (dateSel) {
-      dateSel.innerHTML = '<option value="">Choose a date</option>' +
-        pickupDates().map(function (d) {
-          return '<option value="' + iso(d) + '">' + prettyDate(d) + "</option>";
-        }).join("");
+    /* --- the week's two pickup windows --- */
+    var dayRow = $("[data-pickup-days]");
+    var options = Schedule.pickupOptions();
+    var chosen = null;
+
+    function renderDays() {
+      if (!dayRow) return;
+      dayRow.innerHTML = options.map(function (o, i) {
+        return '<button type="button" class="choice" data-pick="' + i + '">' +
+          "<strong>" + o.label + "</strong> " + o.shortDate + " · " + o.window + "</button>";
+      }).join("");
     }
-    if (windowSel) {
+
+    function renderSlots() {
+      if (!windowSel) return;
+      if (!chosen) {
+        windowSel.innerHTML = '<option value="">Choose a pickup day first</option>';
+        windowSel.disabled = true;
+        return;
+      }
+      windowSel.disabled = false;
+      if (!chosen.slots.length) {
+        windowSel.innerHTML = "<option>" + chosen.window + "</option>";
+        return;
+      }
       windowSel.innerHTML = '<option value="">Choose a time</option>' +
-        SHOP_CONFIG.pickupWindows.map(function (w) { return "<option>" + w + "</option>"; }).join("");
+        chosen.slots.map(function (t) { return "<option>" + t + "</option>"; }).join("");
+    }
+
+    renderDays();
+    renderSlots();
+
+    if (dayRow) {
+      dayRow.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-pick]");
+        if (!b) return;
+        Array.prototype.forEach.call(dayRow.children, function (x) { x.classList.remove("is-active"); });
+        b.classList.add("is-active");
+        chosen = options[parseInt(b.getAttribute("data-pick"), 10)];
+        if (dateSel) dateSel.value = chosen.date;
+        var field = dayRow.closest(".field");
+        if (field) field.classList.remove("is-invalid");
+        renderSlots();
+      });
     }
 
     /* --- order review --- */
@@ -85,11 +122,11 @@
       if (!items.length) {
         linesEl.innerHTML = '<div class="empty"><p class="script" style="font-size:2rem">Your order is empty</p>' +
           '<p>Add a few things and come back to check out.</p>' +
-          '<a class="btn btn--ghost btn--sm" href="shop.html">Browse the bakery</a></div>';
+          '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("shop.html") + '">Browse the bakery</a></div>';
         form.hidden = true;
         return;
       }
-      form.hidden = false;
+      form.hidden = !open;
       linesEl.innerHTML = items.map(function (i) {
         var opts = Object.keys(i.options || {}).map(function (k) { return i.options[k].name; }).join(" · ");
         return (
@@ -123,10 +160,12 @@
 
       var below = isDelivery && t.subtotal < SHOP_CONFIG.delivery.minimum;
       if (submitBtn) {
-        submitBtn.disabled = below;
-        submitBtn.textContent = below
-          ? "Delivery minimum is " + money(SHOP_CONFIG.delivery.minimum)
-          : SHOP_CONFIG.paymentMode === "stripe" ? "Pay & place pre-order" : "Place pre-order request";
+        submitBtn.disabled = below || !open;
+        submitBtn.textContent = !open
+          ? "Ordering reopens Monday"
+          : below
+            ? "Delivery minimum is " + money(SHOP_CONFIG.delivery.minimum)
+            : SHOP_CONFIG.paymentMode === "stripe" ? "Pay & place pre-order" : "Place pre-order request";
       }
     }
 
@@ -156,6 +195,16 @@
         if (el.offsetParent === null && el.type !== "hidden") return; // hidden section
         if (!el.value.trim()) { invalid(el, "This one's required."); ok = false; }
       });
+      if (!chosen) {
+        var dayField = dayRow ? dayRow.closest(".field") : null;
+        if (dayField) {
+          dayField.classList.add("is-invalid");
+          var e1 = dayField.querySelector(".error");
+          if (e1) e1.textContent = "Pick Friday or Saturday.";
+        }
+        ok = false;
+      }
+
       var email = $("#email");
       if (email && email.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
         invalid(email, "Check the email address.");
@@ -188,8 +237,11 @@
           };
         }),
         fulfillment: method,
-        date: dateSel ? dateSel.value : "",
+        date: chosen ? chosen.date : "",
+        day: chosen ? chosen.label : "",
+        pretty: chosen ? chosen.pretty : "",
         window: windowSel ? windowSel.value : "",
+        windowRange: chosen ? chosen.window : "",
         customer: {
           name: $("#name").value.trim(),
           email: $("#email").value.trim(),
@@ -262,7 +314,7 @@
         "Email: " + d.customer.email,
         "Phone: " + d.customer.phone,
         d.fulfillment === "delivery" ? "Delivery to: " + d.customer.address : "Pickup",
-        "Date: " + d.date + " — " + d.window,
+        "Pickup: " + (d.pretty || d.date) + " at " + d.window + " (window " + d.windowRange + ")",
         d.customer.occasion ? "Occasion: " + d.customer.occasion : "",
         "",
         "Order:",
@@ -277,6 +329,7 @@
     }
 
     function mailFallback(d) {
+      if (DEMO) return; // a demo build doesn't open anybody's email
       var href = "mailto:" + SHOP_CONFIG.email +
         "?subject=" + encodeURIComponent("Pre-order request — " + d.customer.name) +
         "&body=" + encodeURIComponent(summaryText(d));
@@ -286,7 +339,7 @@
     function finish(d) {
       sessionStorage.setItem("frostedfrog.lastOrder", JSON.stringify(d));
       Cart.clear();
-      window.location.href = "thank-you.html";
+      go("thank-you.html");
     }
   });
 })();

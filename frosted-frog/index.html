@@ -52,9 +52,9 @@
           <a class="btn btn--ghost" href="order.html">Start a pre-order</a>
         </div>
         <div class="hero__meta">
-          <div><strong>3 days</strong>minimum notice</div>
-          <div><strong>Thu&ndash;Sat</strong>pickup windows</div>
-          <div><strong>15 mi</strong>local delivery</div>
+          <div><strong>Mon&ndash;Wed</strong>order window</div>
+          <div><strong>Fri 3&ndash;7</strong>pickup</div>
+          <div><strong>Sat 10&ndash;7</strong>pickup</div>
         </div>
       </div>
       <div class="hero__mark" data-reveal="right">
@@ -71,9 +71,23 @@
     </div>
   </div>
 
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="week" data-reveal>
+        <div class="week__status" data-order-status></div>
+        <ol class="week__steps">
+          <li><span>Mon&ndash;Wed</span><strong>Order window</strong><em>Pick from this week's menu</em></li>
+          <li><span>Thursday</span><strong>Shopping day</strong><em>Ingredients bought for your order</em></li>
+          <li><span>Friday</span><strong>Baked &amp; ready</strong><em>Pickup 3:00&ndash;7:00 PM</em></li>
+          <li><span>Saturday</span><strong>Baked &amp; ready</strong><em>Pickup 10:00 AM&ndash;7:00 PM</em></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap center">
-      <span class="eyebrow" data-reveal>The Showcase</span>
+      <span class="eyebrow" data-reveal>This Week's Menu</span>
       <h2 data-reveal>Baked in small batches,<br>finished by hand</h2>
       <div class="ornament" data-reveal><span></span><i></i><span></span></div>
       <p class="lede" data-reveal>Every order is made fresh the week you pick it up &mdash; never frozen, never bulk. Choose from the cases below, or tell us what you're dreaming up.</p>
@@ -97,16 +111,16 @@
     <div class="wrap grid grid--2" style="align-items:center">
       <div data-reveal="left">
         <span class="eyebrow">How pre-ordering works</span>
-        <h2>Three steps, and then it's ours to worry about</h2>
-        <p class="lede">Pick your treats, choose a pickup day, and pay at checkout. You'll get a confirmation with the address and your window &mdash; then we bake.</p>
+        <h2>One menu a week,<br>two chances to pick it up</h2>
+        <p class="lede">Order any time Monday through Wednesday. Thursday we shop for exactly what was ordered, then everything is baked fresh for Friday and Saturday pickup.</p>
         <a class="btn btn--light" href="order.html" style="margin-top:1rem">Place a pre-order</a>
       </div>
       <div data-reveal="right">
         <div class="panel" style="background:rgba(251,248,241,.06);border-color:rgba(232,217,174,.3)">
-          <h3 style="display:flex;gap:.8rem;align-items:center"><span class="num" style="background:#E8D9AE">1</span> Choose your treats</h3>
-          <p style="opacity:.85">Sizes, fillings, colors and a note for anything special.</p>
-          <h3 style="display:flex;gap:.8rem;align-items:center;margin-top:1.8rem"><span class="num" style="background:#E8D9AE">2</span> Pick a day</h3>
-          <p style="opacity:.85">Thursday through Saturday, at least three days out.</p>
+          <h3 style="display:flex;gap:.8rem;align-items:center"><span class="num" style="background:#E8D9AE">1</span> Order Monday&ndash;Wednesday</h3>
+          <p style="opacity:.85">Pick from the week's menu, with sizes, fillings and a note for anything special.</p>
+          <h3 style="display:flex;gap:.8rem;align-items:center;margin-top:1.8rem"><span class="num" style="background:#E8D9AE">2</span> Choose Friday or Saturday</h3>
+          <p style="opacity:.85">Friday 3:00&ndash;7:00 PM, or Saturday 10:00 AM&ndash;7:00 PM. Lock in a time inside the window.</p>
           <h3 style="display:flex;gap:.8rem;align-items:center;margin-top:1.8rem"><span class="num" style="background:#E8D9AE">3</span> Pay &amp; you're set</h3>
           <p style="opacity:.85;margin:0">Secure checkout, instant confirmation, zero guesswork.</p>
         </div>
@@ -143,6 +157,7 @@
       <div>
         <h4>Visit &amp; Order</h4>
         <ul>
+          <li data-schedule-summary></li>
           <li data-config="pickupLocation"></li>
           <li><a href="#" data-config="email"></a></li>
           <li><a href="#" data-config="phone"></a></li>
@@ -166,6 +181,7 @@
   </div>
 </footer>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/catalog.js"></script>

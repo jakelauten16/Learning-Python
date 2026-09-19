@@ -147,7 +147,7 @@
       lines.innerHTML =
         '<div class="empty"><p class="script" style="font-size:2rem">Nothing here yet</p>' +
         '<p>Pick out something sweet and it will show up right here.</p>' +
-        '<a class="btn btn--ghost btn--sm" href="shop.html">Browse the bakery</a></div>';
+        '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("shop.html") + '">Browse the bakery</a></div>';
       foot.innerHTML = "";
       return;
     }
@@ -175,7 +175,7 @@
     foot.innerHTML =
       '<div class="totals"><div><span>Subtotal</span><span>' + money(Cart.subtotal()) + "</span></div>" +
       '<div><span>Taxes &amp; pickup details</span><span>at checkout</span></div></div>' +
-      '<a class="btn btn--block" href="order.html" style="margin-top:1rem">Review &amp; pre-order</a>';
+      '<a class="btn btn--block" href="' + window.pageHref("order.html") + '" style="margin-top:1rem">Review &amp; pre-order</a>';
   }
 
   function openDrawer() {
@@ -218,6 +218,7 @@
       var t = e.target;
       if (t.closest("[data-cart-open]")) { e.preventDefault(); renderDrawer(); openDrawer(); }
       if (t.closest("[data-cart-close]")) { closeDrawer(); }
+      if (t.closest(".drawer a")) { closeDrawer(); }
       var down = t.closest("[data-qty-down]");
       var up = t.closest("[data-qty-up]");
       var rm = t.closest("[data-remove]");

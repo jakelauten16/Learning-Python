@@ -51,6 +51,7 @@
 
   <section class="section" style="padding-top:0">
     <div class="wrap">
+      <div data-window-closed hidden style="margin-bottom:2.5rem"></div>
       <div data-order-lines style="margin-bottom:2.5rem"></div>
 
       <form class="checkout" data-order-form novalidate hidden>
@@ -69,18 +70,18 @@
           </div>
 
           <div class="panel" data-reveal>
-            <h3><span class="num">2</span> When do you need it?</h3>
-            <div class="field--row">
-              <div class="field">
-                <label for="pickup-date">Date</label>
-                <select id="pickup-date" name="date" required></select>
-                <p class="error">Pick a date.</p>
-              </div>
-              <div class="field">
-                <label for="pickup-window">Time window</label>
-                <select id="pickup-window" name="window" required></select>
-                <p class="error">Pick a window.</p>
-              </div>
+            <h3><span class="num">2</span> Which pickup are you coming to?</h3>
+            <p class="hint" style="margin-top:-.4rem">Everything is baked fresh for that week's two pickups. Choose the one that suits you.</p>
+            <div class="field">
+              <span class="legend">Pickup day</span>
+              <div class="choice-row" data-pickup-days></div>
+              <input type="hidden" id="pickup-date" name="date">
+              <p class="error">Pick Friday or Saturday.</p>
+            </div>
+            <div class="field">
+              <label for="pickup-window">Time</label>
+              <select id="pickup-window" name="window" required></select>
+              <p class="error">Pick a time.</p>
             </div>
             <div class="field">
               <label for="occasion">Occasion <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
@@ -120,7 +121,8 @@
             <div data-order-totals></div>
             <button class="btn btn--block" type="submit" data-submit style="margin-top:1.4rem">Place pre-order</button>
             <div data-status aria-live="polite"></div>
-            <p class="hint" style="margin-top:1rem">Orders need <span data-config="leadTimeDays"></span> days' notice. Changes are welcome up to 72 hours before pickup.</p>
+            <p class="hint" style="margin-top:1rem" data-schedule-summary></p>
+            <p class="hint">Changes are welcome until the order window closes Wednesday night.</p>
             <p class="note" data-config="cottageNotice"></p>
           </div>
         </aside>
@@ -139,6 +141,7 @@
       <div>
         <h4>Visit &amp; Order</h4>
         <ul>
+          <li data-schedule-summary></li>
           <li data-config="pickupLocation"></li>
           <li><a href="#" data-config="email"></a></li>
           <li><a href="#" data-config="phone"></a></li>
@@ -162,6 +165,7 @@
   </div>
 </footer>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/checkout.js"></script>

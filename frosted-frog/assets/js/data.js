@@ -1,9 +1,9 @@
 /* ---------------------------------------------------------------------------
    The Frosted Frog — everything you'll edit week to week lives in this file.
 
-   SHOP_CONFIG  → business details, pickup windows, lead time, payment mode
+   SHOP_CONFIG  → business details, the weekly schedule, payment mode
    CATEGORIES   → the sections on the shop page and the home-page showcase
-   PRODUCTS     → every item you sell
+   PRODUCTS     → this week's menu
    --------------------------------------------------------------------------- */
 
 const SHOP_CONFIG = {
@@ -17,13 +17,33 @@ const SHOP_CONFIG = {
   cottageNotice:
     "Made in a home kitchen that is not subject to state inspection. Products may contain, or have come in contact with, wheat, eggs, dairy, soy, peanuts and tree nuts.",
 
-  // How far ahead an order must be placed, in days.
-  leadTimeDays: 3,
-  // How far out the calendar lets people book.
-  maxDaysOut: 90,
-  // Days pickup is offered. 0 = Sunday ... 6 = Saturday.
-  pickupDays: [4, 5, 6],
-  pickupWindows: ["10:00 AM – 12:00 PM", "12:00 PM – 2:00 PM", "4:00 PM – 6:00 PM"],
+  /* THE WEEKLY RHYTHM --------------------------------------------------------
+     Ordering is open Monday through Wednesday. Thursday is shopping day,
+     Friday and Saturday are baking and pickup. Customers don't pick an
+     arbitrary date — they choose one of that week's two pickup windows.
+
+     Days are numbered 0 = Sunday through 6 = Saturday, and times are 24-hour.
+  --------------------------------------------------------------------------- */
+  schedule: {
+    // Days the order form accepts orders, and the hours on those days.
+    orderDays: [1, 2, 3],          // Monday, Tuesday, Wednesday
+    orderOpens: "00:00",
+    orderCloses: "23:59",
+
+    // The pickup windows for the week that's just been ordered.
+    pickups: [
+      { day: 5, label: "Friday",   start: "15:00", end: "19:00" },
+      { day: 6, label: "Saturday", start: "10:00", end: "19:00" },
+    ],
+
+    // Customers choose a time inside the window, in increments of this many
+    // minutes. Set to 0 to let them take the whole window with no time choice.
+    slotMinutes: 30,
+
+    // Leave false. Set to true only while you're previewing the site — it
+    // keeps ordering open on days it would normally be closed.
+    previewAnyDay: false,
+  },
 
   // Local delivery (set enabled:false to hide the option entirely).
   delivery: { enabled: true, fee: 12, radiusMiles: 15, minimum: 45 },
@@ -238,10 +258,11 @@ const TESTIMONIALS = [
 ];
 
 const FAQS = [
-  { q: "How far in advance should I order?", a: "Standard orders need at least " + SHOP_CONFIG.leadTimeDays + " days' notice. Custom cakes and large cookie sets are best booked two to four weeks ahead, especially in the spring and around the holidays." },
+  { q: "When can I order?", a: "The order form is open Monday through Wednesday each week. Thursday is shopping day, and everything is baked fresh Friday and Saturday for that week's pickups. If you land here on a Thursday or a weekend, the menu is still here to browse — ordering reopens Monday morning." },
+  { q: "When do I pick up?", a: "Friday between 3:00 and 7:00 PM, or Saturday between 10:00 AM and 7:00 PM. You'll choose which one at checkout and lock in a time inside that window." },
   { q: "How do I pay?", a: "You'll pay securely at checkout when you place your pre-order. Custom quotes are invoiced separately once we've settled on the details." },
-  { q: "Where do I pick up?", a: SHOP_CONFIG.pickupLocation + ". You'll get the address and your pickup window in your confirmation email." },
+  { q: "Where do I pick up?", a: SHOP_CONFIG.pickupLocation + ". You'll get the address and your pickup time in your confirmation email." },
   { q: "Do you deliver?", a: SHOP_CONFIG.delivery.enabled ? "Yes — local delivery within " + SHOP_CONFIG.delivery.radiusMiles + " miles for a flat $" + SHOP_CONFIG.delivery.fee + " on orders over $" + SHOP_CONFIG.delivery.minimum + "." : "Pickup only for now." },
   { q: "Can you work around allergies?", a: "I can leave out nuts on most items, but everything is made in one home kitchen, so I can't promise an allergen-free product. " + SHOP_CONFIG.cottageNotice },
-  { q: "What about changes or cancellations?", a: "Changes are welcome up to 72 hours before your pickup date. Inside 72 hours the ingredients are already bought and the order is final." },
+  { q: "What about changes or cancellations?", a: "Changes are welcome until the order window closes Wednesday night. After that the shopping is done and the order is final." },
 ];

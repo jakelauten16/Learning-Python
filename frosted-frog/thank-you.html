@@ -66,7 +66,7 @@
         i.qty + " &times; " + i.name + "</span><span>" + money(i.qty * i.unitPrice) + "</span></div>";
     }).join("") +
     '<div class="totals"><div class="total"><span>Total</span><span>' + money(d.totals.total) + "</span></div></div>" +
-    "<p class='hint'>" + (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + " on " + d.date + " &middot; " + d.window + "</p></div>";
+    "<p class='hint'>" + (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + " &middot; " + (d.pretty || d.date) + " at " + d.window + "</p></div>";
 })();
 </script>
 <footer class="site-footer">
@@ -80,6 +80,7 @@
       <div>
         <h4>Visit &amp; Order</h4>
         <ul>
+          <li data-schedule-summary></li>
           <li data-config="pickupLocation"></li>
           <li><a href="#" data-config="email"></a></li>
           <li><a href="#" data-config="phone"></a></li>
@@ -103,6 +104,7 @@
   </div>
 </footer>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
 </body>

@@ -4,6 +4,14 @@
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Links built in JavaScript go through here so a demo build (all pages in
+     one document, routed by hash) links to the right place. */
+  window.pageHref = function (page, anchor) {
+    var id = page.replace(".html", "");
+    if (window.FROSTED_DEMO) return "#/" + id + (anchor ? ":" + anchor : "");
+    return page + (anchor ? "#" + anchor : "");
+  };
+
   document.addEventListener("DOMContentLoaded", function () {
     /* --- fill anything tagged with a config key --- */
     Array.prototype.forEach.call(document.querySelectorAll("[data-config]"), function (el) {
@@ -22,6 +30,27 @@
         el.textContent = value;
       }
     });
+
+    /* --- the weekly schedule, wherever it's referenced --- */
+    if (window.Schedule) {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-schedule-summary]"), function (el) {
+        el.textContent = Schedule.summary();
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-order-status]"), function (el) {
+        var open = Schedule.isOrderingOpen();
+        var pickups = Schedule.pickupOptions();
+        var when = open
+          ? "Ordering closes " + Schedule.ordersClose().toLocaleDateString(undefined, { weekday: "long" }) + " night"
+          : "Ordering reopens " + Schedule.ordersOpen().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+        el.className = "week__status" + (open ? " is-open" : "");
+        el.innerHTML =
+          '<span class="dot" aria-hidden="true"></span>' +
+          "<strong>" + (open ? "Ordering is open" : "Ordering is closed") + "</strong>" +
+          "<span>" + when + " · pickup " +
+          pickups.map(function (p) { return p.label + " " + p.shortDate; }).join(" or ") + "</span>";
+      });
+    }
 
     var year = document.querySelector("[data-year]");
     if (year) year.textContent = new Date().getFullYear();

@@ -13,14 +13,22 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 /* Load the same catalog the site uses. */
 function loadCatalog() {
-  const file = path.join(__dirname, "..", "..", "assets", "js", "data.js");
+  const dir = path.join(__dirname, "..", "..", "assets", "js");
   const sandbox = {};
   vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync(file, "utf8"), sandbox);
-  return { PRODUCTS: sandbox.PRODUCTS, SHOP_CONFIG: sandbox.SHOP_CONFIG };
+  // data.js declares consts, which stay lexical — hand them over explicitly.
+  vm.runInContext(
+    fs.readFileSync(path.join(dir, "data.js"), "utf8") +
+      "\n;this.__catalog = { PRODUCTS, SHOP_CONFIG };",
+    sandbox
+  );
+  // The same schedule rules the browser uses, so the server can re-check them.
+  vm.runInContext(fs.readFileSync(path.join(dir, "schedule.js"), "utf8"), sandbox);
+  sandbox.__catalog.Schedule = sandbox.Schedule;
+  return sandbox.__catalog;
 }
 
-const { PRODUCTS, SHOP_CONFIG } = loadCatalog();
+const { PRODUCTS, SHOP_CONFIG, Schedule } = loadCatalog();
 
 const cents = (dollars) => Math.round(Number(dollars) * 100);
 
@@ -60,15 +68,18 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: "Your order is empty" }) };
   }
   if (!order.date || !order.window) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Choose a pickup date and window" }) };
+    return { statusCode: 400, body: JSON.stringify({ error: "Choose a pickup day and time" }) };
   }
 
-  /* Lead time is enforced here too, not just in the browser. */
-  const earliest = new Date();
-  earliest.setHours(0, 0, 0, 0);
-  earliest.setDate(earliest.getDate() + SHOP_CONFIG.leadTimeDays);
-  if (new Date(order.date + "T00:00:00") < earliest) {
-    return { statusCode: 400, body: JSON.stringify({ error: "That date is inside our lead time" }) };
+  /* The schedule is enforced here too, not just in the browser. */
+  if (!Schedule.isOrderingOpen(new Date(), SHOP_CONFIG)) {
+    return {
+      statusCode: 409,
+      body: JSON.stringify({ error: "Ordering is closed — the order book opens again Monday" }),
+    };
+  }
+  if (!Schedule.isValidPickup(order.date, order.window, new Date(), SHOP_CONFIG)) {
+    return { statusCode: 400, body: JSON.stringify({ error: "That isn't one of this week's pickup times" }) };
   }
 
   const lineItems = [];
@@ -127,7 +138,8 @@ exports.handler = async (event) => {
       metadata: {
         fulfillment: delivery ? "delivery" : "pickup",
         pickup_date: order.date,
-        pickup_window: order.window,
+        pickup_time: order.window,
+        pickup_window: order.windowRange || "",
         customer_name: (customer.name || "").slice(0, 200),
         customer_phone: (customer.phone || "").slice(0, 50),
         address: (customer.address || "").slice(0, 400),

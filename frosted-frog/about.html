@@ -118,7 +118,7 @@
   <section class="section section--green">
     <div class="wrap center">
       <h2 data-reveal>Ready when you are</h2>
-      <p class="lede" data-reveal style="margin-inline:auto">Pre-orders open <span data-config="leadTimeDays"></span> days out and fill up fast on holiday weekends.</p>
+      <p class="lede" data-reveal style="margin-inline:auto" data-schedule-summary></p>
       <a class="btn btn--light" href="order.html" data-reveal style="margin-top:1rem">Start a pre-order</a>
     </div>
   </section>
@@ -152,6 +152,7 @@ document.addEventListener("submit", function (e) {
       <div>
         <h4>Visit &amp; Order</h4>
         <ul>
+          <li data-schedule-summary></li>
           <li data-config="pickupLocation"></li>
           <li><a href="#" data-config="email"></a></li>
           <li><a href="#" data-config="phone"></a></li>
@@ -175,6 +176,7 @@ document.addEventListener("submit", function (e) {
   </div>
 </footer>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/catalog.js"></script>

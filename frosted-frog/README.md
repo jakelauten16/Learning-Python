@@ -1,8 +1,22 @@
 # The Frosted Frog — bakery website
 
-A boutique storefront for a cottage bakery: browse the case, build an order,
-pick a pickup day, and pay at checkout. Plain HTML, CSS and JavaScript — no
-build step and no framework. Open `index.html` in a browser and it works.
+A boutique storefront for a cottage bakery, built around one weekly rhythm:
+
+| | |
+| --- | --- |
+| **Monday – Wednesday** | The order book is open. Customers order from the week's menu. |
+| **Thursday** | Shopping day. Ordering is closed. |
+| **Friday** | Baked and ready. Pickup 3:00 – 7:00 PM. |
+| **Saturday** | Baked and ready. Pickup 10:00 AM – 7:00 PM. |
+
+Customers never pick a date out of a calendar — at checkout they choose one of
+that week's two pickup windows and a time inside it. Outside the order window
+the menu is still browsable, but the form closes itself and says when it
+reopens. The cart survives, so a Thursday visitor can come back Monday and
+check out.
+
+Plain HTML, CSS and JavaScript — no build step and no framework. Open
+`index.html` in a browser and it works.
 
 ## Pages
 
@@ -21,9 +35,14 @@ closed tab, or a customer who wanders off mid-order.
 
 Nothing else needs to be touched week to week.
 
-- **`SHOP_CONFIG`** — business name, email, phone, pickup location, lead time,
-  which days pickup is offered, time windows, delivery fee and radius, sales
-  tax rate, and the payment mode.
+- **`SHOP_CONFIG`** — business name, email, phone, pickup location, delivery
+  fee and radius, sales tax rate, and the payment mode.
+- **`SHOP_CONFIG.schedule`** — the weekly rhythm: which days take orders
+  (`orderDays`, 0 = Sunday), the pickup windows (`pickups`), and how finely
+  customers can choose a time inside a window (`slotMinutes` — 30 gives 3:00,
+  3:30, 4:00 and so on; set it to 0 to offer the whole window instead).
+  Changing a window here changes the checkout, the home page, the FAQ and the
+  server-side check all at once.
 - **`CATEGORIES`** — the sections on the shop page and the home-page showcase.
 - **`PRODUCTS`** — every item: name, category, price, unit ("per dozen"),
   minimum quantity, description, photo, and optional choices (size, filling,
@@ -77,6 +96,25 @@ recalculates every price from `data.js` on the server and re-checks the lead
 time and the delivery minimum, so nothing the customer edits in the browser can
 change what they're charged.
 
+## The demo build
+
+`demo/build.js` folds every page into one self-contained HTML file — all the
+CSS, JavaScript and images inlined, pages routed by `#/shop`, `#/order` and so
+on — so the whole site can be previewed from a single link or file.
+
+```bash
+node demo/build.js        # writes demo/frosted-frog-demo.html
+```
+
+The demo adds a small bar at the bottom that the real site doesn't have:
+
+- **A day switcher.** Preview the site as if it were Monday (ordering open),
+  Thursday or Saturday (closed), without waiting for the day to come around.
+- **Empty the cart**, to start a walkthrough over.
+
+Rebuild it after any change and the preview link updates with it. The demo is
+a view of the real files — there's no second copy of the site to keep in sync.
+
 ## Running it locally
 
 Double-clicking `index.html` works for everything except the Stripe function.
@@ -113,7 +151,8 @@ some sensible security headers.
 - [ ] Set the sales tax rate, or set it to `0` if you don't collect it.
 - [ ] Swap the placeholder illustrations for photos of your own baking.
 - [ ] Replace the sample reviews with real ones (or delete them).
-- [ ] Decide your real lead time, pickup days and windows.
+- [ ] Confirm the order window and pickup times in `SHOP_CONFIG.schedule`.
+- [ ] Set `previewAnyDay` back to `false` if you ever switch it on.
 - [ ] Turn on Stripe and place a test order end to end.
 
 ## Later: the app

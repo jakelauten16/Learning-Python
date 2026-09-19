@@ -155,7 +155,7 @@
     if (cats) {
       cats.innerHTML = CATEGORIES.map(function (c, i) {
         return (
-          '<a class="cat-card" href="shop.html#' + c.id + '" data-reveal data-delay="' + ((i % 3) * 110) + '">' +
+          '<a class="cat-card" href="' + window.pageHref("shop.html", c.id) + '" data-reveal data-delay="' + ((i % 3) * 110) + '">' +
             '<img src="' + c.image + '" alt="' + c.name + '" loading="lazy">' +
             '<div class="cat-card__cap"><h3>' + c.name + "</h3><p>" + c.blurb + "</p></div>" +
           "</a>"
@@ -167,7 +167,9 @@
     var shopGrid = document.querySelector("[data-shop-grid]");
     var filterBar = document.querySelector("[data-filters]");
     if (shopGrid) {
-      var active = (location.hash || "").replace("#", "") || "all";
+      /* In a demo build the hash drives the page router, not the filters. */
+      var demo = !!window.FROSTED_DEMO;
+      var active = (demo ? "" : location.hash || "").replace("#", "") || "all";
       if (active !== "all" && !CATEGORIES.some(function (c) { return c.id === active; })) active = "all";
 
       if (filterBar) {
@@ -192,9 +194,13 @@
         filterBar.addEventListener("click", function (e) {
           var b = e.target.closest("[data-filter]");
           if (!b) return;
-          history.replaceState(null, "", b.getAttribute("data-filter") === "all" ? "#" : "#" + b.getAttribute("data-filter"));
-          apply(b.getAttribute("data-filter"));
+          var id = b.getAttribute("data-filter");
+          if (!demo) history.replaceState(null, "", id === "all" ? "#" : "#" + id);
+          apply(id);
         });
+      }
+      if (demo) {
+        window.addEventListener("demo:filter", function (e) { apply(e.detail || "all"); });
       }
       apply(active);
     }

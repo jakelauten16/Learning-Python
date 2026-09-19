@@ -444,3 +444,27 @@ p { margin: 0 0 1.1em; }
 }
 
 @media print { .site-header, .drawer, .drawer-backdrop, .site-footer { display: none; } }
+
+/* --- the weekly rhythm --------------------------------------------------- */
+.week { background: var(--white); border: 1px solid rgba(168, 130, 31, .2); border-radius: var(--radius); padding: clamp(1.5rem, 3vw, 2.2rem); }
+.week__steps { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.2rem; }
+.week__steps li { position: relative; padding-left: 1.2rem; border-left: 1px solid rgba(168, 130, 31, .3); }
+.week__steps span { display: block; font-size: .66rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gold-600); margin-bottom: .35rem; }
+.week__steps strong { display: block; font-family: var(--font-display); font-size: 1.28rem; font-weight: 500; color: var(--green-900); }
+.week__steps em { font-style: normal; font-size: .88rem; color: var(--ink-soft); }
+
+.week__status {
+  display: inline-flex; align-items: center; flex-wrap: wrap; gap: .6rem;
+  background: var(--sage-100); border-radius: 999px; padding: .55rem 1.2rem;
+  font-size: .82rem; color: var(--green-900);
+}
+.week__status strong { font-weight: 400; letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; }
+.week__status span:not(.dot) { color: var(--ink-soft); }
+.week__status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-600); }
+.week__status.is-open .dot { background: var(--green-500); box-shadow: 0 0 0 0 rgba(73, 122, 94, .55); animation: pulse 2.4s var(--ease) infinite; }
+@keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(73, 122, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(73, 122, 94, 0); } }
+
+.choice strong { font-weight: 500; }
+
+/* A hidden element stays hidden even when its layout rule says otherwise. */
+[hidden] { display: none !important; }

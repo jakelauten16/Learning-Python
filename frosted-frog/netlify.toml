@@ -1,0 +1,22 @@
+# Deploy config for Netlify. The site is plain static files — no build step.
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# The checkout function reads prices from the site's own data.js, so it has
+# to be bundled with the function.
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["assets/js/data.js"]
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

@@ -1,5 +1,7 @@
 # Lucy Lou's Coffee — website
 
+> This repository holds more than one site. **The Frosted Frog** bakery site lives in [`frosted-frog/`](frosted-frog/README.md). The rest of this README describes the Lucy Lou's Coffee site at the repository root.
+
 A rebuild of [lucylouscoffee.com](https://lucylouscoffee.com/) as a static site:
 five pages, no build step, no framework, no server. Open `index.html` in a
 browser and it works.

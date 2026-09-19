@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &amp; FAQ | The Frosted Frog</title>
+<meta name="description" content="The story behind The Frosted Frog cottage bakery, custom order requests, allergen information, pickup and delivery policies.">
+<meta property="og:title" content="About &amp; FAQ | The Frosted Frog">
+<meta property="og:description" content="The story behind The Frosted Frog cottage bakery, custom order requests, allergen information, pickup and delivery policies.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/frosted-frog-logo.webp">
+<meta name="theme-color" content="#1B3B2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order</a></li>
+      <li><a href="about.html" aria-current="page">About &amp; FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="section section--tight" style="padding-top:3.5rem">
+    <div class="wrap center">
+      <span class="eyebrow" data-reveal>Our Story</span>
+      <h1 data-reveal style="font-size:clamp(2.4rem,5vw,3.8rem)">A home kitchen<span class="script" style="display:block">with very high standards</span></h1>
+      <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap grid grid--2" style="align-items:center">
+      <div data-reveal="left">
+        <p class="lede">The Frosted Frog started the way most good things do &mdash; with a birthday cake for someone we love, and then a request for another one.</p>
+        <p>Today it's a licensed cottage bakery run out of our own kitchen: small batches, real butter, and the kind of detail work that doesn't scale &mdash; hand-piped buttercream, iced cookies done one at a time, cake pops dipped and dried the same afternoon they're rolled.</p>
+        <p>Because everything is made to order, nothing sits in a case. What you pick up was baked for you, that week, on purpose.</p>
+        <a class="link-arrow" href="shop.html">See what's on the board</a>
+      </div>
+      <div data-reveal="right">
+        <img src="assets/img/frosted-frog-logo.webp" class="logo-art" alt="The Frosted Frog logo" data-parallax="0.06" style="width:min(420px,100%);margin-inline:auto">
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" id="custom">
+    <div class="wrap">
+      <div class="center">
+        <span class="eyebrow" data-reveal>Custom Orders</span>
+        <h2 data-reveal>Tell us what you're planning</h2>
+        <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+        <p class="lede center" data-reveal style="margin-inline:auto">Tiered cakes, dessert tables, themed cookie sets, party favors &mdash; anything not on the standard board is quoted individually. Send the details and we'll come back with a price and a timeline, usually within a day.</p>
+      </div>
+
+      <form class="panel" data-quote-form style="max-width:720px;margin:2.5rem auto 0" data-reveal>
+        <div class="field--row">
+          <div class="field">
+            <label for="q-name">Name</label>
+            <input id="q-name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="q-email">Email</label>
+            <input id="q-email" name="email" type="email" required>
+          </div>
+        </div>
+        <div class="field--row">
+          <div class="field">
+            <label for="q-date">Date needed</label>
+            <input id="q-date" name="date" type="date">
+          </div>
+          <div class="field">
+            <label for="q-guests">Servings / quantity</label>
+            <input id="q-guests" name="guests" placeholder="About 40 people">
+          </div>
+        </div>
+        <div class="field">
+          <label for="q-details">What are you dreaming up?</label>
+          <textarea id="q-details" name="details" required placeholder="Sage green and gold garden party. Two-tier cake, three dozen iced cookies, cake pops for the kids…"></textarea>
+        </div>
+        <button class="btn btn--block" type="submit">Send the request</button>
+        <p class="hint" style="margin-top:.9rem">Two to four weeks' notice is ideal for custom work, and longer around holidays.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" style="max-width:840px">
+      <div class="center">
+        <span class="eyebrow" data-reveal>Good to Know</span>
+        <h2 data-reveal>Questions, answered</h2>
+        <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+      </div>
+      <div data-faqs style="margin-top:2rem"></div>
+      <p class="note" data-reveal data-config="cottageNotice"></p>
+    </div>
+  </section>
+
+  <section class="section section--green">
+    <div class="wrap center">
+      <h2 data-reveal>Ready when you are</h2>
+      <p class="lede" data-reveal style="margin-inline:auto">Pre-orders open <span data-config="leadTimeDays"></span> days out and fill up fast on holiday weekends.</p>
+      <a class="btn btn--light" href="order.html" data-reveal style="margin-top:1rem">Start a pre-order</a>
+    </div>
+  </section>
+</main>
+<script>
+document.addEventListener("submit", function (e) {
+  var form = e.target.closest("[data-quote-form]");
+  if (!form) return;
+  e.preventDefault();
+  var get = function (id) { return (document.getElementById(id).value || "").trim(); };
+  if (!get("q-name") || !get("q-email") || !get("q-details")) {
+    Cart.toast("Please fill in your name, email and the details.");
+    return;
+  }
+  var body = ["Custom order request", "", "Name: " + get("q-name"), "Email: " + get("q-email"),
+    "Date needed: " + get("q-date"), "Servings: " + get("q-guests"), "", get("q-details")].join("\n");
+  window.location.href = "mailto:" + SHOP_CONFIG.email +
+    "?subject=" + encodeURIComponent("Custom order request — " + get("q-name")) +
+    "&body=" + encodeURIComponent(body);
+  Cart.toast("Opening your email so you can send it over.");
+});
+</script>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul>
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="shop.html">Browse the bakery</a></li>
+          <li><a href="about.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/catalog.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Cookies illustration">
+  <rect width="400" height="300" fill="#FBF8F1"/>
+  <g fill="none" stroke="#2C5240" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="150" cy="150" r="54"/>
+    <circle cx="255" cy="180" r="42"/>
+    <g fill="#BE9430" stroke="none">
+      <circle cx="132" cy="136" r="5"/><circle cx="166" cy="128" r="4"/><circle cx="158" cy="166" r="5.5"/>
+      <circle cx="128" cy="170" r="4"/><circle cx="178" cy="158" r="4"/>
+      <circle cx="244" cy="168" r="4.5"/><circle cx="266" cy="190" r="4"/><circle cx="252" cy="200" r="3.5"/>
+    </g>
+  </g>
+</svg>

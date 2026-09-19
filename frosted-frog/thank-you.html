@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thank You | The Frosted Frog</title>
+<meta name="description" content="Your pre-order request has been received.">
+<meta property="og:title" content="Thank You | The Frosted Frog">
+<meta property="og:description" content="Your pre-order request has been received.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/frosted-frog-logo.webp">
+<meta name="theme-color" content="#1B3B2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order</a></li>
+      <li><a href="about.html">About &amp; FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="section" style="min-height:60vh;display:flex;align-items:center">
+    <div class="wrap center" style="max-width:720px">
+      <img src="assets/img/frosted-frog-logo.webp" alt="" style="width:220px;margin:0 auto 1.5rem" class="float logo-art">
+      <span class="eyebrow">Order received</span>
+      <h1 class="script" style="font-size:clamp(3rem,8vw,5rem);color:var(--green-700)">Thank you</h1>
+      <div class="ornament"><span></span><i></i><span></span></div>
+      <p class="lede" style="margin-inline:auto">We've got your pre-order. You'll hear back within one business day with your confirmation, the pickup address, and anything we need to nail down.</p>
+      <div data-receipt style="margin:2rem auto;text-align:left;max-width:520px"></div>
+      <a class="btn" href="shop.html">Back to the bakery</a>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var raw = sessionStorage.getItem("frostedfrog.lastOrder");
+  if (!raw) return;
+  try { var d = JSON.parse(raw); } catch (e) { return; }
+  var money = function (n) { return "$" + Number(n).toFixed(2); };
+  document.querySelector("[data-receipt]").innerHTML =
+    '<div class="panel"><h3>Your order</h3>' +
+    d.items.map(function (i) {
+      return "<div style='display:flex;justify-content:space-between;padding:.4rem 0'><span>" +
+        i.qty + " &times; " + i.name + "</span><span>" + money(i.qty * i.unitPrice) + "</span></div>";
+    }).join("") +
+    '<div class="totals"><div class="total"><span>Total</span><span>' + money(d.totals.total) + "</span></div></div>" +
+    "<p class='hint'>" + (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + " on " + d.date + " &middot; " + d.window + "</p></div>";
+})();
+</script>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul>
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="shop.html">Browse the bakery</a></li>
+          <li><a href="about.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

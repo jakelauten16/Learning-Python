@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Layer cake illustration">
+  <rect width="400" height="300" fill="#FBF8F1"/>
+  <g fill="none" stroke="#2C5240" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M110 200h180v-70H110z"/>
+    <path d="M110 165h180" stroke-dasharray="6 7" opacity=".55"/>
+    <path d="M96 200h208l-12 14H108z"/>
+    <path d="M200 214v22"/><path d="M168 246h64"/>
+    <path d="M140 130c10-16 26-22 34-8 6-14 22-20 32-10 12-14 30-6 32 10" stroke="#BE9430"/>
+    <path d="M172 112c6-12 18-14 22-4" stroke="#BE9430"/>
+  </g>
+</svg>

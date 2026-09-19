@@ -1,0 +1,13 @@
+{
+  "name": "the-frosted-frog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Frosted Frog cottage bakery — static site with online pre-ordering",
+  "scripts": {
+    "dev": "npx --yes serve .",
+    "dev:netlify": "netlify dev"
+  },
+  "dependencies": {
+    "stripe": "^16.12.0"
+  }
+}

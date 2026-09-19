@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Brownies illustration">
+  <rect width="400" height="300" fill="#FBF8F1"/>
+  <g fill="none" stroke="#2C5240" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 112h176v112H112z"/>
+    <path d="M170 112v112M230 112v112M112 168h176" opacity=".6"/>
+    <path d="M112 112l18-16h176l-18 16"/><path d="M288 112l18-16v112l-18 16"/>
+    <path d="M132 140c8-8 16-2 22 4" stroke="#BE9430"/>
+    <path d="M248 192c8-8 16-2 22 4" stroke="#BE9430"/>
+  </g>
+</svg>

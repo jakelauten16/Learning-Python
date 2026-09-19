@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bakery — Cakes, Cookies, Cake Pops &amp; More | The Frosted Frog</title>
+<meta name="description" content="Browse every item The Frosted Frog bakes: layer cakes, cupcakes, iced sugar cookies, cake pops, brownies and seasonal treats. Pre-order online.">
+<meta property="og:title" content="The Bakery — Cakes, Cookies, Cake Pops &amp; More | The Frosted Frog">
+<meta property="og:description" content="Browse every item The Frosted Frog bakes: layer cakes, cupcakes, iced sugar cookies, cake pops, brownies and seasonal treats. Pre-order online.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/frosted-frog-logo.webp">
+<meta name="theme-color" content="#1B3B2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" aria-current="page">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order</a></li>
+      <li><a href="about.html">About &amp; FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="section section--tight" style="padding-top:3.5rem">
+    <div class="wrap center">
+      <span class="eyebrow" data-reveal>The Bakery</span>
+      <h1 data-reveal style="font-size:clamp(2.4rem,5vw,3.8rem)">Everything on the board</h1>
+      <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+      <p class="lede" data-reveal>Prices are for standard flavors and finishes. Anything can be customized &mdash; leave a note when you add it, or ask for a quote.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="filters" data-filters data-reveal></div>
+      <div class="grid grid--3" data-shop-grid></div>
+      <p class="note" style="margin-top:3rem" data-reveal data-config="cottageNotice"></p>
+    </div>
+  </section>
+
+  <section class="section section--green">
+    <div class="wrap center">
+      <span class="eyebrow" data-reveal>Don't see it?</span>
+      <h2 data-reveal>If you can describe it, we can probably bake it</h2>
+      <p class="lede" data-reveal style="margin-inline:auto">Custom flavors, dietary swaps, dessert tables and party favors &mdash; send over the details and we'll put together a quote.</p>
+      <a class="btn btn--light" href="about.html#custom" data-reveal style="margin-top:1rem">Ask about a custom order</a>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul>
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="shop.html">Browse the bakery</a></li>
+          <li><a href="about.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/catalog.js"></script>
+</body>
+</html>

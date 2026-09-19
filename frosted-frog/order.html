@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pre-Order &amp; Checkout | The Frosted Frog</title>
+<meta name="description" content="Review your order, choose a pickup day or local delivery, and pay securely. Pre-orders need three days' notice.">
+<meta property="og:title" content="Pre-Order &amp; Checkout | The Frosted Frog">
+<meta property="og:description" content="Review your order, choose a pickup day or local delivery, and pay securely. Pre-orders need three days' notice.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/frosted-frog-logo.webp">
+<meta name="theme-color" content="#1B3B2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">The Bakery</a></li>
+      <li><a href="order.html" aria-current="page">Pre-Order</a></li>
+      <li><a href="about.html">About &amp; FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="section section--tight" style="padding-top:3.5rem">
+    <div class="wrap center">
+      <span class="eyebrow" data-reveal>Pre-Order</span>
+      <h1 data-reveal style="font-size:clamp(2.2rem,4.5vw,3.4rem)">Let's get this on the calendar</h1>
+      <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div data-order-lines style="margin-bottom:2.5rem"></div>
+
+      <form class="checkout" data-order-form novalidate hidden>
+        <div>
+          <div class="panel" data-reveal>
+            <h3><span class="num">1</span> How would you like it?</h3>
+            <div class="choice-row" data-method></div>
+            <div data-delivery-fields hidden>
+              <div class="field">
+                <label for="address">Delivery address</label>
+                <input id="address" name="address" autocomplete="street-address" placeholder="123 Willow Lane, Sugar Hill">
+                <p class="hint">Local delivery within <span data-config="delivery.radiusMiles"></span> miles. Minimum order applies.</p>
+                <p class="error">This one's required.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-reveal>
+            <h3><span class="num">2</span> When do you need it?</h3>
+            <div class="field--row">
+              <div class="field">
+                <label for="pickup-date">Date</label>
+                <select id="pickup-date" name="date" required></select>
+                <p class="error">Pick a date.</p>
+              </div>
+              <div class="field">
+                <label for="pickup-window">Time window</label>
+                <select id="pickup-window" name="window" required></select>
+                <p class="error">Pick a window.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="occasion">Occasion <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+              <input id="occasion" name="occasion" placeholder="Ellie's 5th birthday">
+            </div>
+          </div>
+
+          <div class="panel" data-reveal>
+            <h3><span class="num">3</span> Where do we reach you?</h3>
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" autocomplete="name" required>
+              <p class="error">This one's required.</p>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+                <p class="error">Check the email address.</p>
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+                <p class="error">This one's required.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="notes">Anything else we should know?</label>
+              <textarea id="notes" name="notes" placeholder="Allergies, colors, inspiration photos you'll email over…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <aside class="summary" data-reveal="right">
+          <div class="panel">
+            <h3 style="margin-bottom:1.2rem">Order summary</h3>
+            <div data-order-totals></div>
+            <button class="btn btn--block" type="submit" data-submit style="margin-top:1.4rem">Place pre-order</button>
+            <div data-status aria-live="polite"></div>
+            <p class="hint" style="margin-top:1rem">Orders need <span data-config="leadTimeDays"></span> days' notice. Changes are welcome up to 72 hours before pickup.</p>
+            <p class="note" data-config="cottageNotice"></p>
+          </div>
+        </aside>
+      </form>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul>
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="shop.html">Browse the bakery</a></li>
+          <li><a href="about.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/checkout.js"></script>
+</body>
+</html>

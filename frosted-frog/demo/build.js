@@ -226,6 +226,22 @@ ${demoJS}
 
 out = inlineImages(rewriteLinks(out));
 
-const dest = path.join(__dirname, "frosted-frog-demo.html");
-fs.writeFileSync(dest, out);
-console.log("Built " + path.relative(ROOT, dest) + " — " + (out.length / 1024).toFixed(0) + " KB");
+function write(name, html) {
+  const dest = path.join(__dirname, name);
+  fs.writeFileSync(dest, html);
+  console.log("Built " + path.relative(ROOT, dest) + " — " + (html.length / 1024).toFixed(0) + " KB");
+}
+
+/* The preview host wraps the page in its own document skeleton. */
+write("frosted-frog-demo.html", out);
+
+/* A full document, for sending to somebody as a file: it opens from a
+   download, an email attachment or a thumb drive with nothing alongside it. */
+write(
+  "frosted-frog-preview.html",
+  '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+    '<meta name="description" content="Interactive preview of The Frosted Frog bakery website.">\n' +
+    out.replace("<div class=\"progress\"", "</head>\n<body>\n<div class=\"progress\"") +
+    "</body>\n</html>\n"
+);

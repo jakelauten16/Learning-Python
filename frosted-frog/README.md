@@ -103,8 +103,17 @@ CSS, JavaScript and images inlined, pages routed by `#/shop`, `#/order` and so
 on — so the whole site can be previewed from a single link or file.
 
 ```bash
-node demo/build.js        # writes demo/frosted-frog-demo.html
+node demo/build.js
 ```
+
+It writes two copies of the same preview:
+
+- `demo/frosted-frog-demo.html` — for publishing to a preview link.
+- `demo/frosted-frog-preview.html` — a complete HTML document to **send to
+  somebody**. Email it, drop it in a text or a shared folder, put it on a thumb
+  drive: it opens in any browser, on a phone or a laptop, with nothing else
+  alongside it and no internet needed (apart from the fonts, which fall back
+  gracefully offline).
 
 The demo adds a small bar at the bottom that the real site doesn't have:
 

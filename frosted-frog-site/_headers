@@ -1,0 +1,26 @@
+# Cloudflare Pages reads this file and sends these headers with every response.
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; form-action 'self' https://formspree.io; frame-ancestors 'self'; base-uri 'self'
+
+# Fingerprint-free filenames, so cache for a week and revalidate.
+/assets/css/*
+  Cache-Control: public, max-age=604800
+/assets/js/*
+  Cache-Control: public, max-age=604800
+/assets/img/*
+  Cache-Control: public, max-age=604800
+
+# Fonts never change under the same name.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Pages themselves should always be fresh — the menu changes weekly.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

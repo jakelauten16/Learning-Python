@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>Cupcakes with piped frosting</title>
+  <path d="M148 170h104l-16 82h-72z"/>
+  <path d="M160 170l8 82M200 170v82M240 170l-8 82" opacity=".45"/>
+  <path d="M148 170c-10-20 4-36 20-30 0-20 22-30 36-16 14-12 32-2 30 16 14 2 20 16 10 24 8 4 8 6 8 6" stroke="#BE9430"/>
+  <circle cx="204" cy="76" r="7" fill="#BE9430" stroke="none"/>
+  <path d="M204 83v12" stroke="#BE9430"/>
+
+</svg>

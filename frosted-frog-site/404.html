@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Not Found | The Frosted Frog</title>
+<meta name="description" content="That page hopped off. Head back to the bakery.">
+<meta property="og:title" content="Page Not Found | The Frosted Frog">
+<meta property="og:description" content="That page hopped off. Head back to the bakery.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1B3B2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order</a></li>
+      <li><a href="about.html">About &amp; FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="section" style="min-height:62vh;display:flex;align-items:center">
+    <div class="wrap center" style="max-width:640px">
+      <img class="frog frog--inline frog--hop" src="assets/img/frog-baker.svg" alt="" aria-hidden="true" style="width:180px">
+      <span class="eyebrow">Error 404</span>
+      <h1 class="script" style="font-size:clamp(2.6rem,7vw,4.2rem);color:var(--green-700)">That one hopped off</h1>
+      <div class="ornament"><span></span><i></i><span></span></div>
+      <p class="lede" style="margin-inline:auto">The page you were after isn't here any more — but the menu is, and so is the order form.</p>
+      <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.6rem">
+        <a class="btn" href="shop.html">Browse the bakery</a>
+        <a class="btn btn--ghost" href="index.html">Back to the start</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" loading="lazy">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul class="pads">
+          <li data-schedule-summary></li>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul class="pads">
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="shop.html">Browse the bakery</a></li>
+          <li><a href="about.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

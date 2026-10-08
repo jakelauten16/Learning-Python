@@ -1,0 +1,10 @@
+The fonts in this folder — Cormorant Garamond, Jost and Parisienne — are
+licensed under the SIL Open Font License, Version 1.1.
+
+Cormorant Garamond © Christian Thalmann, Catharsis Fonts
+Jost © indestructible type*
+Parisienne © Astigmatic (AOETI)
+
+The full licence text is at https://openfontlicense.org — in short: these fonts
+may be used, embedded and redistributed freely, including commercially, but may
+not be sold on their own.

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>A frosted layer cake</title>
+  <path d="M112 212h176v-86H112z"/>
+  <path d="M112 168h176" stroke-dasharray="7 9" opacity=".5"/>
+  <path d="M96 212h208l-14 16H110z"/>
+  <path d="M200 228v24"/><path d="M164 262h72"/>
+  <path d="M112 126c0-10 12-16 22-10 4-12 20-16 28-6 6-12 22-14 30-4 8-12 24-10 30 2 10-4 20 2 20 12 0 4-2 6-4 6" stroke="#BE9430"/>
+  <path d="M150 104c4-10 14-12 18-4" stroke="#BE9430"/>
+  <path d="M206 100c4-10 14-12 18-4" stroke="#BE9430"/>
+
+</svg>

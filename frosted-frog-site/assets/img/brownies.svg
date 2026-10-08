@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>Brownies cut into squares</title>
+  <path d="M110 118h180v110H110z"/>
+  <path d="M170 118v110M230 118v110M110 173h180" opacity=".55"/>
+  <path d="M110 118l20-18h180l-20 18"/><path d="M290 118l20-18v110l-20 18"/>
+  <path d="M130 146c8-10 18-4 24 4" stroke="#BE9430"/>
+  <path d="M250 198c8-10 18-4 24 4" stroke="#BE9430"/>
+  <g fill="#BE9430" stroke="none"><circle cx="200" cy="150" r="3.5"/><circle cx="146" cy="205" r="3.5"/><circle cx="262" cy="150" r="3.5"/></g>
+
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>A frog piping frosting</title>
+  <!-- head -->
+  <path d="M52 112c0-32 30-54 68-54s68 22 68 54c0 26-24 44-54 46h-28c-30-2-54-20-54-46z"/>
+  <!-- eyes -->
+  <circle cx="84" cy="64" r="28"/>
+  <circle cx="156" cy="64" r="28"/>
+  <circle cx="84" cy="68" r="12" fill="#2C5240" stroke="none"/>
+  <circle cx="156" cy="68" r="12" fill="#2C5240" stroke="none"/>
+  <circle cx="89" cy="62" r="4" fill="#FBF8F1" stroke="none"/>
+  <circle cx="161" cy="62" r="4" fill="#FBF8F1" stroke="none"/>
+  <!-- freckles + smile -->
+  <g fill="#2C5240" stroke="none" opacity=".55">
+    <circle cx="76" cy="104" r="2.6"/><circle cx="88" cy="112" r="2.6"/>
+    <circle cx="152" cy="112" r="2.6"/><circle cx="164" cy="104" r="2.6"/>
+  </g>
+  <path d="M90 120c10 14 24 20 30 20s20-6 30-20"/>
+  <!-- body, tucked under the head -->
+  <path d="M74 158c-4 24 14 44 46 44s50-20 46-44"/>
+  <!-- left arm with the piping bag -->
+  <path d="M78 160c-12 0-22-8-24-20"/>
+  <path d="M54 140l-20-22 34-18 10 28z" stroke="#BE9430"/>
+  <path d="M34 118c-8-6-8-16 2-20l12 6" stroke="#BE9430"/>
+  <path d="M72 162c14-4 24 4 22 14-2 10-16 14-22 6" stroke="#BE9430"/>
+  <!-- right arm, resting -->
+  <path d="M166 160c12 0 22-8 24-20"/>
+  <!-- lily pad -->
+  <path d="M44 214c0-10 34-18 76-18s76 8 76 18" opacity=".45"/>
+  <path d="M120 196v18" opacity=".3"/>
+
+</svg>

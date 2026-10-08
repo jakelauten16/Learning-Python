@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>A stack of cookies</title>
+  <circle cx="148" cy="152" r="56"/>
+  <circle cx="256" cy="186" r="44"/>
+  <g fill="#BE9430" stroke="none">
+    <circle cx="128" cy="136" r="5.5"/><circle cx="166" cy="130" r="4.5"/><circle cx="156" cy="170" r="6"/>
+    <circle cx="124" cy="172" r="4.5"/><circle cx="180" cy="160" r="4.5"/>
+    <circle cx="244" cy="172" r="5"/><circle cx="270" cy="194" r="4.5"/><circle cx="252" cy="206" r="4"/>
+  </g>
+  <path d="M110 120c6-8 14-10 20-4" opacity=".4"/>
+
+</svg>

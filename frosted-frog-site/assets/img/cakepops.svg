@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>Cake pops</title>
+  <circle cx="136" cy="120" r="36"/><path d="M136 156v92"/>
+  <circle cx="202" cy="98" r="36"/><path d="M202 134v114"/>
+  <circle cx="268" cy="126" r="36"/><path d="M268 162v86"/>
+  <path d="M112 104c8-12 20-14 26-4" stroke="#BE9430"/>
+  <path d="M178 82c8-12 20-14 26-4" stroke="#BE9430"/>
+  <path d="M244 110c8-12 20-14 26-4" stroke="#BE9430"/>
+  <g fill="#BE9430" stroke="none" opacity=".9">
+    <circle cx="150" cy="138" r="3"/><circle cx="214" cy="116" r="3"/><circle cx="282" cy="144" r="3"/>
+  </g>
+  <path d="M120 250h164" opacity=".4"/>
+
+</svg>

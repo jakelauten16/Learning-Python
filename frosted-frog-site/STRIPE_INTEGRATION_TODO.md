@@ -110,6 +110,40 @@ Developers → Webhooks → Add endpoint →
 Copy its signing secret into `STRIPE_WEBHOOK_SECRET`. A test-mode secret does
 not validate live events, so this is done once in each mode.
 
+### Deploying
+
+Drag and drop will not work any more. It uploads files but never compiles the
+`functions` folder, so `/api/checkout` would return a 404 and the checkout
+button would fail. Deploy with Wrangler instead, from your own computer:
+
+```bash
+cd frosted-frog-site
+sh tools/deploy.sh --check    # confirms the folder is ready, uploads nothing
+sh tools/deploy.sh            # logs in, sets both secrets, deploys, verifies
+```
+
+The script asks for each Stripe secret in turn and Wrangler reads them without
+echoing, so the values never appear on screen or in your shell history. It
+finishes by calling `/api/health` on the live site and printing the webhook URL
+to paste into Stripe.
+
+If you would rather run the commands yourself:
+
+```bash
+wrangler login
+wrangler pages secret put STRIPE_SECRET_KEY --project-name super-dust-23bf
+wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name super-dust-23bf
+wrangler pages deploy . --project-name super-dust-23bf --branch main
+```
+
+Set the secrets before deploying. Pages picks up secret changes on the next
+deployment, so changing one later means deploying again.
+
+`SITE_URL` is optional while you are on `super-dust-23bf.pages.dev`: the
+function falls back to whatever domain the request arrived on, which is
+correct. Set it in the dashboard under Settings, Variables and Secrets, once
+a custom domain is attached, so Stripe returns customers to the right place.
+
 ### Turning it on
 
 Set `paymentMode: "stripe"` in [assets/js/data.js](assets/js/data.js), then

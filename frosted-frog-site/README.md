@@ -40,7 +40,20 @@ a third party changing something under you.
 
 ## Putting it on Cloudflare
 
-**The quick way, drag and drop**
+**Once the functions exist, use Wrangler**
+
+The `functions` folder has to be compiled, and drag and drop does not do that.
+From this folder on your own computer:
+
+```bash
+sh tools/deploy.sh
+```
+
+It checks the folder, logs you in if needed, takes the two Stripe secrets
+without showing them, deploys, and verifies the functions answer. See
+[STRIPE_INTEGRATION_TODO.md](STRIPE_INTEGRATION_TODO.md) for the detail.
+
+**Drag and drop, for a site with no functions**
 
 1. Sign in at [dash.cloudflare.com](https://dash.cloudflare.com) → Workers &
    Pages → Create → Pages → Upload assets.

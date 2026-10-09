@@ -1,13 +1,12 @@
-# Clean URLs: /menu and /order.html both work.
-/menu        /order.html       200
-/order       /order.html       200
-/bakery      /bakery.html      200
-/faq         /faq.html         200
-/review      /review.html      200
-/thank-you   /thank-you.html   200
+# Only the old paths need rules here.
+#
+# The clean URLs (/order, /review, /bakery, /faq) are handled by Workers
+# itself: with the default html_handling it serves /order from order.html and
+# redirects order.html to /order. Adding our own /order -> /order.html rewrite
+# on top of that made an infinite redirect loop, because Workers then bounced
+# /order.html straight back to /order.
 
-# Old paths from the first version of the site.
-/shop.html   /order.html       301
-/shop        /order.html       301
-/about.html  /bakery.html      301
-/about       /bakery.html      301
+/shop.html   /order    301
+/shop        /order    301
+/about.html  /bakery   301
+/about       /bakery   301

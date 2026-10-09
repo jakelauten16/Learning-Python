@@ -7,3 +7,5 @@ wrangler.jsonc
 .assetsignore
 *.md
 .wrangler
+package.json
+package-lock.json

@@ -40,7 +40,7 @@
   function renderGrid(el, list) {
     el.innerHTML = list.length
       ? list.map(cardHTML).join("")
-      : '<p class="empty">Nothing in this section right now — check back soon.</p>';
+      : '<p class="empty">Nothing in this section right now, check back soon.</p>';
     if (window.observeReveals) window.observeReveals(el);
   }
 
@@ -101,7 +101,7 @@
         '<div class="field"><label for="m-qty">Quantity' + (min > 1 ? " (minimum " + min + ")" : "") + "</label>" +
           '<input id="m-qty" type="number" min="' + min + '" step="' + step + '" value="' + min + '"></div>' +
         '<div class="field"><label for="m-note">Notes for the baker <span style="text-transform:none;letter-spacing:0">(colors, message on the cake, allergies)</span></label>' +
-          '<textarea id="m-note" placeholder="Sage and gold, please — &quot;Happy Birthday Ellie&quot; on top."></textarea></div>' +
+          '<textarea id="m-note" placeholder="Sage and gold, please, &quot;Happy Birthday Ellie&quot; on top."></textarea></div>' +
         '<button class="btn btn--block" data-add="' + p.id + '">Add to order</button>' +
         '<p class="hint" style="margin-top:.8rem">Orders need ' + SHOP_CONFIG.leadTimeDays + " days' notice. You'll choose your pickup day at checkout.</p>" +
       "</div>";
@@ -212,7 +212,7 @@
     if (quotes) {
       quotes.innerHTML = TESTIMONIALS.map(function (t, i) {
         return '<figure class="quote" data-reveal data-delay="' + (i * 130) + '"><p>&ldquo;' + t.quote +
-          '&rdquo;</p><cite>' + t.name + "</cite></figure>";
+          '&rdquo;</p><cite>' + t.name + (t.context ? '<span>' + t.context + "</span>" : "") + "</cite></figure>";
       }).join("");
       if (window.observeReveals) window.observeReveals(quotes);
     }

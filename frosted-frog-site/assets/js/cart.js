@@ -1,4 +1,4 @@
-/* Cart — stored in localStorage so it survives a refresh, a closed tab, and a
+/* Cart, stored in localStorage so it survives a refresh, a closed tab, and a
    customer who wanders off mid-order. */
 (function (window) {
   "use strict";

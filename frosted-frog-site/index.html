@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Frosted Frog — Cottage Bakery | Cakes, Cookies &amp; Confections</title>
+<title>The Frosted Frog | Cottage Bakery | Cakes, Cookies &amp; Confections</title>
 <meta name="description" content="Small-batch cakes, cupcakes, cookies, cake pops and brownies, baked to order in a home kitchen. Pre-order online for pickup or local delivery.">
-<meta property="og:title" content="The Frosted Frog — Cottage Bakery | Cakes, Cookies &amp; Confections">
+<meta property="og:title" content="The Frosted Frog | Cottage Bakery | Cakes, Cookies &amp; Confections">
 <meta property="og:description" content="Small-batch cakes, cupcakes, cookies, cake pops and brownies, baked to order in a home kitchen. Pre-order online for pickup or local delivery.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
@@ -34,6 +34,7 @@
       <li><a href="faq.html">FAQ &amp; Policies</a></li>
     </ul>
     <div class="nav__actions">
+      <button class="theme-toggle" type="button">Dark</button>
       <button class="cart-btn" data-cart-open aria-label="Open your order">
         Order <span class="cart-count" data-cart-count>0</span>
       </button>
@@ -48,27 +49,24 @@
     <div class="hero__pond" aria-hidden="true"></div>
     <div class="wrap hero__grid">
       <div data-reveal="left">
-        <span class="eyebrow">Cottage bakery &middot; Made to order</span>
+        <span class="eyebrow">Cottage bakery, made to order</span>
         <h1>Something sweet<span class="script">worth waiting for</span></h1>
-        <p class="lede" data-config="tagline"></p>
+        <p class="lede">Small-batch cakes, cookies and confections, baked at home for your table.</p>
         <div class="hero__cta">
-          <a class="btn" href="order.html">See the menu</a>
+          <a class="btn" href="order.html">See this week's menu</a>
           <a class="btn btn--ghost" href="order.html#group-requests">Custom orders</a>
-        </div>
-        <div class="hero__meta">
-          <div><strong>Mon&ndash;Wed</strong>order window</div>
-          <div><strong>Fri 3&ndash;7</strong>pickup</div>
-          <div><strong>Sat 10&ndash;7</strong>pickup</div>
         </div>
       </div>
       <div class="hero__mark" data-reveal="right">
-        <img class="float" src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog bakery logo" width="520" height="520" fetchpriority="high">
-        <div class="hero__card">
-          <div class="week__status" data-order-status></div>
-          <p class="hero__card-note" data-weekly-note></p>
-          <a class="link-arrow" href="order.html#group-weekly">See this week's cookies</a>
-        </div>
+        <img class="float" src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog bakery logo" width="430" height="430" fetchpriority="high">
       </div>
+    </div>
+  </section>
+
+  <section class="section section--tight statusband">
+    <div class="wrap statusband__grid">
+      <div class="week__status" data-order-status></div>
+      <p class="statusband__note"><span data-weekly-note></span> <a class="link-arrow" href="order.html#group-weekly">See the cookies</a></p>
     </div>
   </section>
 
@@ -80,25 +78,13 @@
     </div>
   </div>
 
-  <section class="section section--tight">
-    <div class="wrap">
-      <ol class="week__steps" data-reveal>
-        <li><span>Mon&ndash;Wed</span><strong>Order window</strong><em>Pick from this week's menu</em></li>
-        <li><span>Thursday</span><strong>Shopping day</strong><em>Ingredients bought for your order</em></li>
-        <li><span>Friday</span><strong>Baked &amp; ready</strong><em>Pickup 3:00&ndash;7:00 PM</em></li>
-        <li><span>Saturday</span><strong>Baked &amp; ready</strong><em>Pickup 10:00 AM&ndash;7:00 PM</em></li>
-      </ol>
-    </div>
-  </section>
-
   <section class="section section--cream">
     <div class="wrap">
       <div class="section__head" data-reveal>
         <div>
-          <span class="eyebrow">The Menu</span>
           <h2>Four ways to order</h2>
         </div>
-        <p>Weekly cookie specials first, then what's in season, the mainstays that are always on the board &mdash; and anything else you can describe.</p>
+        <p>Weekly cookie specials first, then what is in season, the mainstays that are always on the board, and anything else you can describe.</p>
       </div>
       <div class="grid grid--4" data-categories></div>
     </div>
@@ -108,10 +94,9 @@
     <div class="wrap">
       <div class="section__head" data-reveal>
         <div>
-          <span class="eyebrow">Favorites</span>
           <h2>What everyone orders twice</h2>
         </div>
-        <a class="btn btn--ghost btn--sm" href="order.html">See the whole menu</a>
+        <a class="btn btn--ghost btn--sm" href="order.html">See this week's menu</a>
       </div>
       <div class="grid grid--3" data-featured></div>
     </div>
@@ -123,17 +108,15 @@
         <span class="eyebrow">How pre-ordering works</span>
         <h2>One menu a week,<br>two chances to pick it up</h2>
         <p class="lede">Order any time Monday through Wednesday. Thursday we shop for exactly what was ordered, then everything is baked fresh for Friday and Saturday pickup.</p>
-        <ul class="pads" style="margin:1.2rem 0 1.6rem">
-          <li>Pick your treats and leave a note for anything special</li>
-          <li>Choose Friday 3&ndash;7 or Saturday 10&ndash;7, down to the half hour</li>
-          <li>We confirm with a total &mdash; you pay by <span data-config="paymentMethods"></span></li>
-        </ul>
-        <a class="btn btn--light" href="order.html">Start a pre-order</a>
+        <ol class="steps">
+          <li><strong>Order Monday to Wednesday.</strong> Pick your treats and leave a note for anything special.</li>
+          <li><strong>Choose Friday or Saturday.</strong> Friday 3:00 to 7:00 PM, Saturday 10:00 AM to 7:00 PM, down to the half hour.</li>
+          <li><strong>We confirm with a total.</strong> You pay by <span data-config="paymentMethods"></span>. Nothing is charged on this site.</li>
+        </ol>
+        <a class="btn btn--light" href="order.html">See this week's menu</a>
       </div>
       <div class="split__art" data-reveal="right">
         <img class="frog frog--hop" src="assets/img/frog-baker.svg" alt="The Frosted Frog mascot, piping a swirl of frosting">
-        <p class="script" style="font-size:2.1rem;color:var(--cream);margin:.4rem 0 0">No card needed</p>
-        <p style="opacity:.82;margin:0" data-config="paymentNote"></p>
       </div>
     </div>
   </section>
@@ -147,11 +130,10 @@
   <section class="section section--cream">
     <div class="wrap split split--tight">
       <div data-reveal="left">
-        <span class="eyebrow">Custom Orders</span>
         <h2 style="margin-bottom:.4rem">Birthdays, showers, weddings<span class="script" style="display:block">and just-because</span></h2>
-        <p>Working from a color palette, an invitation, or a picture you can't stop looking at? Send it over &mdash; custom cakes and cookie sets are quoted individually, and two to four weeks' notice is ideal.</p>
+        <p>Working from a color palette, an invitation, or a picture you cannot stop looking at? Send it over. Custom cakes and cookie sets are quoted individually, and two to four weeks of notice is ideal.</p>
         <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.2rem">
-          <a class="btn" href="order.html#group-requests">Request a quote</a>
+          <a class="btn" href="order.html#group-requests">Custom orders</a>
           <a class="btn btn--ghost" href="bakery.html">Meet the baker</a>
         </div>
       </div>

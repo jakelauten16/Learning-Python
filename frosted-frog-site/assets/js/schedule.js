@@ -4,7 +4,7 @@
    Ordering opens Monday and closes Wednesday night. Thursday is shopping day.
    Friday and Saturday are baking and pickup, in the windows set in data.js.
 
-   Customers never pick a date out of a calendar — they pick one of that week's
+   Customers never pick a date out of a calendar, they pick one of that week's
    two windows, and a time inside it. The same file runs in the browser and in
    the checkout function, so the server checks the schedule too.
    --------------------------------------------------------------------------- */
@@ -64,7 +64,7 @@
   }
 
   function windowLabel(pickup) {
-    return time12(pickup.start) + " – " + time12(pickup.end);
+    return time12(pickup.start) + " to " + time12(pickup.end);
   }
 
   /* Is the order form accepting orders right now? */
@@ -134,7 +134,7 @@
     });
   }
 
-  /* When the current window closes / the next one opens — for the countdown. */
+  /* When the current window closes / the next one opens, for the countdown. */
   function ordersClose(now, config) {
     var s = cfg(config);
     var today = startOfDay(now || new Date());
@@ -165,7 +165,7 @@
   function summary(config) {
     var s = cfg(config);
     var days = s.orderDays.map(function (d) { return DAY_NAMES[d]; });
-    return "Order " + days[0] + "–" + days[days.length - 1] + " · Pick up " +
+    return "Order " + days[0] + "-" + days[days.length - 1] + " · Pick up " +
       s.pickups.map(function (p) { return (p.label || DAY_NAMES[p.day]) + " " + windowLabel(p); }).join(" or ");
   }
 

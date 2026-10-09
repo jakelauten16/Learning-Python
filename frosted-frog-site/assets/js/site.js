@@ -12,6 +12,30 @@
     return page + (anchor ? "#group-" + anchor : "");
   };
 
+  /* The page follows the viewer's system setting until they say otherwise;
+     the choice is remembered on their own device only. */
+  (function () {
+    var KEY = "frostedfrog.theme";
+    var saved = null;
+    try { saved = window.localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    if (saved === "dark" || saved === "light") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+
+    window.toggleTheme = function () {
+      var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var current = document.documentElement.getAttribute("data-theme") || (dark ? "dark" : "light");
+      var next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { window.localStorage.setItem(KEY, next); } catch (e) { /* private mode */ }
+      var btn = document.querySelector(".theme-toggle");
+      if (btn) {
+        btn.textContent = next === "dark" ? "Light" : "Dark";
+        btn.setAttribute("aria-label", "Switch to " + (next === "dark" ? "light" : "dark") + " mode");
+      }
+    };
+  })();
+
   document.addEventListener("DOMContentLoaded", function () {
     /* --- fill anything tagged with a config key --- */
     Array.prototype.forEach.call(document.querySelectorAll("[data-config]"), function (el) {
@@ -59,37 +83,68 @@
       else weekly.remove();
     }
 
+    var toggleBtn = document.querySelector(".theme-toggle");
+    if (toggleBtn) {
+      var isDark = (document.documentElement.getAttribute("data-theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+      toggleBtn.textContent = isDark ? "Light" : "Dark";
+      toggleBtn.setAttribute("aria-label", "Switch to " + (isDark ? "light" : "dark") + " mode");
+      toggleBtn.addEventListener("click", window.toggleTheme);
+    }
+
     var year = document.querySelector("[data-year]");
     if (year) year.textContent = new Date().getFullYear();
 
-    /* --- sticky header shadow --- */
+    /* --- sticky header state, without a scroll listener ---
+       An observer watches a one-pixel sentinel at the top of the page, so the
+       browser does the work off the main thread. The reading-progress bar is
+       driven by a CSS scroll timeline where the browser supports one. */
     var header = document.querySelector(".site-header");
-    var progress = document.querySelector(".progress");
+    if (header && "IntersectionObserver" in window) {
+      var sentinel = document.createElement("div");
+      sentinel.setAttribute("aria-hidden", "true");
+      sentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:12px;pointer-events:none";
+      document.body.prepend(sentinel);
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle("is-stuck", !entries[0].isIntersecting);
+      }, { threshold: 0 }).observe(sentinel);
+    }
 
-    function onScroll() {
-      var y = window.scrollY;
-      if (header) header.classList.toggle("is-stuck", y > 12);
-      if (progress) {
-        var h = document.documentElement.scrollHeight - window.innerHeight;
-        progress.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
-      }
-      if (!reduced) {
-        Array.prototype.forEach.call(document.querySelectorAll("[data-parallax]"), function (el) {
-          var speed = parseFloat(el.getAttribute("data-parallax")) || 0.12;
-          var rect = el.getBoundingClientRect();
-          var offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * -speed;
-          el.style.transform = "translate3d(0," + offset.toFixed(1) + "px,0)";
+    if (!CSS.supports("animation-timeline: scroll()")) {
+      var bar = document.querySelector(".progress");
+      if (bar) bar.remove();
+    }
+
+    /* --- parallax, on the compositor's schedule --- */
+    var parallax = document.querySelectorAll("[data-parallax]");
+    if (parallax.length && !reduced && "IntersectionObserver" in window) {
+      var ticking = false;
+      var inView = [];
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var i = inView.indexOf(entry.target);
+          if (entry.isIntersecting && i === -1) inView.push(entry.target);
+          if (!entry.isIntersecting && i > -1) inView.splice(i, 1);
+        });
+        loop();
+      }, { rootMargin: "20% 0px" });
+      Array.prototype.forEach.call(parallax, function (el) { io2.observe(el); });
+
+      function loop() {
+        if (!inView.length || ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(function () {
+          inView.forEach(function (el) {
+            var speed = parseFloat(el.getAttribute("data-parallax")) || 0.12;
+            var rect = el.getBoundingClientRect();
+            var offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * -speed;
+            el.style.transform = "translate3d(0," + offset.toFixed(1) + "px,0)";
+          });
+          ticking = false;
+          if (inView.length) loop();
         });
       }
     }
-
-    var ticking = false;
-    window.addEventListener("scroll", function () {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(function () { onScroll(); ticking = false; });
-    }, { passive: true });
-    onScroll();
 
     /* --- mobile nav --- */
     var toggle = document.querySelector(".nav__toggle");

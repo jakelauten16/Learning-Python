@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   The Frosted Frog — everything you'll edit week to week lives in this file.
+   The Frosted Frog, everything you'll edit week to week lives in this file.
 
    SHOP_CONFIG  → business details, the weekly schedule, payment mode
    CATEGORIES   → the sections on the shop page and the home-page showcase
@@ -13,14 +13,14 @@ const SHOP_CONFIG = {
   phone: "(555) 555-0142",
   instagram: "https://instagram.com/thefrostedfrog",
   facebook: "https://facebook.com/thefrostedfrog",
-  pickupLocation: "Pickup in Sugar Hill — exact address sent with your confirmation",
+  pickupLocation: "Pickup in Sugar Hill. The exact address comes with your confirmation.",
   cottageNotice:
     "Made in a home kitchen that is not subject to state inspection. Products may contain, or have come in contact with, wheat, eggs, dairy, soy, peanuts and tree nuts.",
 
   /* THE WEEKLY RHYTHM --------------------------------------------------------
      Ordering is open Monday through Wednesday. Thursday is shopping day,
      Friday and Saturday are baking and pickup. Customers don't pick an
-     arbitrary date — they choose one of that week's two pickup windows.
+     arbitrary date, they choose one of that week's two pickup windows.
 
      Days are numbered 0 = Sunday through 6 = Saturday, and times are 24-hour.
   --------------------------------------------------------------------------- */
@@ -40,7 +40,7 @@ const SHOP_CONFIG = {
     // minutes. Set to 0 to let them take the whole window with no time choice.
     slotMinutes: 30,
 
-    // Leave false. Set to true only while you're previewing the site — it
+    // Leave false. Set to true only while you're previewing the site, it
     // keeps ordering open on days it would normally be closed.
     previewAnyDay: false,
   },
@@ -56,13 +56,13 @@ const SHOP_CONFIG = {
      request you send yourself. That keeps the site a set of plain files with
      nothing to secure, nothing to renew, and no fees.
 
-     orderEndpoint — paste your Formspree form URL here (free tier is fine):
+     orderEndpoint, paste your Formspree form URL here (free tier is fine):
        1. Sign up at formspree.io and create a form.
-       2. Copy the endpoint it gives you — https://formspree.io/f/xxxxxxxx
+       2. Copy the endpoint it gives you, https://formspree.io/f/xxxxxxxx
        3. Paste it below, between the quotes.
      Leave it empty and the site falls back to opening the customer's own email
      app with the whole order filled in, addressed to you. That works, but it
-     relies on them pressing send — Formspree is the better of the two.
+     relies on them pressing send, Formspree is the better of the two.
   --------------------------------------------------------------------------- */
   orderEndpoint: "",
 
@@ -70,7 +70,7 @@ const SHOP_CONFIG = {
   paymentMethods: "Venmo, Cash App, or cash at pickup",
   paymentNote:
     "Nothing is charged on this site. Once your order is confirmed you'll get " +
-    "a total and a payment request — settle it before pickup day.",
+    "a total and a payment request. Settle it any time before pickup day.",
 };
 
 /* The menu is laid out in this order, top to bottom. Move a block here and the
@@ -81,7 +81,7 @@ const CATEGORIES = [
     name: "This Week's Special Cookies",
     blurb: "A new batch every week. When they're gone, they're gone until they come round again.",
     image: "assets/img/cookies.svg",
-    // Update this line each week — it shows at the top of the menu.
+    // Update this line each week, it shows at the top of the menu.
     note: "This week: brown butter pecan, and iced pumpkin spice.",
   },
   {
@@ -93,7 +93,7 @@ const CATEGORIES = [
   {
     id: "mainstays",
     name: "The Mainstays",
-    blurb: "On the board every week — cakes, cupcakes, cookies, cake pops and bars.",
+    blurb: "On the board every week: cakes, cupcakes, cookies, cake pops and bars.",
     image: "assets/img/cakes.svg",
   },
   {
@@ -107,10 +107,10 @@ const CATEGORIES = [
 /* Each product:
    id        unique, lowercase, no spaces
    name      what the customer sees
-   group     which menu section it sits in — a CATEGORIES id
+   group     which menu section it sits in, a CATEGORIES id
    kind      the little label on the card ("Layer cake", "Cookies"…)
    price     base price in dollars
-   unit      "each", "per dozen", etc. — shown next to the price
+   unit      "each", "per dozen", etc., shown next to the price
    min       smallest quantity that can be ordered (default 1)
    desc      one or two sentences
    image     path to a photo (drop your own in assets/img and point here)
@@ -119,7 +119,7 @@ const CATEGORIES = [
    available false = shows as "sold out" and can't be added to the cart
 */
 const PRODUCTS = [
-  /* ---- This week's special cookies — the top of the menu ---------------- */
+  /* ---- This week's special cookies, the top of the menu ---------------- */
   {
     id: "weekly-brown-butter-pecan",
     name: "Brown Butter Pecan",
@@ -152,7 +152,7 @@ const PRODUCTS = [
     price: 32,
     unit: "per dozen",
     min: 12,
-    desc: "A dozen of whatever's best coming out of the oven this week — a little of each special.",
+    desc: "A dozen of whatever's best coming out of the oven this week: a little of each special.",
     image: "assets/img/cookies.svg",
   },
 
@@ -162,15 +162,15 @@ const PRODUCTS = [
     group: "mainstays",
     kind: "Layer cake",
     price: 55,
-    unit: "6-inch, serves 8–10",
+    unit: "6-inch, serves 8-10",
     desc: "Three layers of vanilla bean cake with silky Swiss meringue buttercream and a hand-piped finish.",
     image: "assets/img/cakes.svg",
     featured: true,
     options: [
       { label: "Size", choices: [
-        { name: '6" — serves 8–10', price: 0 },
-        { name: '8" — serves 16–20', price: 25 },
-        { name: 'Two tier — serves 30+', price: 85 },
+        { name: '6", serves 8-10', price: 0 },
+        { name: '8", serves 16-20', price: 25 },
+        { name: 'Two tier, serves 30+', price: 85 },
       ]},
       { label: "Filling", choices: [
         { name: "Vanilla buttercream", price: 0 },
@@ -186,14 +186,14 @@ const PRODUCTS = [
     group: "mainstays",
     kind: "Layer cake",
     price: 60,
-    unit: "6-inch, serves 8–10",
+    unit: "6-inch, serves 8-10",
     desc: "Deep dark chocolate cake, whipped chocolate ganache, and a gold-dusted crown of buttercream.",
     image: "assets/img/cakes.svg",
     featured: true,
     options: [
       { label: "Size", choices: [
-        { name: '6" — serves 8–10', price: 0 },
-        { name: '8" — serves 16–20', price: 25 },
+        { name: '6", serves 8-10', price: 0 },
+        { name: '8", serves 16-20', price: 25 },
       ]},
     ],
   },
@@ -203,7 +203,7 @@ const PRODUCTS = [
     group: "mainstays",
     kind: "Layer cake",
     price: 68,
-    unit: "6-inch, serves 8–10",
+    unit: "6-inch, serves 8-10",
     desc: "Almond cake brushed with champagne syrup, mascarpone buttercream, sugared florals.",
     image: "assets/img/cakes.svg",
   },
@@ -249,14 +249,14 @@ const PRODUCTS = [
     price: 42,
     unit: "per dozen",
     min: 12,
-    desc: "Hand-iced in your colors — showers, birthdays, holidays, or a monogram for the table.",
+    desc: "Hand-iced in your colors for showers, birthdays, holidays, or a monogram for the table.",
     image: "assets/img/cookies.svg",
     featured: true,
     options: [
       { label: "Design", choices: [
-        { name: "Simple — one or two colors", price: 0 },
-        { name: "Detailed — florals, lettering", price: 12 },
-        { name: "Custom — send me your theme", price: 20 },
+        { name: "Simple, one or two colors", price: 0 },
+        { name: "Detailed, florals, lettering", price: 12 },
+        { name: "Custom, send me your theme", price: 20 },
       ]},
     ],
   },
@@ -312,8 +312,8 @@ const PRODUCTS = [
     group: "seasonal",
     kind: "Dessert box",
     price: 48,
-    unit: "serves 6–8",
-    desc: "A curated box of the week's best — cookies, brownie bites, cake pops and a little something extra.",
+    unit: "serves 6-8",
+    desc: "A curated box of the week's best: cookies, brownie bites, cake pops and a little something extra.",
     image: "assets/img/seasonal.svg",
     featured: true,
   },
@@ -330,18 +330,20 @@ const PRODUCTS = [
   },
 ];
 
+/* Replace these with real reviews before launch, or delete the block and the
+   home page simply skips the section. */
 const TESTIMONIALS = [
-  { quote: "The cake was the prettiest thing at the party and somehow tasted even better than it looked.", name: "Marissa H." },
-  { quote: "I ordered four dozen iced cookies for a baby shower and every single one was perfect.", name: "Dana P." },
-  { quote: "Easiest pre-order I've ever done, and the cake pops disappeared in ten minutes.", name: "Kelsey R." },
+  { quote: "The cake was the prettiest thing at the party, and somehow it tasted even better than it looked.", name: "Marissa H.", context: "Birthday cake, June" },
+  { quote: "Four dozen iced cookies for a baby shower. Every single one was perfect.", name: "Dana P.", context: "Baby shower, March" },
+  { quote: "Easiest pre-order I have ever done, and the cake pops disappeared in ten minutes.", name: "Kelsey R.", context: "Office party, October" },
 ];
 
 const FAQS = [
-  { q: "When can I order?", a: "The order form is open Monday through Wednesday each week. Thursday is shopping day, and everything is baked fresh Friday and Saturday for that week's pickups. If you land here on a Thursday or a weekend, the menu is still here to browse — ordering reopens Monday morning." },
+  { q: "When can I order?", a: "The order form is open Monday through Wednesday each week. Thursday is shopping day, and everything is baked fresh Friday and Saturday for that week's pickups. If you land here on a Thursday or a weekend, the menu is still here to browse, ordering reopens Monday morning." },
   { q: "When do I pick up?", a: "Friday between 3:00 and 7:00 PM, or Saturday between 10:00 AM and 7:00 PM. You'll choose which one at checkout and lock in a time inside that window." },
   { q: "How do I pay?", a: SHOP_CONFIG.paymentNote + " We take " + SHOP_CONFIG.paymentMethods + "." },
   { q: "Where do I pick up?", a: SHOP_CONFIG.pickupLocation + ". You'll get the address and your pickup time in your confirmation email." },
-  { q: "Do you deliver?", a: SHOP_CONFIG.delivery.enabled ? "Yes — local delivery within " + SHOP_CONFIG.delivery.radiusMiles + " miles for a flat $" + SHOP_CONFIG.delivery.fee + " on orders over $" + SHOP_CONFIG.delivery.minimum + "." : "Pickup only for now." },
+  { q: "Do you deliver?", a: SHOP_CONFIG.delivery.enabled ? "Yes, local delivery within " + SHOP_CONFIG.delivery.radiusMiles + " miles for a flat $" + SHOP_CONFIG.delivery.fee + " on orders over $" + SHOP_CONFIG.delivery.minimum + "." : "Pickup only for now." },
   { q: "Can you work around allergies?", a: "I can leave out nuts on most items, but everything is made in one home kitchen, so I can't promise an allergen-free product. " + SHOP_CONFIG.cottageNotice },
   { q: "What about changes or cancellations?", a: "Changes are welcome until the order window closes Wednesday night. After that the shopping is done and the order is final." },
 ];

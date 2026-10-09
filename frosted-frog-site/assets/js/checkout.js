@@ -1,5 +1,5 @@
 /* Order page: review the cart, choose pickup or delivery, pick one of the
-   week's two pickup windows, and send the order. Nothing is charged here —
+   week's two pickup windows, and send the order. Nothing is charged here ,
    the order goes to Formspree, or to the customer's own email app. */
 (function () {
   "use strict";
@@ -40,7 +40,7 @@
       }
 
       var body = {
-        _subject: "Custom request — " + val("q-name"),
+        _subject: "Custom request, " + val("q-name"),
         name: val("q-name"),
         email: val("q-email"),
         date_needed: val("q-date"),
@@ -57,7 +57,7 @@
         btn.disabled = false;
         btn.textContent = label;
         if (status) {
-          status.innerHTML = '<p class="note">Got it — we\'ll come back to you with a quote, usually within a day.</p>';
+          status.innerHTML = '<p class="note">Got it, we\'ll come back to you with a quote, usually within a day.</p>';
         }
       }
 
@@ -108,7 +108,7 @@
             '<span class="eyebrow">Ordering is closed right now</span>' +
             "<h3>The order book opens " + opens.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) + "</h3>" +
             "<p>Orders are taken Monday through Wednesday, and everything is baked fresh for that week's Friday and Saturday pickups. " +
-            "Your cart is saved — come back Monday and it will still be here.</p>" +
+            "Your cart is saved, come back Monday and it will still be here.</p>" +
             '<a class="btn btn--ghost" href="' + window.pageHref("order.html") + '">See this week\'s menu</a>' +
           "</div>";
       }
@@ -349,7 +349,7 @@
             submitBtn.disabled = false;
             submitBtn.textContent = original;
             if (statusEl) {
-              statusEl.innerHTML = '<p class="note">Your order didn\'t send — the internet may have blinked. ' +
+              statusEl.innerHTML = '<p class="note">Your order didn\'t send, the internet may have blinked. ' +
                 'Try again, or <a href="#" data-mail-order>send it by email instead</a> and it will reach us just the same.</p>';
               var link = statusEl.querySelector("[data-mail-order]");
               if (link) {
@@ -367,10 +367,10 @@
       }
     });
 
-    /* Flat, readable fields — this is what lands in the inbox. */
+    /* Flat, readable fields, this is what lands in the inbox. */
     function formPayload(d) {
       return {
-        _subject: "Pre-order — " + d.customer.name + " — " + (d.pretty || d.date),
+        _subject: "Pre-order, " + d.customer.name + ", " + (d.pretty || d.date),
         name: d.customer.name,
         email: d.customer.email,
         phone: d.customer.phone,
@@ -386,7 +386,7 @@
     function summaryText(d) {
       var lines = d.items.map(function (i) {
         return "- " + i.qty + " x " + i.name + (i.options.length ? " (" + i.options.join("; ") + ")" : "") +
-          (i.note ? " — note: " + i.note : "") + " — " + money(i.qty * i.unitPrice);
+          (i.note ? ", note: " + i.note : "") + ", " + money(i.qty * i.unitPrice);
       });
       return [
         "New pre-order request",
@@ -413,7 +413,7 @@
     function mailFallback(d) {
       if (DEMO) return; // a demo build doesn't open anybody's email
       var href = "mailto:" + SHOP_CONFIG.email +
-        "?subject=" + encodeURIComponent("Pre-order request — " + d.customer.name) +
+        "?subject=" + encodeURIComponent("Pre-order request, " + d.customer.name) +
         "&body=" + encodeURIComponent(summaryText(d));
       window.location.href = href;
     }

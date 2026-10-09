@@ -1,0 +1,9 @@
+# Everything here stays off the public site. Server code, tooling and notes.
+src
+functions
+tools
+node_modules
+wrangler.jsonc
+.assetsignore
+*.md
+.wrangler

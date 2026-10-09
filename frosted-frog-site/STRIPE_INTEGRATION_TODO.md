@@ -84,7 +84,7 @@ and Secrets → Add**, applied to **Production**:
 |------|------|-------|
 | `STRIPE_SECRET_KEY` | Secret | A restricted key, `rk_test_...` while testing, `rk_live_...` when live |
 | `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_...`, from the webhook endpoint you create |
-| `SITE_URL` | Plain text | `https://thefrostedfrogbakery.com` |
+| `SITE_URL` | Plain text | Only once a custom domain is attached. The Worker otherwise uses the domain the request arrived on, which is correct on `workers.dev`. |
 | `ORDER_ENDPOINT` | Plain text | Optional. Your Formspree URL, if you would rather not keep it in `data.js` |
 
 There is no `.env` file and no publishable key. The site is static files, so
@@ -101,7 +101,8 @@ Developers → API keys → Create restricted key, with only:
 ### Webhook
 
 Developers → Webhooks → Add endpoint →
-`https://thefrostedfrogbakery.com/api/stripe-webhook`, subscribed to:
+`https://super-dust-23bf.madison-lautenschlager.workers.dev/api/stripe-webhook`
+(change this to your custom domain once one is attached), subscribed to:
 
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
@@ -112,39 +113,136 @@ not validate live events, so this is done once in each mode.
 
 ### Deploying
 
-Drag and drop will not work any more. It uploads files but never compiles the
-`functions` folder, so `/api/checkout` would return a 404 and the checkout
-button would fail. Deploy with Wrangler instead, from your own computer:
+This project is a **Cloudflare Worker with static assets**, not a Pages
+project. The `*.workers.dev` address is how you can tell. That distinction
+matters: the `functions/` folder convention is a Pages feature, and a Workers
+deploy ignores it completely. Without the pieces below, `/api/checkout` would
+return a 404 and the checkout button would fail with nothing in the logs.
+
+Three files make it work:
+
+| File | What it does |
+|------|--------------|
+| [src/worker.js](src/worker.js) | The router. Sends `/api/...` to the handlers in `functions/api/`, and everything else to the static files. One implementation, so Pages and Workers cannot drift apart. |
+| [wrangler.jsonc](wrangler.jsonc) | Names the Worker `super-dust-23bf`, points at the assets, and sets `run_worker_first: ["/api/*"]` so a request to the checkout always reaches the Worker. |
+| [.assetsignore](.assetsignore) | Keeps the server code, the tooling and these notes off the public site. |
+
+The Worker name in `wrangler.jsonc` must match the Worker in your dashboard.
+Cloudflare refuses the build if they differ.
+
+#### Option A: deploy from GitHub, automatic on every push
+
+Recommended. Once connected, every push rebuilds and redeploys with no
+commands at all.
+
+**1. Put the site in its own repository.** From the `frosted-frog-site` folder
+on your computer:
+
+```bash
+git init -b main
+git add -A
+git commit -m "The Frosted Frog website"
+```
+
+Create an empty repository at https://github.com/new, named
+`frosted-frog-site`, private, with no README or .gitignore. Then:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/frosted-frog-site.git
+git push -u origin main
+```
+
+**2. Connect Cloudflare to it.**
+
+1. Go to https://dash.cloudflare.com and open **Workers & Pages**.
+2. Click the Worker named **super-dust-23bf**.
+3. Open the **Settings** tab, then **Builds**.
+4. Click **Connect**, pick **GitHub**, and authorise Cloudflare if it asks.
+   You can grant access to just this one repository.
+5. Choose the `frosted-frog-site` repository.
+6. Fill in the build settings:
+   - **Git branch**: `main`
+   - **Build command**: leave empty. There is no build step.
+   - **Deploy command**: `npx wrangler deploy`
+   - **Root directory**: leave empty, because the repository root is the site.
+7. Save. The first build starts straight away, and every `git push` after that
+   deploys by itself.
+
+If you would rather not make a new repository, connect the one you already
+have instead and set **Root directory** to `frosted-frog-site`, with the
+branch set to whichever branch holds this work.
+
+**3. Add the two secrets yourself.** Build settings and runtime secrets are
+different things in Cloudflare, and Stripe keys belong in the runtime set:
+
+1. **Workers & Pages → super-dust-23bf → Settings → Variables and Secrets**.
+2. Click **Add**.
+3. Type: **Secret**. Name: `STRIPE_SECRET_KEY`. Value: your restricted key
+   from Stripe, starting `rk_test_` or `rk_live_`. Save.
+4. **Add** again. Type: **Secret**. Name: `STRIPE_WEBHOOK_SECRET`. Value: the
+   signing secret from your Stripe webhook, starting `whsec_`. Save.
+5. Deploy once more after adding them, by pushing any commit. Secrets reach
+   the Worker on its next deployment.
+
+Do not put these under *Build variables and secrets*. Those exist only while
+the build runs and are invisible to the running site.
+
+#### Option B: one command from your laptop
+
+If you would rather not involve GitHub.
+
+**Install first:** [Node.js](https://nodejs.org) version 20 or newer. Nothing
+else. The script fetches Wrangler on demand.
 
 ```bash
 cd frosted-frog-site
-sh tools/deploy.sh --check    # confirms the folder is ready, uploads nothing
-sh tools/deploy.sh            # logs in, sets both secrets, deploys, verifies
+sh tools/deploy.sh --check    # checks and tests everything, uploads nothing
+sh tools/deploy.sh            # logs in, takes both secrets, deploys, verifies
 ```
 
-The script asks for each Stripe secret in turn and Wrangler reads them without
-echoing, so the values never appear on screen or in your shell history. It
-finishes by calling `/api/health` on the live site and printing the webhook URL
-to paste into Stripe.
+The script prompts for each Stripe secret in turn through Wrangler's own
+hidden input, so no value is shown on screen or kept in your shell history.
+It finishes by calling `/api/health` on the live site.
 
-If you would rather run the commands yourself:
+The equivalent by hand:
 
 ```bash
-wrangler login
-wrangler pages secret put STRIPE_SECRET_KEY --project-name super-dust-23bf
-wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name super-dust-23bf
-wrangler pages deploy . --project-name super-dust-23bf --branch main
+npx wrangler login
+npx wrangler secret put STRIPE_SECRET_KEY
+npx wrangler secret put STRIPE_WEBHOOK_SECRET
+npx wrangler deploy
 ```
 
-Set the secrets before deploying. Pages picks up secret changes on the next
-deployment, so changing one later means deploying again.
+#### Checking it worked
 
-`SITE_URL` is optional while you are on `super-dust-23bf.pages.dev`: the
-function falls back to whatever domain the request arrived on, which is
-correct. Set it in the dashboard under Settings, Variables and Secrets, once
-a custom domain is attached, so Stripe returns customers to the right place.
+```
+https://super-dust-23bf.madison-lautenschlager.workers.dev/api/health
+```
 
-### Turning it on
+Open it in a browser. A healthy answer looks like:
+
+```json
+{"ok":true,"products":15,"paymentMode":"deposit","stripeKeySet":true,"webhookSecretSet":true,"orderEndpointSet":false}
+```
+
+Both `Set` fields read `true` once the secrets are in place. The endpoint
+reveals no key material, so it is safe to open anywhere. A 404 instead of JSON
+means the Worker did not deploy, which is exactly the failure a drag and drop
+would have given you silently.
+
+#### Working on it locally
+
+Optional, and only if you want to see changes before pushing:
+
+```bash
+npx wrangler dev
+```
+
+`.wrangler` is listed in `.assetsignore` so the file watcher does not trigger
+itself in a loop. Local runs have no Stripe keys unless you add a `.dev.vars`
+file, which is already in `.gitignore` and must never be committed.
+
+### Turning it on### Turning it on
 
 Set `paymentMode: "stripe"` in [assets/js/data.js](assets/js/data.js), then
 deploy. Leave it as `"deposit"` to go back to taking orders by email.

@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "super-dust-23bf",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-09",
+
+  // The whole site folder is the asset directory. `.assetsignore` keeps the
+  // server code, the tooling and the notes out of what gets published.
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+
+    // Without this, a request could be answered by an asset before the Worker
+    // ever sees it. The checkout must always reach the Worker.
+    "run_worker_first": ["/api/*"]
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

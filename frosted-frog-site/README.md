@@ -40,39 +40,29 @@ a third party changing something under you.
 
 ## Putting it on Cloudflare
 
-**Once the functions exist, use Wrangler**
+This deploys as a **Cloudflare Worker with static assets**. The pages are
+served from the assets binding; [src/worker.js](src/worker.js) answers the
+`/api/...` routes that take orders and payments.
 
-The `functions` folder has to be compiled, and drag and drop does not do that.
-From this folder on your own computer:
+Drag and drop cannot deploy it, because there would be no Worker and the
+checkout would 404. Two ways that do work, both covered step by step in
+[STRIPE_INTEGRATION_TODO.md](STRIPE_INTEGRATION_TODO.md):
 
-```bash
-sh tools/deploy.sh
-```
+- **From GitHub**, so every push deploys by itself. Connect the repository
+  under Workers & Pages → super-dust-23bf → Settings → Builds, with an empty
+  build command and `npx wrangler deploy` as the deploy command.
+- **From your computer**, one command:
 
-It checks the folder, logs you in if needed, takes the two Stripe secrets
-without showing them, deploys, and verifies the functions answer. See
-[STRIPE_INTEGRATION_TODO.md](STRIPE_INTEGRATION_TODO.md) for the detail.
+  ```bash
+  sh tools/deploy.sh
+  ```
 
-**Drag and drop, for a site with no functions**
+  It checks the folder, runs the tests, logs you in, takes the two Stripe
+  secrets without showing them, deploys, and confirms the API answers.
 
-1. Sign in at [dash.cloudflare.com](https://dash.cloudflare.com) → Workers &
-   Pages → Create → Pages → Upload assets.
-2. Drag the `frosted-frog-site` folder in. No build command, no framework
-   preset, it's already a finished site.
-3. It goes live at `something.pages.dev` in about a minute.
-4. Custom domain → add `thefrostedfrogbakery.com`, follow the DNS prompts.
-
-To update the site later, drag the folder in again as a new deployment.
-
-**The better way once you're settled, connect the repository**
-
-Point Cloudflare Pages at this Git repository instead, with
-`frosted-frog-site` as the root directory and the build command left empty.
-Then every change that's pushed deploys itself.
-
-HTTPS, the CDN, and DDoS protection come free and need no setup. `_headers`
-already sets a content security policy, HSTS, and sensible caching, so the
-fonts cache for a year while pages always revalidate.
+HTTPS, the CDN and DDoS protection come free and need no setup. `_headers`
+sets a content security policy, HSTS and caching; `_redirects` gives the clean
+URLs. Both work on Workers, and neither file is served to visitors.
 
 ## Everything you'll actually edit: `assets/js/data.js`
 

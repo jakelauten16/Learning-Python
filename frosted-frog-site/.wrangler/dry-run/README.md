@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "super-dust-23bf" generated at 2026-10-09T18:08:32.092Z.

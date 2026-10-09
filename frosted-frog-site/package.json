@@ -1,0 +1,14 @@
+{
+  "name": "frosted-frog-site",
+  "private": true,
+  "description": "The Frosted Frog cottage bakery. Static site plus a Cloudflare Worker for ordering and payment.",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test": "node tools/test-worker.mjs && node tools/test-checkout.mjs",
+    "preview": "node tools/build-preview.js"
+  },
+  "devDependencies": {
+    "wrangler": "4.149.0"
+  }
+}

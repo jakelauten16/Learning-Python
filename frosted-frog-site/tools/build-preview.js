@@ -19,9 +19,10 @@ const PAGES = [
   { id: "bakery", file: "bakery.html", label: "The Bakery" },
   { id: "order", file: "order.html", label: "Pre-Order & Menu" },
   { id: "faq", file: "faq.html", label: "FAQ & Policies" },
+  { id: "review", file: "review.html", label: "Review" },
   { id: "thank-you", file: "thank-you.html", label: "Thank you" },
 ];
-const SCRIPTS = ["data.js", "schedule.js", "cart.js", "site.js", "catalog.js", "checkout.js"];
+const SCRIPTS = ["data.js", "schedule.js", "cart.js", "site.js", "catalog.js", "checkout.js", "submit.js", "review.js"];
 const STYLES = ["assets/css/fonts.css", "assets/css/site.css"];
 
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");

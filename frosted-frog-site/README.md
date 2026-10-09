@@ -10,6 +10,7 @@ frosted-frog-site/
 ├── order.html          This week's menu, special requests, cart, checkout
 ├── bakery.html         The baker's story and the ethos
 ├── faq.html            Questions, allergens, policies
+├── review.html         The last look before an order is sent or paid for
 ├── thank-you.html      Confirmation, and the paid receipt after Stripe
 ├── 404.html
 ├── _headers            Security + caching headers (Cloudflare reads this)
@@ -22,7 +23,7 @@ frosted-frog-site/
 │   ├── fonts/          4 woff2 files (124 KB) + the font licence
 │   ├── img/            Logo, mascot, icons, product illustrations
 │   └── js/             data.js · schedule.js · cart.js · catalog.js ·
-│                       checkout.js · site.js
+│                       checkout.js · submit.js · review.js · site.js
 ├── functions/          Server side. Cloudflare runs these; they are never
 │   ├── _lib/order.js   published as files and never reach the browser.
 │   └── api/
@@ -140,6 +141,22 @@ Set it up with Formspree, five minutes, free tier is plenty:
 Leave `orderEndpoint` empty and the site opens the customer's own email with
 the whole order filled in. That works, but it depends on them pressing send.
 
+### The three steps a customer goes through
+
+1. **order.html** picks the items, the pickup window and the contact details.
+   The button there reads "Review your order" and sends nobody anywhere.
+2. **review.html** shows the whole thing back: items with their options and
+   notes, the pickup slot, the contact details, the totals and the cottage
+   food notice, with a Change link beside each section. Nothing has been sent
+   or charged at this point.
+3. Confirming on that page either opens Stripe or sends the request, and
+   **thank-you.html** closes the loop.
+
+The review page refuses to show a stale order. If the cart emptied, or
+changed in another tab, or the order window closed while the form was open,
+it says so and sends people back to the menu rather than confirming something
+that is no longer true.
+
 ### `"stripe"` (pay in full at checkout)
 
 The customer pays by card before the order exists. Change `paymentMode` to
@@ -249,8 +266,8 @@ Roll key**.
 5. Set `paymentMode: "stripe"` in `assets/js/data.js` and redeploy.
 6. Open `https://your-site.pages.dev/api/health`. It should report
    `stripeKeySet: true` and `webhookSecretSet: true`.
-7. Place an order on the site during the Monday to Wednesday window. The
-   button now reads "Pay $X and confirm".
+7. Place an order on the site during the Monday to Wednesday window, then
+   confirm on the review page, where the button reads "Pay $X".
 8. On Stripe's page use the test card **4242 4242 4242 4242**, any future
    expiry, any three-digit CVC, any ZIP. No money moves in test mode.
 9. You should land back on the thank-you page and see **Paid**, with a

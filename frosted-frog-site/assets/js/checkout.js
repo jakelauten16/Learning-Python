@@ -242,9 +242,7 @@
           ? "Ordering reopens Monday"
           : below
             ? "Delivery minimum is " + money(SHOP_CONFIG.delivery.minimum)
-            : SHOP_CONFIG.paymentMode === "stripe"
-              ? "Pay " + money(t.total) + " and confirm"
-              : "Send my pre-order";
+            : "Review your order";
       }
     }
 
@@ -316,7 +314,7 @@
       var data = {
         items: Cart.items().map(function (i) {
           return {
-            id: i.id, name: i.name, qty: i.qty, unitPrice: i.price,
+            id: i.id, name: i.name, image: i.image, qty: i.qty, unitPrice: i.price,
             options: Object.keys(i.options || {}).map(function (k) { return k + ": " + i.options[k].name; }),
             note: i.note || "",
           };
@@ -338,147 +336,12 @@
         totals: Cart.totals({ delivery: method === "delivery" }),
       };
 
-      submitBtn.disabled = true;
-      var original = submitBtn.textContent;
-      submitBtn.textContent = "One moment…";
-      if (statusEl) statusEl.textContent = "";
-
-      /* Paying by card. The browser sends what was chosen, never what it
-         costs: the server prices the order from its own catalog and hands
-         back a Stripe page to go to. */
-      if (SHOP_CONFIG.paymentMode === "stripe") {
-        fetch(SHOP_CONFIG.checkoutEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(serverPayload(data)),
-        })
-          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
-          .then(function (res) {
-            if (!res.ok || !res.body.url) throw new Error(res.body.error || "Checkout is unavailable");
-            sessionStorage.setItem("frostedfrog.lastOrder", JSON.stringify(data));
-            Cart.clear();
-            window.location.href = res.body.url;
-          })
-          .catch(function (err) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = original;
-            if (statusEl) {
-              statusEl.innerHTML = '<p class="note">' + (err.message || "Something went wrong") +
-                '. Nothing has been charged. Try again, or email us at <a href="mailto:' +
-                SHOP_CONFIG.email + '">' + SHOP_CONFIG.email + "</a>.</p>";
-            }
-          });
-        return;
-      }
-
-      /* No card is taken here. The order is a request: it goes to Formspree
-         when one is configured, otherwise to the customer's own email app. */
-      if (SHOP_CONFIG.orderEndpoint) {
-        fetch(SHOP_CONFIG.orderEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(formPayload(data)),
-        })
-          .then(function (r) {
-            if (!r.ok) throw new Error("That didn't go through");
-            finish(data);
-          })
-          .catch(function () {
-            submitBtn.disabled = false;
-            submitBtn.textContent = original;
-            if (statusEl) {
-              statusEl.innerHTML = '<p class="note">Your order didn\'t send, the internet may have blinked. ' +
-                'Try again, or <a href="#" data-mail-order>send it by email instead</a> and it will reach us just the same.</p>';
-              var link = statusEl.querySelector("[data-mail-order]");
-              if (link) {
-                link.addEventListener("click", function (e) {
-                  e.preventDefault();
-                  mailFallback(data);
-                  finish(data);
-                });
-              }
-            }
-          });
-      } else {
-        mailFallback(data);
-        finish(data);
-      }
+      /* One more look before any money moves. */
+      try {
+        sessionStorage.setItem("frostedfrog.pendingOrder", JSON.stringify(data));
+      } catch (e) { /* private mode */ }
+      go("review.html");
     });
 
-    /* Ids and quantities only. No prices leave the browser, because nothing
-       the browser says about money is believed on the other end. */
-    function serverPayload(d) {
-      return {
-        items: d.items.map(function (i) {
-          var options = {};
-          (i.options || []).forEach(function (pair) {
-            var at = pair.indexOf(": ");
-            if (at > 0) options[pair.slice(0, at)] = pair.slice(at + 2);
-          });
-          return { id: i.id, qty: i.qty, options: options, note: i.note || "" };
-        }),
-        fulfillment: d.fulfillment,
-        date: d.date,
-        window: d.window,
-        customer: d.customer,
-      };
-    }
-
-    /* Flat, readable fields, this is what lands in the inbox. */
-    function formPayload(d) {
-      return {
-        _subject: "Pre-order, " + d.customer.name + ", " + (d.pretty || d.date),
-        name: d.customer.name,
-        email: d.customer.email,
-        phone: d.customer.phone,
-        pickup: (d.pretty || d.date) + " at " + d.window,
-        fulfillment: d.fulfillment === "delivery" ? "Delivery to " + d.customer.address : "Pickup",
-        occasion: d.customer.occasion,
-        notes: d.customer.notes,
-        total: money(d.totals.total),
-        order: summaryText(d),
-      };
-    }
-
-    function summaryText(d) {
-      var lines = d.items.map(function (i) {
-        return "- " + i.qty + " x " + i.name + (i.options.length ? " (" + i.options.join("; ") + ")" : "") +
-          (i.note ? ", note: " + i.note : "") + ", " + money(i.qty * i.unitPrice);
-      });
-      return [
-        "New pre-order request",
-        "",
-        "Name: " + d.customer.name,
-        "Email: " + d.customer.email,
-        "Phone: " + d.customer.phone,
-        (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + ": " +
-          (d.pretty || d.date) + " at " + d.window + " (window " + d.windowRange + ")",
-        d.fulfillment === "delivery" ? "Address: " + d.customer.address : "",
-        d.customer.occasion ? "Occasion: " + d.customer.occasion : "",
-        "",
-        "Order:",
-      ].filter(Boolean).concat(lines, [
-        "",
-        "Subtotal: " + money(d.totals.subtotal),
-        d.totals.delivery ? "Delivery: " + money(d.totals.delivery) : "",
-        d.totals.tax ? "Tax: " + money(d.totals.tax) : "",
-        "Total: " + money(d.totals.total),
-        d.customer.notes ? "\nNotes: " + d.customer.notes : "",
-      ].filter(Boolean)).join("\n");
-    }
-
-    function mailFallback(d) {
-      if (DEMO) return; // a demo build doesn't open anybody's email
-      var href = "mailto:" + SHOP_CONFIG.email +
-        "?subject=" + encodeURIComponent("Pre-order request, " + d.customer.name) +
-        "&body=" + encodeURIComponent(summaryText(d));
-      window.location.href = href;
-    }
-
-    function finish(d) {
-      sessionStorage.setItem("frostedfrog.lastOrder", JSON.stringify(d));
-      Cart.clear();
-      go("thank-you.html");
-    }
   });
 })();

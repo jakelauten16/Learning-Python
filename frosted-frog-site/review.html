@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check Your Order | The Frosted Frog</title>
+<meta name="description" content="One last look at your order before it is sent.">
+<meta property="og:title" content="Check Your Order | The Frosted Frog">
+<meta property="og:description" content="One last look at your order before it is sent.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog" width="58" height="58">
+      <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="bakery.html">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order &amp; Menu</a></li>
+      <li><a href="faq.html">FAQ &amp; Policies</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="theme-toggle" type="button">Dark</button>
+      <button class="cart-btn" data-cart-open aria-label="Open your order">
+        Order <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<main id="main" tabindex="-1" data-review>
+  <section class="section section--tight" style="padding-top:2.6rem;padding-bottom:1rem">
+    <div class="wrap center">
+      <span class="eyebrow">Step 3 of 3</span>
+      <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:.3rem">Check your order</h1>
+      <p class="lede center" style="margin-inline:auto">Have a look before anything is sent. You can still change your mind.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:1rem">
+    <div class="wrap" style="max-width:940px">
+
+      <div class="panel center" data-review-empty hidden>
+        <img class="frog frog--inline" src="assets/img/frog-baker.svg" alt="" aria-hidden="true" width="240" height="240" style="width:140px">
+        <h2 style="font-size:1.6rem">Nothing to check just yet</h2>
+        <p data-reason></p>
+        <a class="btn" href="order.html">Back to this week's menu</a>
+      </div>
+
+      <div data-review-panel>
+        <div class="review">
+          <div class="review__main">
+            <div class="panel">
+              <div class="review__head">
+                <h2>What you are ordering</h2>
+                <a class="link-arrow" href="order.html">Change</a>
+              </div>
+              <div data-review-items></div>
+              <div data-review-totals style="margin-top:1.2rem"></div>
+            </div>
+
+            <div class="panel" style="margin-top:1.4rem">
+              <div class="review__head">
+                <h2>When and where</h2>
+                <a class="link-arrow" href="order.html#checkout">Change</a>
+              </div>
+              <dl class="review-facts" data-review-pickup></dl>
+            </div>
+
+            <div class="panel" style="margin-top:1.4rem">
+              <div class="review__head">
+                <h2>Who we are baking for</h2>
+                <a class="link-arrow" href="order.html#checkout">Change</a>
+              </div>
+              <dl class="review-facts" data-review-contact></dl>
+            </div>
+          </div>
+
+          <aside class="review__side">
+            <div class="panel summary">
+              <h2 style="font-size:1.4rem">Confirm</h2>
+              <p class="hint" data-review-payment></p>
+              <button class="btn btn--block" type="button" data-confirm>Confirm</button>
+              <div data-review-status aria-live="polite"></div>
+              <a class="link-arrow" href="order.html" style="margin-top:1rem;display:inline-block">Keep shopping</a>
+              <p class="hint" style="margin-top:1.2rem">Changes are welcome until the order window closes Wednesday night.</p>
+              <p class="note" data-config="cottageNotice"></p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" width="120" height="120" loading="lazy">
+        <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
+        <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
+      </div>
+      <div>
+        <h4>Visit &amp; Order</h4>
+        <ul class="pads">
+          <li data-schedule-summary></li>
+          <li data-config="pickupLocation"></li>
+          <li><a href="#" data-config="email"></a></li>
+          <li><a href="#" data-config="phone"></a></li>
+          <li><a href="order.html">Start a pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Along</h4>
+        <ul class="pads">
+          <li><a href="#" data-config="instagram">Instagram</a></li>
+          <li><a href="#" data-config="facebook">Facebook</a></li>
+          <li><a href="order.html">This week's menu</a></li>
+          <li><a href="faq.html">Allergies &amp; policies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; <span data-year></span> The Frosted Frog. All rights reserved.</span>
+      <span data-config="cottageNotice"></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/schedule.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/submit.js"></script>
+<script src="assets/js/review.js"></script>
+</body>
+</html>

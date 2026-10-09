@@ -841,3 +841,32 @@ p { margin: 0 0 1.1em; text-wrap: pretty; }
   transition: background-color .25s var(--ease), color .25s var(--ease);
 }
 .toast__undo:hover { background: var(--gold-200); color: var(--green-900); }
+
+/* =========================================================================
+   The review step
+   ========================================================================= */
+.review { display: grid; grid-template-columns: 1.3fr .7fr; gap: clamp(1.2rem, 2.5vw, 2rem); align-items: start; }
+.review__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.review__head h2 { margin: 0; font-size: clamp(1.3rem, 2vw, 1.6rem); }
+
+.review-line {
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 1rem;
+  padding: .9rem 0; border-bottom: 1px solid rgba(168, 130, 31, .16);
+}
+.review-line:last-of-type { border-bottom: 0; }
+.review-line img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius); background: var(--cream); }
+.review-line h3 { font-size: 1.1rem; margin: 0 0 .15rem; }
+.review-line__opts, .review-line__note, .review-line__qty { margin: 0; font-size: .84rem; color: var(--ink-soft); }
+.review-line__note { font-style: italic; }
+.review-line__qty { margin-top: .3rem; font-variant-numeric: tabular-nums; }
+.review-line__price { font-family: var(--font-display); font-size: 1.1rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.review-facts { display: grid; grid-template-columns: auto 1fr; gap: .5rem 1.4rem; margin: 0; }
+.review-facts dt { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-600); padding-top: .2rem; }
+.review-facts dd { margin: 0; color: var(--ink); }
+.review-sub { display: block; font-size: .82rem; color: var(--ink-soft); }
+
+@media (max-width: 860px) {
+  .review { grid-template-columns: 1fr; }
+  .review__side { position: static; }
+}

@@ -10,7 +10,8 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1B3B2C">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
@@ -20,11 +21,12 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="progress" aria-hidden="true"></div>
 <header class="site-header">
   <nav class="wrap nav" aria-label="Main">
     <a class="nav__brand" href="index.html">
-      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog" width="58" height="58">
       <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
     </a>
     <ul class="nav__links">
@@ -44,7 +46,7 @@
     </div>
   </nav>
 </header>
-<main>
+<main id="main" tabindex="-1">
   <section class="section section--tight" style="padding-top:3rem;padding-bottom:1rem">
     <div class="wrap center">
       <span class="eyebrow" data-reveal>The Bakery</span>
@@ -56,8 +58,8 @@
   <section class="section" style="padding-top:1.5rem">
     <div class="wrap bio">
       <div class="bio__portrait" data-reveal="left">
-        <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog logo" data-parallax="0.05">
-        <img class="frog frog--hop bio__frog" src="assets/img/frog-baker.svg" alt="" aria-hidden="true">
+        <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog logo" width="380" height="380" data-parallax="0.05">
+        <img class="frog frog--hop bio__frog" src="assets/img/frog-baker.svg" width="240" height="240" alt="" aria-hidden="true">
         <p class="bio__caption">Swap this for a photo of you in the kitchen, <code>assets/img/</code></p>
       </div>
       <div data-reveal="right">
@@ -123,7 +125,7 @@
 
   <section class="section section--cream">
     <div class="wrap center">
-      <img class="frog frog--inline frog--hop" src="assets/img/frog-baker.svg" alt="" aria-hidden="true" data-reveal>
+      <img class="frog frog--inline frog--hop" src="assets/img/frog-baker.svg" width="240" height="240" alt="" aria-hidden="true" data-reveal>
       <h2 data-reveal style="margin-bottom:.3rem">Come hungry</h2>
       <p class="lede center" data-reveal style="margin-inline:auto">This week's menu is up, and the order book is open Monday through Wednesday.</p>
       <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem">
@@ -138,7 +140,7 @@
   <div class="wrap">
     <div class="footer__grid">
       <div>
-        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" loading="lazy">
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" width="120" height="120" loading="lazy">
         <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
         <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
       </div>

@@ -10,7 +10,8 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1B3B2C">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
@@ -20,11 +21,12 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="progress" aria-hidden="true"></div>
 <header class="site-header">
   <nav class="wrap nav" aria-label="Main">
     <a class="nav__brand" href="index.html">
-      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog" width="58" height="58">
       <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
     </a>
     <ul class="nav__links">
@@ -44,7 +46,7 @@
     </div>
   </nav>
 </header>
-<main>
+<main id="main" tabindex="-1">
   <section class="section section--tight" style="padding-top:2.6rem;padding-bottom:1.4rem">
     <div class="wrap center">
       <span class="eyebrow" data-reveal>Pre-Order</span>
@@ -70,7 +72,7 @@
         </header>
         <div class="request" data-reveal>
           <div class="request__art">
-            <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true">
+            <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true" width="240" height="240">
             <p class="script" style="font-size:1.9rem;color:var(--green-700);margin:0">Ask for anything</p>
             <ul class="pads" style="margin-top:1rem;font-size:.92rem">
               <li>Tiered and sculpted cakes</li>
@@ -87,7 +89,7 @@
               </div>
               <div class="field">
                 <label for="q-email">Email</label>
-                <input id="q-email" name="email" type="email" autocomplete="email" required>
+                <input id="q-email" name="email" type="email" autocomplete="email" spellcheck="false" required>
               </div>
             </div>
             <div class="field--row">
@@ -169,7 +171,7 @@
             <div class="field--row">
               <div class="field">
                 <label for="email">Email</label>
-                <input id="email" name="email" type="email" autocomplete="email" required>
+                <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required>
                 <p class="error">Check the email address.</p>
               </div>
               <div class="field">
@@ -192,7 +194,7 @@
             <button class="btn btn--block" type="submit" data-submit style="margin-top:1.4rem">Place pre-order</button>
             <div data-status aria-live="polite"></div>
             <div class="ribbit" style="margin-top:1.2rem">
-              <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true">
+              <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true" width="240" height="240">
               <p style="margin:0"><strong>No card needed</strong><span data-config="paymentNote"></span> We take <span data-config="paymentMethods"></span>.</p>
             </div>
             <p class="hint" style="margin-top:1rem" data-schedule-summary></p>
@@ -208,7 +210,7 @@
   <div class="wrap">
     <div class="footer__grid">
       <div>
-        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" loading="lazy">
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" width="120" height="120" loading="lazy">
         <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
         <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
       </div>

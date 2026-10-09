@@ -3,7 +3,8 @@
 (function () {
   "use strict";
 
-  function money(n) { return "$" + Number(n).toFixed(2); }
+  var currency = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
+  function money(n) { return currency.format(Number(n)); }
 
   function group(id) {
     return CATEGORIES.filter(function (c) { return c.id === id; })[0];
@@ -21,7 +22,7 @@
       '<article class="card" data-reveal="zoom" data-delay="' + ((i % 3) * 110) + '">' +
         '<div class="card__media">' +
           '<span class="card__tag">' + tagFor(p) + "</span>" +
-          '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy">' +
+          '<img src="' + p.image + '" alt="' + p.name + '" width="400" height="300" loading="lazy">' +
         "</div>" +
         '<div class="card__body">' +
           "<h3>" + p.name + "</h3>" +
@@ -90,7 +91,7 @@
     }).join("");
 
     host.querySelector(".modal").innerHTML =
-      '<div class="modal__media"><img src="' + p.image + '" alt="' + p.name + '"></div>' +
+      '<div class="modal__media"><img src="' + p.image + '" alt="' + p.name + '" width="400" height="300"></div>' +
       '<div class="modal__body">' +
         '<button class="modal__close" aria-label="Close">&times;</button>' +
         '<span class="eyebrow">' + tagFor(p) + "</span>" +
@@ -99,7 +100,7 @@
         '<p class="price" data-modal-price>' + money(p.price) + "<small>" + (p.unit || "each") + "</small></p>" +
         optionsHTML +
         '<div class="field"><label for="m-qty">Quantity' + (min > 1 ? " (minimum " + min + ")" : "") + "</label>" +
-          '<input id="m-qty" type="number" min="' + min + '" step="' + step + '" value="' + min + '"></div>' +
+          '<input id="m-qty" type="number" inputmode="numeric" min="' + min + '" step="' + step + '" value="' + min + '"></div>' +
         '<div class="field"><label for="m-note">Notes for the baker <span style="text-transform:none;letter-spacing:0">(colors, message on the cake, allergies)</span></label>' +
           '<textarea id="m-note" placeholder="Sage and gold, please, &quot;Happy Birthday Ellie&quot; on top."></textarea></div>' +
         '<button class="btn btn--block" data-add="' + p.id + '">Add to order</button>' +
@@ -162,7 +163,7 @@
         var count = PRODUCTS.filter(function (p) { return p.group === c.id; }).length;
         return (
           '<a class="cat-card" href="' + window.pageHref("order.html", c.id) + '" data-reveal data-delay="' + ((i % 4) * 90) + '">' +
-            '<img src="' + c.image + '" alt="" loading="lazy">' +
+            '<img src="' + c.image + '" alt="" width="400" height="300" loading="lazy">' +
             '<div class="cat-card__cap"><h3>' + c.name + "</h3><p>" + c.blurb + "</p>" +
             '<span class="cat-card__go">' + (count ? count + " on the board" : "Tell us what you need") + "</span></div>" +
           "</a>"

@@ -4,7 +4,8 @@
 (function () {
   "use strict";
 
-  function money(n) { return "$" + Number(n).toFixed(2); }
+  var currency = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
+  function money(n) { return currency.format(Number(n)); }
   function $(sel) { return document.querySelector(sel); }
 
   /* Demo builds run every page in one document, so navigation is by hash. */
@@ -36,6 +37,7 @@
       });
       if (missing.length) {
         Cart.toast("Name, email and a few details, please.");
+        document.getElementById(missing[0]).focus();
         return;
       }
 
@@ -206,7 +208,7 @@
         var opts = Object.keys(i.options || {}).map(function (k) { return i.options[k].name; }).join(" · ");
         return (
           '<div class="line">' +
-            '<img src="' + i.image + '" alt="" loading="lazy">' +
+            '<img src="' + i.image + '" alt="" width="64" height="64" loading="lazy">' +
             "<div><h4>" + i.name + "</h4>" +
               (opts ? '<p class="line__opts">' + opts + "</p>" : "") +
               (i.note ? '<p class="line__opts"><em>&ldquo;' + i.note + "&rdquo;</em></p>" : "") +
@@ -299,7 +301,13 @@
       if (!Cart.items().length) return;
       if (!validate()) {
         var first = form.querySelector(".field.is-invalid");
-        if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (first) {
+          first.scrollIntoView({ behavior: "smooth", block: "center" });
+          /* The pickup-day field holds buttons rather than an input, and its
+             date field is hidden, so look for anything actually focusable. */
+          var control = first.querySelector("input:not([type=hidden]), select, textarea, button");
+          if (control) control.focus({ preventScroll: true });
+        }
         return;
       }
 

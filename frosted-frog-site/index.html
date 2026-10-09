@@ -10,7 +10,8 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1B3B2C">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
@@ -20,11 +21,12 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="progress" aria-hidden="true"></div>
 <header class="site-header">
   <nav class="wrap nav" aria-label="Main">
     <a class="nav__brand" href="index.html">
-      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog" width="58" height="58">
       <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
     </a>
     <ul class="nav__links">
@@ -44,7 +46,7 @@
     </div>
   </nav>
 </header>
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero__pond" aria-hidden="true"></div>
     <div class="wrap hero__grid">
@@ -116,7 +118,7 @@
         <a class="btn btn--light" href="order.html">See this week's menu</a>
       </div>
       <div class="split__art" data-reveal="right">
-        <img class="frog frog--hop" src="assets/img/frog-baker.svg" alt="The Frosted Frog mascot, piping a swirl of frosting">
+        <img class="frog frog--hop" src="assets/img/frog-baker.svg" width="240" height="240" alt="The Frosted Frog mascot, piping a swirl of frosting">
       </div>
     </div>
   </section>
@@ -130,7 +132,7 @@
   <section class="section section--cream">
     <div class="wrap split split--tight">
       <div data-reveal="left">
-        <h2 style="margin-bottom:.4rem">Birthdays, showers, weddings<span class="script" style="display:block">and just-because</span></h2>
+        <h2 style="margin-bottom:.4rem">Birthdays, showers, weddings<span class="script" style="display:block">and no reason at all</span></h2>
         <p>Working from a color palette, an invitation, or a picture you cannot stop looking at? Send it over. Custom cakes and cookie sets are quoted individually, and two to four weeks of notice is ideal.</p>
         <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.2rem">
           <a class="btn" href="order.html#group-requests">Custom orders</a>
@@ -156,7 +158,7 @@
   <div class="wrap">
     <div class="footer__grid">
       <div>
-        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" loading="lazy">
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" width="120" height="120" loading="lazy">
         <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
         <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
       </div>

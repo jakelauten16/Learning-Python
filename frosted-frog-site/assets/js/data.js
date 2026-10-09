@@ -254,7 +254,7 @@ const PRODUCTS = [
     featured: true,
     options: [
       { label: "Design", choices: [
-        { name: "Simple, one or two colors", price: 0 },
+        { name: "One or two colors", price: 0 },
         { name: "Detailed, florals, lettering", price: 12 },
         { name: "Custom, send me your theme", price: 20 },
       ]},

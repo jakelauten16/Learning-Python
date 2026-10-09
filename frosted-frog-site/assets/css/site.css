@@ -4,6 +4,8 @@
    ========================================================================= */
 
 :root {
+  color-scheme: light dark;
+
   --green-900: #1B3B2C;
   --green-700: #2C5240;
   --green-500: #497A5E;
@@ -82,6 +84,9 @@ html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   margin: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(44, 82, 64, .12);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-body);
@@ -97,6 +102,7 @@ a { color: var(--green-700); text-decoration: none; }
 a:hover { color: var(--gold-600); }
 
 h1, h2, h3, h4 {
+  text-wrap: balance;
   font-family: var(--font-display);
   font-weight: 400;
   color: var(--green-900);
@@ -108,7 +114,7 @@ h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); }
 h2 { font-size: clamp(2rem, 4vw, 3.1rem); }
 h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); }
 
-p { margin: 0 0 1.1em; }
+p { margin: 0 0 1.1em; text-wrap: pretty; }
 
 .wrap { width: min(var(--wrap), 92vw); margin-inline: auto; }
 .section { padding: clamp(3rem, 5.5vw, 5rem) 0; }
@@ -154,7 +160,9 @@ p { margin: 0 0 1.1em; }
   letter-spacing: .22em; text-transform: uppercase;
   border: 1px solid var(--green-700); border-radius: var(--radius);
   background: var(--green-700); color: var(--cream);
-  cursor: pointer; transition: all .35s var(--ease);
+  cursor: pointer;
+  transition: background-color .35s var(--ease), color .35s var(--ease),
+              border-color .35s var(--ease), transform .35s var(--ease), box-shadow .35s var(--ease);
   position: relative; overflow: hidden;
 }
 .btn:hover { background: var(--green-900); color: var(--white); transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -176,7 +184,7 @@ p { margin: 0 0 1.1em; }
 
 /* --- header -------------------------------------------------------------- */
 .site-header {
-  position: sticky; top: 0; z-index: 90;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 90;
   background: rgba(251, 248, 241, .92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid transparent;
@@ -206,7 +214,7 @@ p { margin: 0 0 1.1em; }
   border: 1px solid var(--gold-500); background: transparent; color: var(--green-900);
   padding: .6rem 1.1rem; border-radius: var(--radius); cursor: pointer;
   font-family: var(--font-body); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
-  transition: all .3s var(--ease);
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
 .cart-btn:hover { background: var(--gold-500); color: #2A2410; }
 .cart-count {
@@ -285,7 +293,7 @@ p { margin: 0 0 1.1em; }
 .card__body h3 { margin-bottom: .35rem; }
 .card__desc { font-size: .93rem; color: var(--ink-soft); flex: 1; }
 .card__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-top: 1.2rem; }
-.price { font-family: var(--font-display); font-size: 1.45rem; color: var(--green-900); }
+.price { font-family: var(--font-display); font-size: 1.45rem; color: var(--green-900); font-variant-numeric: tabular-nums; }
 .price small { display: block; font-family: var(--font-body); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 .soldout { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-600); }
 
@@ -302,7 +310,7 @@ p { margin: 0 0 1.1em; }
   border: 1px solid rgba(44, 82, 64, .3); background: transparent; color: var(--green-900);
   padding: .6rem 1.35rem; border-radius: 999px; cursor: pointer;
   font-family: var(--font-body); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
-  transition: all .3s var(--ease);
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
 .filter:hover { border-color: var(--gold-500); color: var(--gold-600); }
 .filter.is-active { background: var(--green-700); border-color: var(--green-700); color: var(--cream); }
@@ -328,13 +336,15 @@ p { margin: 0 0 1.1em; }
 .drawer {
   position: fixed; top: 0; right: 0; height: 100%; width: min(430px, 92vw);
   background: var(--cream); z-index: 101; display: flex; flex-direction: column;
+  overscroll-behavior: contain;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   transform: translateX(105%); transition: transform .5s var(--ease); box-shadow: var(--shadow-lg);
 }
 .drawer.is-open { transform: none; }
 .drawer__head { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 1.6rem; border-bottom: 1px solid rgba(168, 130, 31, .25); }
 .drawer__head h3 { margin: 0; }
 .drawer__close { background: none; border: 0; font-size: 1.6rem; line-height: 1; color: var(--green-900); cursor: pointer; }
-.drawer__body { flex: 1; overflow-y: auto; padding: 1.2rem 1.6rem; }
+.drawer__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 1.2rem 1.6rem; }
 .drawer__foot { padding: 1.4rem 1.6rem 1.8rem; border-top: 1px solid rgba(168, 130, 31, .25); background: var(--white); }
 
 .line { display: grid; grid-template-columns: 64px 1fr auto; gap: .9rem; padding: 1rem 0; border-bottom: 1px solid rgba(168, 130, 31, .16); }
@@ -345,11 +355,11 @@ p { margin: 0 0 1.1em; }
 .qty button { background: none; border: 0; width: 28px; height: 28px; cursor: pointer; color: var(--green-900); font-size: 1rem; line-height: 1; }
 .qty button:hover { color: var(--gold-600); }
 .qty span { min-width: 30px; text-align: center; font-size: .9rem; }
-.line__price { font-family: var(--font-display); font-size: 1.05rem; text-align: right; white-space: nowrap; }
+.line__price { font-family: var(--font-display); font-size: 1.05rem; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .line__remove { display: block; background: none; border: 0; padding: 0; margin-top: .4rem; color: var(--ink-soft); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
 .line__remove:hover { color: var(--gold-600); }
 
-.totals { font-size: .92rem; }
+.totals { font-size: .92rem; font-variant-numeric: tabular-nums; }
 .totals div { display: flex; justify-content: space-between; padding: .28rem 0; color: var(--ink-soft); }
 .totals .total { font-family: var(--font-display); font-size: 1.35rem; color: var(--green-900); border-top: 1px solid rgba(168, 130, 31, .25); margin-top: .5rem; padding-top: .7rem; }
 
@@ -363,7 +373,8 @@ p { margin: 0 0 1.1em; }
 }
 .modal-backdrop.is-open { opacity: 1; visibility: visible; }
 .modal {
-  background: var(--cream); width: min(860px, 100%); max-height: 90vh; overflow-y: auto;
+  background: var(--cream); width: min(860px, 100%); max-height: 90dvh; overflow-y: auto;
+  overscroll-behavior: contain;
   border-radius: var(--radius); display: grid; grid-template-columns: 1fr 1fr;
   transform: translateY(20px) scale(.98); transition: transform .4s var(--ease);
 }
@@ -394,7 +405,7 @@ p { margin: 0 0 1.1em; }
 .choice {
   border: 1px solid rgba(44, 82, 64, .25); background: var(--white); border-radius: var(--radius);
   padding: .6rem 1rem; cursor: pointer; font-family: var(--font-body); font-size: .82rem; color: var(--ink);
-  transition: all .25s var(--ease);
+  transition: background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
 }
 .choice:hover { border-color: var(--gold-500); }
 .choice.is-active { background: var(--green-700); border-color: var(--green-700); color: var(--cream); }
@@ -445,7 +456,7 @@ p { margin: 0 0 1.1em; }
 
 /* --- toast --------------------------------------------------------------- */
 .toast {
-  position: fixed; left: 50%; bottom: 2rem; transform: translate(-50%, 140%);
+  position: fixed; left: 50%; bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);
   background: var(--green-900); color: var(--cream); padding: .95rem 1.6rem;
   border-radius: var(--radius); font-size: .85rem; letter-spacing: .06em; z-index: 200;
   transition: transform .45s var(--ease); box-shadow: var(--shadow-md);
@@ -454,7 +465,7 @@ p { margin: 0 0 1.1em; }
 
 /* --- scroll progress ----------------------------------------------------- */
 /* Reading progress, driven by the browser's own scroll timeline. */
-.progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--gold-500); z-index: 120; width: 100%; transform-origin: 0 50%; transform: scaleX(0); }
+.progress { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; height: 2px; background: var(--gold-500); z-index: 120; width: 100%; transform-origin: 0 50%; transform: scaleX(0); }
 @supports (animation-timeline: scroll()) {
   .progress { animation: progress-grow linear; animation-timeline: scroll(root block); }
 }
@@ -792,3 +803,41 @@ p { margin: 0 0 1.1em; }
   :root:not([data-theme="light"]) .card__tag { background: rgba(26, 47, 37, .94); color: var(--gold-500); }
   :root:not([data-theme="light"]) .toast { background: #0C1A14; border: 1px solid rgba(216, 182, 92, .3); }
 }
+
+/* =========================================================================
+   Keyboard focus. Every interactive thing shows where you are, and only
+   when you are navigating by keyboard.
+   ========================================================================= */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-600);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+:where(a, button, input, select, textarea, summary):focus:not(:focus-visible) { outline: none; }
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible { outline-offset: 1px; }
+
+/* A keyboard visitor can jump the navigation and land on the page itself. */
+.skip-link {
+  position: absolute; left: 1rem; top: 0; z-index: 200;
+  transform: translateY(-120%);
+  background: var(--green-900); color: var(--cream);
+  padding: .7rem 1.2rem; border-radius: 0 0 var(--radius) var(--radius);
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  transition: transform .2s var(--ease);
+}
+.skip-link:focus-visible { transform: translateY(0); color: var(--cream); }
+
+/* The sticky header must never sit on top of what you just focused. */
+:target, [id] { scroll-margin-top: 110px; }
+
+.toast { display: inline-flex; align-items: center; gap: 1rem; }
+.toast__undo {
+  background: none; border: 1px solid rgba(232, 217, 174, .5); color: var(--gold-200);
+  border-radius: 999px; padding: .3rem .8rem; cursor: pointer;
+  font-family: var(--font-body); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  transition: background-color .25s var(--ease), color .25s var(--ease);
+}
+.toast__undo:hover { background: var(--gold-200); color: var(--green-900); }

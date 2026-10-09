@@ -10,7 +10,8 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1B3B2C">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
@@ -20,11 +21,12 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="progress" aria-hidden="true"></div>
 <header class="site-header">
   <nav class="wrap nav" aria-label="Main">
     <a class="nav__brand" href="index.html">
-      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog">
+      <img src="assets/img/frosted-frog-logo.webp" alt="The Frosted Frog" width="58" height="58">
       <span class="nav__brand-text">The Frosted Frog<small>Cottage Bakery</small></span>
     </a>
     <ul class="nav__links">
@@ -44,10 +46,10 @@
     </div>
   </nav>
 </header>
-<main>
+<main id="main" tabindex="-1">
   <section class="section" style="min-height:62vh;display:flex;align-items:center">
     <div class="wrap center" style="max-width:640px">
-      <img class="frog frog--inline frog--hop" src="assets/img/frog-baker.svg" alt="" aria-hidden="true" style="width:180px">
+      <img class="frog frog--inline frog--hop" src="assets/img/frog-baker.svg" width="240" height="240" alt="" aria-hidden="true" style="width:180px">
       <span class="eyebrow">Error 404</span>
       <h1 class="script" style="font-size:clamp(2.6rem,7vw,4.2rem);color:var(--green-700)">That one hopped off</h1>
       <div class="ornament"><span></span><i></i><span></span></div>
@@ -63,7 +65,7 @@
   <div class="wrap">
     <div class="footer__grid">
       <div>
-        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" loading="lazy">
+        <img class="footer__logo" src="assets/img/frosted-frog-logo.webp" alt="" width="120" height="120" loading="lazy">
         <p class="script" style="font-size:2rem;color:#FBF8F1">The Frosted Frog</p>
         <p style="max-width:34ch;opacity:.85" data-config="tagline"></p>
       </div>

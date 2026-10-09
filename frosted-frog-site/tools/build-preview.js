@@ -65,7 +65,7 @@ function rewriteLinks(text) {
 }
 
 const indexHTML = read("index.html");
-const header = between(indexHTML, /<header class="site-header">/, /<main>/);
+const header = between(indexHTML, /<a class="skip-link"/, /<main[^>]*>/);
 const footer = between(indexHTML, /<footer class="site-footer">/, /<script src=/).trim();
 
 /* The thank-you page's inline script has to be re-runnable, because the
@@ -84,8 +84,9 @@ function makeRerunnable(body) {
 
 const sections = PAGES.map((p) => {
   const html = read(p.file);
-  let body = between(html, /<main>/, /<footer class="site-footer">/);
+  let body = between(html, /<main[^>]*>/, /<footer class="site-footer">/);
   if (p.id === "thank-you") body = makeRerunnable(body);
+  body = body.replace(/<main id="main" tabindex="-1">/, "<main>");
   return `<div class="demo-page" id="page-${p.id}" data-page="${p.id}" hidden>\n${body}\n</div>`;
 }).join("\n\n");
 
@@ -219,7 +220,9 @@ ${demoCSS}
 </style>
 <div class="progress" aria-hidden="true"></div>
 ${header}
+<div id="main" tabindex="-1">
 ${sections}
+</div>
 ${footer}
 <script>window.FROSTED_DEMO = true;</script>
 <script>

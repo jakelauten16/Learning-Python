@@ -21,8 +21,10 @@
     listeners.forEach(function (fn) { fn(items); });
   }
 
+  /* Intl so the figure follows the reader's locale conventions. */
+  var currency = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
   function money(n) {
-    return "$" + Number(n).toFixed(2);
+    return currency.format(Number(n));
   }
 
   function lineKey(id, options) {
@@ -77,7 +79,19 @@
     },
 
     remove: function (key) {
-      write(read().filter(function (i) { return i.key !== key; }));
+      var items = read();
+      var gone = items.filter(function (i) { return i.key === key; })[0];
+      write(items.filter(function (i) { return i.key !== key; }));
+      if (gone) {
+        Cart.toast(gone.name + " removed", {
+          label: "Undo",
+          action: function () {
+            var back = read();
+            back.push(gone);
+            write(back);
+          },
+        });
+      }
     },
 
     clear: function () { write([]); },
@@ -107,18 +121,30 @@
 
     money: money,
 
-    toast: function (message) {
+    toast: function (message, undo) {
       var el = document.querySelector(".toast");
       if (!el) {
         el = document.createElement("div");
         el.className = "toast";
         el.setAttribute("role", "status");
+        el.setAttribute("aria-live", "polite");
         document.body.appendChild(el);
       }
       el.textContent = message;
+      if (undo) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "toast__undo";
+        btn.textContent = undo.label;
+        btn.addEventListener("click", function () {
+          undo.action();
+          el.classList.remove("is-open");
+        });
+        el.appendChild(btn);
+      }
       el.classList.add("is-open");
       clearTimeout(el._t);
-      el._t = setTimeout(function () { el.classList.remove("is-open"); }, 2600);
+      el._t = setTimeout(function () { el.classList.remove("is-open"); }, undo ? 6000 : 2600);
     },
   };
 
@@ -156,7 +182,7 @@
       var opts = Object.keys(i.options || {}).map(function (k) { return i.options[k].name; }).join(" · ");
       return (
         '<div class="line">' +
-          '<img src="' + i.image + '" alt="" loading="lazy">' +
+          '<img src="' + i.image + '" alt="" width="64" height="64" loading="lazy">' +
           '<div>' +
             '<h4>' + i.name + '</h4>' +
             (opts ? '<p class="line__opts">' + opts + "</p>" : "") +

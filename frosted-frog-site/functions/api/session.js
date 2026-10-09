@@ -26,6 +26,13 @@ export async function onRequestGet({ request, env }) {
       items: meta.items || "",
     });
   } catch (error) {
+    /* An id that does not exist is not our failure. Saying 404 lets the
+       thank-you page tell the difference between "we cannot find that order"
+       and "something is broken at our end", which read very differently to
+       someone who has just handed over money. */
+    if (error.status === 404) {
+      return json({ error: "We have no record of that order" }, 404);
+    }
     console.error("session lookup failed", error.message);
     return json({ error: "We could not look that order up" }, 502);
   }

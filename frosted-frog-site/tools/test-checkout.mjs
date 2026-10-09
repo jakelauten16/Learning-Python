@@ -176,6 +176,23 @@ emailed = null;
 res = await webhook({ request: hook(testPayload, sign(testPayload, ts, "whsec_wrong")), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
 ok("a forged test webhook is rejected too", res.status === 400 && emailed === null);
 
+/* 15. An unknown session id reads as "no record", not as a breakage. */
+const { onRequestGet: sessionLookup } = await import(SITE + "/functions/api/session.js");
+const look = (id) => new Request(`https://thefrostedfrog.com/api/session?id=${id}`);
+
+globalThis.fetch = async () => new Response(
+  JSON.stringify({ error: { message: "No such checkout.session: cs_test_nope" } }),
+  { status: 404, headers: { "Content-Type": "application/json" } });
+res = await sessionLookup({ request: look("cs_test_nope"), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
+ok("an unknown session is 404, not 502", res.status === 404);
+
+globalThis.fetch = async () => new Response("{}", { status: 500, headers: { "Content-Type": "application/json" } });
+res = await sessionLookup({ request: look("cs_test_broken"), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
+ok("Stripe being unwell is still 502", res.status === 502);
+
+res = await sessionLookup({ request: look("not-a-session-id"), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
+ok("a malformed id never reaches Stripe", res.status === 400);
+
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

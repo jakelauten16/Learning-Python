@@ -159,7 +159,10 @@ export async function stripeFetch(secret, path, { method = "POST", params, idemp
   const payload = await response.json();
   if (!response.ok) {
     const reason = payload?.error?.message || "Stripe refused the request";
-    throw new Error(reason);
+    const failure = new Error(reason);
+    /* So a caller can tell "no such thing" apart from "Stripe is unwell". */
+    failure.status = response.status;
+    throw failure;
   }
   return payload;
 }

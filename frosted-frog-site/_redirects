@@ -1,5 +1,12 @@
-# Clean URLs: /shop and /shop.html both work.
-/shop        /shop.html        200
+# Clean URLs: /menu and /order.html both work.
+/menu        /order.html       200
 /order       /order.html       200
-/about       /about.html       200
+/bakery      /bakery.html      200
+/faq         /faq.html         200
 /thank-you   /thank-you.html   200
+
+# Old paths from the first version of the site.
+/shop.html   /order.html       301
+/shop        /order.html       301
+/about.html  /bakery.html      301
+/about       /bakery.html      301

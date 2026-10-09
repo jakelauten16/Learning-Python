@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pre-Order &amp; Checkout | The Frosted Frog</title>
-<meta name="description" content="Review your order, choose a pickup day or local delivery, and pay securely. Pre-orders need three days' notice.">
-<meta property="og:title" content="Pre-Order &amp; Checkout | The Frosted Frog">
-<meta property="og:description" content="Review your order, choose a pickup day or local delivery, and pay securely. Pre-orders need three days' notice.">
+<title>Pre-Order &amp; This Week's Menu | The Frosted Frog</title>
+<meta name="description" content="This week's menu — special cookies, seasonal bakes and the mainstays. Add what you want, pick Friday or Saturday, and send your pre-order.">
+<meta property="og:title" content="Pre-Order &amp; This Week's Menu | The Frosted Frog">
+<meta property="og:description" content="This week's menu — special cookies, seasonal bakes and the mainstays. Add what you want, pick Friday or Saturday, and send your pre-order.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -29,9 +29,9 @@
     </a>
     <ul class="nav__links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html">The Bakery</a></li>
-      <li><a href="order.html" aria-current="page">Pre-Order</a></li>
-      <li><a href="about.html">About &amp; FAQ</a></li>
+      <li><a href="bakery.html">The Bakery</a></li>
+      <li><a href="order.html" aria-current="page">Pre-Order &amp; Menu</a></li>
+      <li><a href="faq.html">FAQ &amp; Policies</a></li>
     </ul>
     <div class="nav__actions">
       <button class="cart-btn" data-cart-open aria-label="Open your order">
@@ -44,18 +44,84 @@
   </nav>
 </header>
 <main>
-  <section class="section section--tight" style="padding-top:3.5rem">
+  <section class="section section--tight" style="padding-top:2.6rem;padding-bottom:1.4rem">
     <div class="wrap center">
       <span class="eyebrow" data-reveal>Pre-Order</span>
-      <h1 data-reveal style="font-size:clamp(2.2rem,4.5vw,3.4rem)">Let's get this on the calendar</h1>
-      <div class="ornament" data-reveal><span></span><i></i><span></span></div>
+      <h1 data-reveal style="font-size:clamp(2.1rem,4.2vw,3.2rem);margin-bottom:.3rem">This week's menu</h1>
+      <p class="lede center" data-reveal style="margin-inline:auto;margin-bottom:1.2rem">Add what you'd like, choose Friday or Saturday, and send it over. Nothing is charged here.</p>
+      <div class="week__status" data-order-status data-reveal></div>
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <div class="menu-jumpbar">
+    <nav class="wrap filters" data-menu-jump aria-label="Jump to a section"></nav>
+  </div>
+
+  <section class="section" style="padding-top:2.2rem">
     <div class="wrap">
-      <div data-window-closed hidden style="margin-bottom:2.5rem"></div>
-      <div data-order-lines style="margin-bottom:2.5rem"></div>
+      <div data-menu></div>
+
+      <!-- Special requests: a section of the menu, never a hidden form -->
+      <section class="menu-group" id="group-requests">
+        <header class="menu-group__head" data-reveal>
+          <h2>Special Requests</h2>
+          <p>Anything that isn't on the board — a tiered cake, a themed cookie set, a dessert table, party favors. Tell us what you're planning and we'll come back with a price, usually within a day.</p>
+        </header>
+        <div class="request" data-reveal>
+          <div class="request__art">
+            <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true">
+            <p class="script" style="font-size:1.9rem;color:var(--green-700);margin:0">Ask for anything</p>
+            <ul class="pads" style="margin-top:1rem;font-size:.92rem">
+              <li>Tiered and sculpted cakes</li>
+              <li>Themed cookie sets in your colors</li>
+              <li>Dessert tables and party favors</li>
+              <li>Flavor swaps and nut-free batches</li>
+            </ul>
+          </div>
+          <form class="request__form" data-quote-form>
+            <div class="field--row">
+              <div class="field">
+                <label for="q-name">Name</label>
+                <input id="q-name" name="name" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="q-email">Email</label>
+                <input id="q-email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="q-date">Date needed</label>
+                <input id="q-date" name="date" type="date">
+              </div>
+              <div class="field">
+                <label for="q-guests">Servings / quantity</label>
+                <input id="q-guests" name="guests" placeholder="About 40 people">
+              </div>
+            </div>
+            <div class="field">
+              <label for="q-details">What are you dreaming up?</label>
+              <textarea id="q-details" name="details" required placeholder="Sage green and gold garden party. Two-tier cake, three dozen iced cookies, cake pops for the kids…"></textarea>
+            </div>
+            <button class="btn btn--block" type="submit">Send the request</button>
+            <p class="hint" style="margin-top:.8rem">Two to four weeks' notice is ideal for custom work, and longer around the holidays.</p>
+            <div data-quote-status aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="section section--cream" id="checkout" style="padding-top:3rem">
+    <div class="wrap">
+      <div class="center" style="margin-bottom:2rem">
+        <span class="swirl" data-reveal aria-hidden="true"></span>
+        <h2 data-reveal style="margin-bottom:.2rem">Your order</h2>
+        <p class="lede center" data-reveal style="margin-inline:auto">Check it over, tell us when you're coming, and send it.</p>
+      </div>
+
+      <div data-window-closed hidden style="margin-bottom:2rem"></div>
+      <div data-order-lines style="margin-bottom:2.2rem"></div>
 
       <form class="checkout" data-order-form novalidate hidden>
         <div>
@@ -160,8 +226,8 @@
         <ul class="pads">
           <li><a href="#" data-config="instagram">Instagram</a></li>
           <li><a href="#" data-config="facebook">Facebook</a></li>
-          <li><a href="shop.html">Browse the bakery</a></li>
-          <li><a href="about.html">Allergies &amp; policies</a></li>
+          <li><a href="order.html">This week's menu</a></li>
+          <li><a href="faq.html">Allergies &amp; policies</a></li>
         </ul>
       </div>
     </div>
@@ -175,6 +241,7 @@
 <script src="assets/js/schedule.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/catalog.js"></script>
 <script src="assets/js/checkout.js"></script>
 </body>
 </html>

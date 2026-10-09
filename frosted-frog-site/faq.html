@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Bakery — Cakes, Cookies, Cake Pops &amp; More | The Frosted Frog</title>
-<meta name="description" content="Browse every item The Frosted Frog bakes: layer cakes, cupcakes, iced sugar cookies, cake pops, brownies and seasonal treats. Pre-order online.">
-<meta property="og:title" content="The Bakery — Cakes, Cookies, Cake Pops &amp; More | The Frosted Frog">
-<meta property="og:description" content="Browse every item The Frosted Frog bakes: layer cakes, cupcakes, iced sugar cookies, cake pops, brownies and seasonal treats. Pre-order online.">
+<title>FAQ &amp; Policies | The Frosted Frog</title>
+<meta name="description" content="How ordering works, how to pay, allergens, changes and cancellations, pickup and local delivery.">
+<meta property="og:title" content="FAQ &amp; Policies | The Frosted Frog">
+<meta property="og:description" content="How ordering works, how to pay, allergens, changes and cancellations, pickup and local delivery.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -29,9 +29,9 @@
     </a>
     <ul class="nav__links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html" aria-current="page">The Bakery</a></li>
-      <li><a href="order.html">Pre-Order</a></li>
-      <li><a href="about.html">About &amp; FAQ</a></li>
+      <li><a href="bakery.html">The Bakery</a></li>
+      <li><a href="order.html">Pre-Order &amp; Menu</a></li>
+      <li><a href="faq.html" aria-current="page">FAQ &amp; Policies</a></li>
     </ul>
     <div class="nav__actions">
       <button class="cart-btn" data-cart-open aria-label="Open your order">
@@ -44,30 +44,35 @@
   </nav>
 </header>
 <main>
-  <section class="section section--tight" style="padding-top:3.5rem">
+  <section class="section section--tight" style="padding-top:3rem;padding-bottom:.5rem">
     <div class="wrap center">
-      <span class="eyebrow" data-reveal>This Week's Menu</span>
-      <h1 data-reveal style="font-size:clamp(2.4rem,5vw,3.8rem)">Everything on the board</h1>
-      <div class="ornament" data-reveal><span></span><i></i><span></span></div>
-      <p class="lede" data-reveal>Order Monday through Wednesday, pick up Friday or Saturday. Anything can be customized &mdash; leave a note when you add it, or ask for a quote.</p>
-      <div class="week__status" data-order-status data-reveal style="margin-top:1.6rem"></div>
+      <span class="eyebrow" data-reveal>Good to Know</span>
+      <h1 data-reveal style="font-size:clamp(2.2rem,4.4vw,3.4rem);margin-bottom:.3rem">Questions, answered</h1>
+      <p class="lede center" data-reveal style="margin-inline:auto">Ordering, paying, pickup, allergens and the small print — all of it in one place.</p>
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
-      <div class="filters" data-filters data-reveal></div>
-      <div class="grid grid--3" data-shop-grid></div>
-      <p class="note" style="margin-top:3rem" data-reveal data-config="cottageNotice"></p>
+  <section class="section" style="padding-top:1.4rem">
+    <div class="wrap" style="max-width:860px">
+      <div class="week__status" data-order-status data-reveal style="margin-bottom:2rem"></div>
+      <div data-faqs></div>
+      <div class="ribbit" data-reveal style="margin-top:2rem">
+        <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true">
+        <p style="margin:0"><strong>Still not sure?</strong>Ask away — <a href="#" data-config="email"></a> or <a href="#" data-config="phone"></a>. A real person reads it.</p>
+      </div>
+      <p class="note" data-reveal data-config="cottageNotice" style="margin-top:1.6rem"></p>
     </div>
   </section>
 
-  <section class="section section--green">
+  <section class="section section--cream">
     <div class="wrap center">
-      <span class="eyebrow" data-reveal>Don't see it?</span>
-      <h2 data-reveal>If you can describe it, we can probably bake it</h2>
-      <p class="lede" data-reveal style="margin-inline:auto">Custom flavors, dietary swaps, dessert tables and party favors &mdash; send over the details and we'll put together a quote.</p>
-      <a class="btn btn--light" href="about.html#custom" data-reveal style="margin-top:1rem">Ask about a custom order</a>
+      <span class="swirl" data-reveal aria-hidden="true"></span>
+      <h2 data-reveal style="margin-bottom:.3rem">Ready when you are</h2>
+      <p class="lede center" data-reveal style="margin-inline:auto" data-schedule-summary></p>
+      <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem">
+        <a class="btn" href="order.html" data-reveal>Start a pre-order</a>
+        <a class="btn btn--ghost" href="bakery.html" data-reveal>Meet the baker</a>
+      </div>
     </div>
   </section>
 </main>
@@ -94,8 +99,8 @@
         <ul class="pads">
           <li><a href="#" data-config="instagram">Instagram</a></li>
           <li><a href="#" data-config="facebook">Facebook</a></li>
-          <li><a href="shop.html">Browse the bakery</a></li>
-          <li><a href="about.html">Allergies &amp; policies</a></li>
+          <li><a href="order.html">This week's menu</a></li>
+          <li><a href="faq.html">Allergies &amp; policies</a></li>
         </ul>
       </div>
     </div>

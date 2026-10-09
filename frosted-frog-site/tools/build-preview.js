@@ -16,9 +16,9 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const PAGES = [
   { id: "index", file: "index.html", label: "Home" },
-  { id: "shop", file: "shop.html", label: "The Bakery" },
-  { id: "order", file: "order.html", label: "Pre-Order" },
-  { id: "about", file: "about.html", label: "About & FAQ" },
+  { id: "bakery", file: "bakery.html", label: "The Bakery" },
+  { id: "order", file: "order.html", label: "Pre-Order & Menu" },
+  { id: "faq", file: "faq.html", label: "FAQ & Policies" },
   { id: "thank-you", file: "thank-you.html", label: "Thank you" },
 ];
 const SCRIPTS = ["data.js", "schedule.js", "cart.js", "site.js", "catalog.js", "checkout.js"];
@@ -53,10 +53,11 @@ function inlineImages(text) {
   });
 }
 
-/* index.html → #/index, and shop.html#cookies → #/shop:cookies */
+/* index.html → #/index, and order.html#group-weekly → #/order:weekly */
 function rewriteLinks(text) {
   PAGES.forEach((p) => {
     text = text
+      .replace(new RegExp(`href="${p.file}#group-([a-z-]+)"`, "g"), `href="#/${p.id}:$1"`)
       .replace(new RegExp(`href="${p.file}#([a-z-]+)"`, "g"), `href="#/${p.id}:$1"`)
       .replace(new RegExp(`href="${p.file}"`, "g"), `href="#/${p.id}"`);
   });
@@ -152,7 +153,8 @@ const demoJS = `
     window.scrollTo(0, 0);
     if (window.observeReveals) window.observeReveals(document.getElementById("page-" + route.id));
     if (route.extra) {
-      window.dispatchEvent(new CustomEvent("demo:filter", { detail: route.extra }));
+      var target = document.getElementById("group-" + route.extra);
+      if (target) setTimeout(function () { target.scrollIntoView({ behavior: "smooth", block: "start" }); }, 80);
     }
     if (route.id === "thank-you" && window.__demoReceipt) window.__demoReceipt();
   }

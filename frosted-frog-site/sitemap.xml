@@ -6,17 +6,17 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://thefrostedfrog.com/shop.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://thefrostedfrog.com/order.html</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://thefrostedfrog.com/about.html</loc>
+    <loc>https://thefrostedfrog.com/bakery.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thefrostedfrog.com/faq.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none" stroke="#2C5240" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>A note card for a special request</title>
+  <path d="M112 96h176v132H112z"/>
+  <path d="M112 128h176" opacity=".5"/>
+  <path d="M140 160h120M140 184h92M140 208h64" opacity=".45" stroke-dasharray="2 10"/>
+  <path d="M150 112c6-12 18-14 24-4 6-12 20-12 26 0 8-10 22-6 24 6" stroke="#BE9430"/>
+  <path d="M276 228l26 26M302 254l10-4-4-10z" stroke="#BE9430"/>
+  <circle cx="300" cy="104" r="5" fill="#BE9430" stroke="none"/>
+</svg>

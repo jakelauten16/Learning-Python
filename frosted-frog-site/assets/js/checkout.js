@@ -18,6 +18,80 @@
     }
   }
 
+  /* ---- Special requests -------------------------------------------------
+     Same inbox as an order, different shape: there's no cart, just a
+     description of what somebody is planning. ---------------------------- */
+  document.addEventListener("DOMContentLoaded", function () {
+    var quote = document.querySelector("[data-quote-form]");
+    if (!quote) return;
+    var status = document.querySelector("[data-quote-status]");
+
+    quote.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var val = function (id) { return (document.getElementById(id).value || "").trim(); };
+      var missing = ["q-name", "q-email", "q-details"].filter(function (id) { return !val(id); });
+      missing.forEach(function (id) {
+        var f = document.getElementById(id).closest(".field");
+        if (f) f.classList.add("is-invalid");
+      });
+      if (missing.length) {
+        Cart.toast("Name, email and a few details, please.");
+        return;
+      }
+
+      var body = {
+        _subject: "Custom request — " + val("q-name"),
+        name: val("q-name"),
+        email: val("q-email"),
+        date_needed: val("q-date"),
+        servings: val("q-guests"),
+        details: val("q-details"),
+      };
+      var btn = quote.querySelector("button[type=submit]");
+      var label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Sending…";
+
+      function sent() {
+        quote.reset();
+        btn.disabled = false;
+        btn.textContent = label;
+        if (status) {
+          status.innerHTML = '<p class="note">Got it — we\'ll come back to you with a quote, usually within a day.</p>';
+        }
+      }
+
+      function byEmail() {
+        if (!window.FROSTED_DEMO) {
+          window.location.href = "mailto:" + SHOP_CONFIG.email +
+            "?subject=" + encodeURIComponent(body._subject) +
+            "&body=" + encodeURIComponent(
+              ["Name: " + body.name, "Email: " + body.email, "Date needed: " + body.date_needed,
+               "Servings: " + body.servings, "", body.details].join("\n"));
+        }
+        sent();
+      }
+
+      if (SHOP_CONFIG.orderEndpoint) {
+        fetch(SHOP_CONFIG.orderEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(body),
+        }).then(function (r) {
+          if (!r.ok) throw new Error("no");
+          sent();
+        }).catch(byEmail);
+      } else {
+        byEmail();
+      }
+    });
+
+    quote.addEventListener("input", function (e) {
+      var f = e.target.closest(".field");
+      if (f) f.classList.remove("is-invalid");
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     var form = $("[data-order-form]");
     if (!form) return;
@@ -35,7 +109,7 @@
             "<h3>The order book opens " + opens.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) + "</h3>" +
             "<p>Orders are taken Monday through Wednesday, and everything is baked fresh for that week's Friday and Saturday pickups. " +
             "Your cart is saved — come back Monday and it will still be here.</p>" +
-            '<a class="btn btn--ghost" href="' + window.pageHref("shop.html") + '">Browse this week\'s menu</a>' +
+            '<a class="btn btn--ghost" href="' + window.pageHref("order.html") + '">See this week\'s menu</a>' +
           "</div>";
       }
     }
@@ -123,7 +197,7 @@
       if (!items.length) {
         linesEl.innerHTML = '<div class="empty"><p class="script" style="font-size:2rem">Your order is empty</p>' +
           '<p>Add a few things and come back to check out.</p>' +
-          '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("shop.html") + '">Browse the bakery</a></div>';
+          '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("order.html") + '">See this week\'s menu</a></div>';
         form.hidden = true;
         return;
       }

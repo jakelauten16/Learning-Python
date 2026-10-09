@@ -6,14 +6,14 @@ site is live.
 
 ```
 frosted-frog-site/
-├── index.html          Home — hero, the week's rhythm, showcase, favorites
-├── shop.html           This week's menu, filterable, with a detail window
-├── order.html          Cart, pickup window, contact details, send order
+├── index.html          Home — hero, the week's rhythm, the four ways to order
+├── order.html          This week's menu + special requests + cart + checkout
+├── bakery.html         The baker's story, the ethos, how a week runs
+├── faq.html            Questions, allergens, policies
 ├── thank-you.html      Confirmation, with a copy of the order
-├── about.html          Story, custom-order request, FAQ, allergen info
 ├── 404.html            Served automatically for any bad link
 ├── _headers            Security + caching headers (Cloudflare reads this)
-├── _redirects          Clean URLs: /shop as well as /shop.html
+├── _redirects          Clean URLs, and 301s from the old page names
 ├── site.webmanifest    Lets people add the site to a phone home screen
 ├── robots.txt
 ├── sitemap.xml
@@ -66,11 +66,16 @@ One file holds the whole shop. Open it in any text editor.
   (`orderDays`, 0 = Sunday), the pickup windows (`pickups`), and how finely
   people can pick a time inside a window (`slotMinutes`). Change a window here
   and the checkout, the home page and the FAQ all follow.
-- **`CATEGORIES`** — the sections of the menu.
-- **`PRODUCTS`** — every item: name, category, price, unit, minimum quantity,
-  description, photo, and optional choices (size, filling, finish) that can add
-  to the price. `featured: true` puts an item on the home page;
-  `available: false` marks it sold out.
+- **`CATEGORIES`** — the sections of the menu, **in the order they appear on
+  the page**: this week's special cookies, seasonal, the mainstays, special
+  requests. Move a block to move the section. The weekly block has a `note`
+  line ("This week: brown butter pecan…") that shows at the top of the menu and
+  on the home page — change it each week and that's your whole weekly update.
+- **`PRODUCTS`** — every item: name, `group` (a CATEGORIES id), `kind` (the
+  little label on the card), price, unit, minimum quantity, description, photo,
+  and optional choices (size, filling, finish) that can add to the price.
+  `featured: true` puts an item on the home page; `available: false` marks it
+  sold out.
 - **`TESTIMONIALS`** and **`FAQS`** — the review strip and the FAQ list.
 
 ### The weekly rhythm, as shipped
@@ -93,7 +98,8 @@ survive, so a Thursday browser can come back Monday and check out.
 {
   id: "lemon-bars",            // unique, no spaces
   name: "Lemon Bars",
-  category: "seasonal",        // must match a CATEGORIES id
+  group: "seasonal",           // must match a CATEGORIES id
+  kind: "Bars",                // the label on the card
   price: 28,
   unit: "per dozen",
   min: 6,                      // smallest quantity someone can order
@@ -115,6 +121,8 @@ with the site are placeholders — swap them out as you photograph your work.
 inbox, you reply with the total, and you settle up by Venmo, Cash App or cash
 at pickup. No payment processor, no fees, no PCI paperwork, nothing to renew —
 and nothing on the site worth attacking.
+
+The same inbox receives special requests from the bottom of the menu.
 
 **Set up Formspree** (five minutes, free tier is plenty):
 

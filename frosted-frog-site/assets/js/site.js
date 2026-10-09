@@ -9,7 +9,7 @@
   window.pageHref = function (page, anchor) {
     var id = page.replace(".html", "");
     if (window.FROSTED_DEMO) return "#/" + id + (anchor ? ":" + anchor : "");
-    return page + (anchor ? "#" + anchor : "");
+    return page + (anchor ? "#group-" + anchor : "");
   };
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -50,6 +50,13 @@
           "<span>" + when + " · pickup " +
           pickups.map(function (p) { return p.label + " " + p.shortDate; }).join(" or ") + "</span>";
       });
+    }
+
+    var weekly = document.querySelector("[data-weekly-note]");
+    if (weekly && typeof CATEGORIES !== "undefined") {
+      var g = CATEGORIES.filter(function (c) { return c.note; })[0];
+      if (g) weekly.textContent = g.note;
+      else weekly.remove();
     }
 
     var year = document.querySelector("[data-year]");

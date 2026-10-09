@@ -73,19 +73,42 @@ const SHOP_CONFIG = {
     "a total and a payment request — settle it before pickup day.",
 };
 
+/* The menu is laid out in this order, top to bottom. Move a block here and the
+   section moves on the page. `id` is what a product's `group` points at. */
 const CATEGORIES = [
-  { id: "cakes",     name: "Cakes",           blurb: "Layered, filled and finished by hand.",              image: "assets/img/cakes.svg" },
-  { id: "cupcakes",  name: "Cupcakes",        blurb: "By the half dozen or the dozen.",                    image: "assets/img/cupcakes.svg" },
-  { id: "cookies",   name: "Cookies",         blurb: "Soft-batch, iced sugar and everything between.",     image: "assets/img/cookies.svg" },
-  { id: "cakepops",  name: "Cake Pops",       blurb: "Dipped, drizzled and dressed for the occasion.",     image: "assets/img/cakepops.svg" },
-  { id: "brownies",  name: "Brownies & Bars", blurb: "Fudgy corners, every single one.",                   image: "assets/img/brownies.svg" },
-  { id: "seasonal",  name: "Seasonal",        blurb: "What's good right now, and only right now.",         image: "assets/img/seasonal.svg" },
+  {
+    id: "weekly",
+    name: "This Week's Special Cookies",
+    blurb: "A new batch every week. When they're gone, they're gone until they come round again.",
+    image: "assets/img/cookies.svg",
+    // Update this line each week — it shows at the top of the menu.
+    note: "This week: brown butter pecan, and iced pumpkin spice.",
+  },
+  {
+    id: "seasonal",
+    name: "Seasonal",
+    blurb: "What's good right now, and only right now.",
+    image: "assets/img/seasonal.svg",
+  },
+  {
+    id: "mainstays",
+    name: "The Mainstays",
+    blurb: "On the board every week — cakes, cupcakes, cookies, cake pops and bars.",
+    image: "assets/img/cakes.svg",
+  },
+  {
+    id: "requests",
+    name: "Special Requests",
+    blurb: "Anything that isn't on the board. Tell us what you're planning and we'll quote it.",
+    image: "assets/img/custom-order.svg",
+  },
 ];
 
 /* Each product:
    id        unique, lowercase, no spaces
    name      what the customer sees
-   category  must match a CATEGORIES id
+   group     which menu section it sits in — a CATEGORIES id
+   kind      the little label on the card ("Layer cake", "Cookies"…)
    price     base price in dollars
    unit      "each", "per dozen", etc. — shown next to the price
    min       smallest quantity that can be ordered (default 1)
@@ -96,10 +119,48 @@ const CATEGORIES = [
    available false = shows as "sold out" and can't be added to the cart
 */
 const PRODUCTS = [
+  /* ---- This week's special cookies — the top of the menu ---------------- */
+  {
+    id: "weekly-brown-butter-pecan",
+    name: "Brown Butter Pecan",
+    group: "weekly",
+    kind: "This week only",
+    price: 26,
+    unit: "per half dozen",
+    min: 6,
+    desc: "Brown butter dough, toasted pecans, a little flaked salt on top. On the board this week only.",
+    image: "assets/img/cookies.svg",
+    featured: true,
+  },
+  {
+    id: "weekly-iced-pumpkin-spice",
+    name: "Iced Pumpkin Spice",
+    group: "weekly",
+    kind: "This week only",
+    price: 26,
+    unit: "per half dozen",
+    min: 6,
+    desc: "Soft pumpkin cookies under a thin brown-sugar icing. Autumn in a cookie tin.",
+    image: "assets/img/cookies.svg",
+    featured: true,
+  },
+  {
+    id: "weekly-bakers-dozen",
+    name: "Baker's Choice Dozen",
+    group: "weekly",
+    kind: "This week only",
+    price: 32,
+    unit: "per dozen",
+    min: 12,
+    desc: "A dozen of whatever's best coming out of the oven this week — a little of each special.",
+    image: "assets/img/cookies.svg",
+  },
+
   {
     id: "vanilla-bean-layer",
     name: "Vanilla Bean Layer Cake",
-    category: "cakes",
+    group: "mainstays",
+    kind: "Layer cake",
     price: 55,
     unit: "6-inch, serves 8–10",
     desc: "Three layers of vanilla bean cake with silky Swiss meringue buttercream and a hand-piped finish.",
@@ -122,7 +183,8 @@ const PRODUCTS = [
   {
     id: "chocolate-celebration",
     name: "Chocolate Celebration Cake",
-    category: "cakes",
+    group: "mainstays",
+    kind: "Layer cake",
     price: 60,
     unit: "6-inch, serves 8–10",
     desc: "Deep dark chocolate cake, whipped chocolate ganache, and a gold-dusted crown of buttercream.",
@@ -138,7 +200,8 @@ const PRODUCTS = [
   {
     id: "almond-champagne",
     name: "Almond & Champagne Cake",
-    category: "cakes",
+    group: "mainstays",
+    kind: "Layer cake",
     price: 68,
     unit: "6-inch, serves 8–10",
     desc: "Almond cake brushed with champagne syrup, mascarpone buttercream, sugared florals.",
@@ -147,7 +210,8 @@ const PRODUCTS = [
   {
     id: "vanilla-cupcakes",
     name: "Classic Vanilla Cupcakes",
-    category: "cupcakes",
+    group: "mainstays",
+    kind: "Cupcakes",
     price: 30,
     unit: "per dozen",
     min: 6,
@@ -158,7 +222,8 @@ const PRODUCTS = [
   {
     id: "lemon-blueberry-cupcakes",
     name: "Lemon Blueberry Cupcakes",
-    category: "cupcakes",
+    group: "mainstays",
+    kind: "Cupcakes",
     price: 34,
     unit: "per dozen",
     min: 6,
@@ -168,18 +233,19 @@ const PRODUCTS = [
   {
     id: "brown-butter-chocolate-chip",
     name: "Brown Butter Chocolate Chip",
-    category: "cookies",
+    group: "mainstays",
+    kind: "Cookies",
     price: 24,
     unit: "per dozen",
     min: 6,
     desc: "Thick, soft-centered and freckled with sea salt. The one everybody re-orders.",
     image: "assets/img/cookies.svg",
-    featured: true,
   },
   {
     id: "iced-sugar-cookies",
     name: "Iced Sugar Cookies",
-    category: "cookies",
+    group: "mainstays",
+    kind: "Cookies",
     price: 42,
     unit: "per dozen",
     min: 12,
@@ -197,7 +263,8 @@ const PRODUCTS = [
   {
     id: "classic-cake-pops",
     name: "Classic Cake Pops",
-    category: "cakepops",
+    group: "mainstays",
+    kind: "Cake pops",
     price: 30,
     unit: "per dozen",
     min: 12,
@@ -219,7 +286,8 @@ const PRODUCTS = [
   {
     id: "fudge-brownies",
     name: "Salted Fudge Brownies",
-    category: "brownies",
+    group: "mainstays",
+    kind: "Bars",
     price: 26,
     unit: "per dozen",
     min: 6,
@@ -230,7 +298,8 @@ const PRODUCTS = [
   {
     id: "blondies",
     name: "Brown Sugar Blondies",
-    category: "brownies",
+    group: "mainstays",
+    kind: "Bars",
     price: 24,
     unit: "per dozen",
     min: 6,
@@ -240,7 +309,8 @@ const PRODUCTS = [
   {
     id: "dessert-box",
     name: "The Frosted Frog Dessert Box",
-    category: "seasonal",
+    group: "seasonal",
+    kind: "Dessert box",
     price: 48,
     unit: "serves 6–8",
     desc: "A curated box of the week's best — cookies, brownie bites, cake pops and a little something extra.",
@@ -250,7 +320,8 @@ const PRODUCTS = [
   {
     id: "seasonal-pie-bars",
     name: "Seasonal Pie Bars",
-    category: "seasonal",
+    group: "seasonal",
+    kind: "Bars",
     price: 28,
     unit: "per dozen",
     min: 6,

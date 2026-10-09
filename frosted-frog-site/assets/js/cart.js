@@ -147,7 +147,7 @@
       lines.innerHTML =
         '<div class="empty"><p class="script" style="font-size:2rem">Nothing here yet</p>' +
         '<p>Pick out something sweet and it will show up right here.</p>' +
-        '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("shop.html") + '">Browse the bakery</a></div>';
+        '<a class="btn btn--ghost btn--sm" href="' + window.pageHref("order.html") + '">See this week\'s menu</a></div>';
       foot.innerHTML = "";
       return;
     }

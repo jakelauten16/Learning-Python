@@ -1,13 +1,18 @@
 /* Renders product cards, category cards, the product detail modal, and the
-   shop page's category filters. Used by index.html and shop.html. */
+   menu sections on the order page. Used by index.html and order.html. */
 (function () {
   "use strict";
 
   function money(n) { return "$" + Number(n).toFixed(2); }
 
-  function categoryName(id) {
-    var c = CATEGORIES.filter(function (c) { return c.id === id; })[0];
-    return c ? c.name : id;
+  function group(id) {
+    return CATEGORIES.filter(function (c) { return c.id === id; })[0];
+  }
+
+  function tagFor(p) {
+    if (p.kind) return p.kind;
+    var g = group(p.group);
+    return g ? g.name : "";
   }
 
   function cardHTML(p, i) {
@@ -15,7 +20,7 @@
     return (
       '<article class="card" data-reveal="zoom" data-delay="' + ((i % 3) * 110) + '">' +
         '<div class="card__media">' +
-          '<span class="card__tag">' + categoryName(p.category) + "</span>" +
+          '<span class="card__tag">' + tagFor(p) + "</span>" +
           '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy">' +
         "</div>" +
         '<div class="card__body">' +
@@ -88,7 +93,7 @@
       '<div class="modal__media"><img src="' + p.image + '" alt="' + p.name + '"></div>' +
       '<div class="modal__body">' +
         '<button class="modal__close" aria-label="Close">&times;</button>' +
-        '<span class="eyebrow">' + categoryName(p.category) + "</span>" +
+        '<span class="eyebrow">' + tagFor(p) + "</span>" +
         "<h3>" + p.name + "</h3>" +
         "<p>" + p.desc + "</p>" +
         '<p class="price" data-modal-price>' + money(p.price) + "<small>" + (p.unit || "each") + "</small></p>" +
@@ -154,55 +159,53 @@
     var cats = document.querySelector("[data-categories]");
     if (cats) {
       cats.innerHTML = CATEGORIES.map(function (c, i) {
+        var count = PRODUCTS.filter(function (p) { return p.group === c.id; }).length;
         return (
-          '<a class="cat-card" href="' + window.pageHref("shop.html", c.id) + '" data-reveal data-delay="' + ((i % 3) * 110) + '">' +
-            '<img src="' + c.image + '" alt="' + c.name + '" loading="lazy">' +
-            '<div class="cat-card__cap"><h3>' + c.name + "</h3><p>" + c.blurb + "</p></div>" +
+          '<a class="cat-card" href="' + window.pageHref("order.html", c.id) + '" data-reveal data-delay="' + ((i % 4) * 90) + '">' +
+            '<img src="' + c.image + '" alt="" loading="lazy">' +
+            '<div class="cat-card__cap"><h3>' + c.name + "</h3><p>" + c.blurb + "</p>" +
+            '<span class="cat-card__go">' + (count ? count + " on the board" : "Tell us what you need") + "</span></div>" +
           "</a>"
         );
       }).join("");
       if (window.observeReveals) window.observeReveals(cats);
     }
 
-    var shopGrid = document.querySelector("[data-shop-grid]");
-    var filterBar = document.querySelector("[data-filters]");
-    if (shopGrid) {
-      /* In a demo build the hash drives the page router, not the filters. */
-      var demo = !!window.FROSTED_DEMO;
-      var active = (demo ? "" : location.hash || "").replace("#", "") || "all";
-      if (active !== "all" && !CATEGORIES.some(function (c) { return c.id === active; })) active = "all";
+    /* --- the menu, laid out section by section in CATEGORIES order --- */
+    var menu = document.querySelector("[data-menu]");
+    if (menu) {
+      menu.innerHTML = CATEGORIES.map(function (g) {
+        var items = PRODUCTS.filter(function (p) { return p.group === g.id; });
+        if (!items.length) return "";      // a section with its own markup, e.g. requests
+        return (
+          '<section class="menu-group" id="group-' + g.id + '">' +
+            '<header class="menu-group__head" data-reveal>' +
+              "<h2>" + g.name + "</h2>" +
+              "<p>" + g.blurb + "</p>" +
+              (g.note ? '<p class="menu-group__note">' + g.note + "</p>" : "") +
+            "</header>" +
+            '<div class="grid grid--3">' + items.map(cardHTML).join("") + "</div>" +
+          "</section>"
+        );
+      }).join("");
+      if (window.observeReveals) window.observeReveals(menu);
+    }
 
-      if (filterBar) {
-        filterBar.innerHTML =
-          '<button class="filter" data-filter="all">Everything</button>' +
-          CATEGORIES.map(function (c) {
-            return '<button class="filter" data-filter="' + c.id + '">' + c.name + "</button>";
-          }).join("");
-      }
-
-      function apply(id) {
-        active = id;
-        renderGrid(shopGrid, id === "all" ? PRODUCTS : PRODUCTS.filter(function (p) { return p.category === id; }));
-        if (filterBar) {
-          Array.prototype.forEach.call(filterBar.children, function (b) {
-            b.classList.toggle("is-active", b.getAttribute("data-filter") === id);
-          });
-        }
-      }
-
-      if (filterBar) {
-        filterBar.addEventListener("click", function (e) {
-          var b = e.target.closest("[data-filter]");
-          if (!b) return;
-          var id = b.getAttribute("data-filter");
-          if (!demo) history.replaceState(null, "", id === "all" ? "#" : "#" + id);
-          apply(id);
+    /* --- jump links, so nothing is more than one click away --- */
+    var jump = document.querySelector("[data-menu-jump]");
+    if (jump) {
+      jump.innerHTML = CATEGORIES.map(function (g) {
+        return '<a class="filter" href="#group-' + g.id + '">' + g.name + "</a>";
+      }).join("");
+      if (window.FROSTED_DEMO) {
+        jump.addEventListener("click", function (e) {
+          var a = e.target.closest("a[href^='#group-']");
+          if (!a) return;
+          e.preventDefault();
+          var el = document.getElementById(a.getAttribute("href").slice(1));
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
         });
       }
-      if (demo) {
-        window.addEventListener("demo:filter", function (e) { apply(e.detail || "all"); });
-      }
-      apply(active);
     }
 
     var quotes = document.querySelector("[data-testimonials]");

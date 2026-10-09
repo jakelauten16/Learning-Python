@@ -53,7 +53,7 @@
       <span class="eyebrow">Order received</span>
       <h1 class="script" style="font-size:clamp(3rem,8vw,5rem);color:var(--green-700)">Thank you</h1>
       <div class="ornament"><span></span><i></i><span></span></div>
-      <p class="lede" style="margin-inline:auto">We've got your pre-order. You'll hear back within one business day with your confirmation, the total, the pickup address, and anything we need to nail down. Nothing has been charged, you'll settle up once it's confirmed.</p>
+      <p class="lede" style="margin-inline:auto">We've got your pre-order. You'll hear back within one business day with your confirmation, the total, the pickup address, and anything we need to nail down. If you paid by card, your receipt is on its way. If you asked us to invoice you, nothing has been charged yet.</p>
       <div data-receipt style="margin:2rem auto;text-align:left;max-width:520px"></div>
       <a class="btn" href="order.html">Back to the bakery</a>
     </div>
@@ -61,18 +61,57 @@
 </main>
 <script>
 (function () {
-  var raw = sessionStorage.getItem("frostedfrog.lastOrder");
-  if (!raw) return;
-  try { var d = JSON.parse(raw); } catch (e) { return; }
-  var money = function (n) { return "$" + Number(n).toFixed(2); };
-  document.querySelector("[data-receipt]").innerHTML =
-    '<div class="panel"><h3>Your order</h3>' +
-    d.items.map(function (i) {
+  var receipt = document.querySelector("[data-receipt]");
+  if (!receipt) return;
+  var money = function (n) { return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(n)); };
+
+  function lines(d) {
+    return d.items.map(function (i) {
       return "<div style='display:flex;justify-content:space-between;padding:.4rem 0'><span>" +
         i.qty + " &times; " + i.name + "</span><span>" + money(i.qty * i.unitPrice) + "</span></div>";
-    }).join("") +
-    '<div class="totals"><div class="total"><span>Total</span><span>' + money(d.totals.total) + "</span></div></div>" +
-    "<p class='hint'>" + (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + " &middot; " + (d.pretty || d.date) + " at " + d.window + "</p></div>";
+    }).join("");
+  }
+
+  function fromStorage() {
+    var raw = sessionStorage.getItem("frostedfrog.lastOrder");
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+  }
+
+  function render(d, payment) {
+    receipt.innerHTML =
+      '<div class="panel"><h3>Your order</h3>' +
+      (payment ? payment : "") +
+      (d ? lines(d) : "") +
+      (d ? '<div class="totals"><div class="total"><span>Total</span><span>' + money(d.totals.total) + "</span></div></div>" : "") +
+      (d ? "<p class='hint'>" + (d.fulfillment === "delivery" ? "Delivery" : "Pickup") + " &middot; " +
+        (d.pretty || d.date) + " at " + d.window + "</p>" : "") +
+      "</div>";
+  }
+
+  /* Coming back from Stripe proves nothing on its own, so ask the server
+     whether that session really paid before saying so. */
+  var sessionId = new URLSearchParams(location.search).get("session_id");
+  if (sessionId) {
+    render(fromStorage(), '<p class="hint">Checking your payment…</p>');
+    fetch("/api/session?id=" + encodeURIComponent(sessionId))
+      .then(function (r) { return r.json(); })
+      .then(function (info) {
+        if (!info.paid) throw new Error("not paid");
+        render(fromStorage(), '<p class="note" style="margin:0 0 1rem"><strong>Paid ' + money(info.total) +
+          "</strong>. Reference " + (info.reference || sessionId.slice(-8)) +
+          ". A receipt is on its way to " + (info.email || "your inbox") + ".</p>");
+        sessionStorage.removeItem("frostedfrog.lastOrder");
+      })
+      .catch(function () {
+        render(fromStorage(), '<p class="note" style="margin:0 0 1rem">We could not confirm the payment from here. ' +
+          "If your card was charged you will get a confirmation email, and we will see the order either way.</p>");
+      });
+    return;
+  }
+
+  var stored = fromStorage();
+  if (stored) render(stored, "");
 })();
 </script>
 <footer class="site-footer">

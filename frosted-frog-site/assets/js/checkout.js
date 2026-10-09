@@ -242,7 +242,9 @@
           ? "Ordering reopens Monday"
           : below
             ? "Delivery minimum is " + money(SHOP_CONFIG.delivery.minimum)
-            : "Send my pre-order";
+            : SHOP_CONFIG.paymentMode === "stripe"
+              ? "Pay " + money(t.total) + " and confirm"
+              : "Send my pre-order";
       }
     }
 
@@ -341,6 +343,34 @@
       submitBtn.textContent = "One moment…";
       if (statusEl) statusEl.textContent = "";
 
+      /* Paying by card. The browser sends what was chosen, never what it
+         costs: the server prices the order from its own catalog and hands
+         back a Stripe page to go to. */
+      if (SHOP_CONFIG.paymentMode === "stripe") {
+        fetch(SHOP_CONFIG.checkoutEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(serverPayload(data)),
+        })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+          .then(function (res) {
+            if (!res.ok || !res.body.url) throw new Error(res.body.error || "Checkout is unavailable");
+            sessionStorage.setItem("frostedfrog.lastOrder", JSON.stringify(data));
+            Cart.clear();
+            window.location.href = res.body.url;
+          })
+          .catch(function (err) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = original;
+            if (statusEl) {
+              statusEl.innerHTML = '<p class="note">' + (err.message || "Something went wrong") +
+                '. Nothing has been charged. Try again, or email us at <a href="mailto:' +
+                SHOP_CONFIG.email + '">' + SHOP_CONFIG.email + "</a>.</p>";
+            }
+          });
+        return;
+      }
+
       /* No card is taken here. The order is a request: it goes to Formspree
          when one is configured, otherwise to the customer's own email app. */
       if (SHOP_CONFIG.orderEndpoint) {
@@ -374,6 +404,25 @@
         finish(data);
       }
     });
+
+    /* Ids and quantities only. No prices leave the browser, because nothing
+       the browser says about money is believed on the other end. */
+    function serverPayload(d) {
+      return {
+        items: d.items.map(function (i) {
+          var options = {};
+          (i.options || []).forEach(function (pair) {
+            var at = pair.indexOf(": ");
+            if (at > 0) options[pair.slice(0, at)] = pair.slice(at + 2);
+          });
+          return { id: i.id, qty: i.qty, options: options, note: i.note || "" };
+        }),
+        fulfillment: d.fulfillment,
+        date: d.date,
+        window: d.window,
+        customer: d.customer,
+      };
+    }
 
     /* Flat, readable fields, this is what lands in the inbox. */
     function formPayload(d) {

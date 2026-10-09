@@ -66,6 +66,19 @@ const SHOP_CONFIG = {
   --------------------------------------------------------------------------- */
   orderEndpoint: "",
 
+  /* PAYMENT MODE -------------------------------------------------------------
+     "deposit" - the order is a request. It reaches you by Formspree or email,
+                 you confirm it, and you take payment yourself.
+     "stripe"  - the customer pays in full by card at checkout before the order
+                 is placed. Needs the Cloudflare function in functions/api and
+                 your Stripe keys set as environment variables. See README.
+  --------------------------------------------------------------------------- */
+  paymentMode: "deposit",
+
+  // Where the browser asks the server to build a Stripe Checkout session.
+  // Server-side code is the only thing that ever sees a price.
+  checkoutEndpoint: "/api/checkout",
+
   // How people pay once you've confirmed. Shown at checkout and on the FAQ.
   paymentMethods: "Venmo, Cash App, or cash at pickup",
   paymentNote:
@@ -347,3 +360,16 @@ const FAQS = [
   { q: "Can you work around allergies?", a: "I can leave out nuts on most items, but everything is made in one home kitchen, so I can't promise an allergen-free product. " + SHOP_CONFIG.cottageNotice },
   { q: "What about changes or cancellations?", a: "Changes are welcome until the order window closes Wednesday night. After that the shopping is done and the order is final." },
 ];
+
+/* ---------------------------------------------------------------------------
+   One catalog, two readers.
+
+   The browser loads this file as a plain script and picks up the constants
+   above. The Cloudflare function imports this same file so it can price an
+   order from the same numbers. That is deliberate: the prices the server
+   charges and the prices the page shows can never drift apart, because there
+   is only one list.
+   --------------------------------------------------------------------------- */
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { SHOP_CONFIG: SHOP_CONFIG, CATEGORIES: CATEGORIES, PRODUCTS: PRODUCTS, TESTIMONIALS: TESTIMONIALS, FAQS: FAQS };
+}

@@ -6,26 +6,31 @@ site is live.
 
 ```
 frosted-frog-site/
-├── index.html          Home, hero, the week's rhythm, the four ways to order
-├── order.html          This week's menu + special requests + cart + checkout
-├── bakery.html         The baker's story, the ethos, how a week runs
+├── index.html          Home
+├── order.html          This week's menu, special requests, cart, checkout
+├── bakery.html         The baker's story and the ethos
 ├── faq.html            Questions, allergens, policies
-├── thank-you.html      Confirmation, with a copy of the order
-├── 404.html            Served automatically for any bad link
+├── thank-you.html      Confirmation, and the paid receipt after Stripe
+├── 404.html
 ├── _headers            Security + caching headers (Cloudflare reads this)
 ├── _redirects          Clean URLs, and 301s from the old page names
 ├── site.webmanifest    Lets people add the site to a phone home screen
 ├── robots.txt
 ├── sitemap.xml
 ├── assets/
-│   ├── css/fonts.css   Self-hosted @font-face rules
-│   ├── css/site.css    Everything else
-│   ├── fonts/          4 woff2 files (124 KB total) + the font licence
+│   ├── css/            fonts.css + site.css
+│   ├── fonts/          4 woff2 files (124 KB) + the font licence
 │   ├── img/            Logo, mascot, icons, product illustrations
 │   └── js/             data.js · schedule.js · cart.js · catalog.js ·
 │                       checkout.js · site.js
-└── tools/              Optional. Builds a single-file preview. Not part of
-                        the site, delete it before uploading if you like.
+├── functions/          Server side. Cloudflare runs these; they are never
+│   ├── _lib/order.js   published as files and never reach the browser.
+│   └── api/
+│       ├── checkout.js       Prices the order, creates the Stripe session
+│       ├── stripe-webhook.js Verifies Stripe's signature, marks it paid
+│       ├── session.js        Tells the thank-you page if it really paid
+│       └── health.js         Deploy check, no secrets
+└── tools/              Optional. Preview builder and the checkout tests.
 ```
 
 Nothing is loaded from anyone else's server: no font CDN, no analytics, no
@@ -117,26 +122,131 @@ with the site are placeholders, swap them out as you photograph your work.
 
 ## How orders reach you
 
-**No card is taken on the site.** An order is a request: it lands in your
-inbox, you reply with the total, and you settle up by Venmo, Cash App or cash
-at pickup. No payment processor, no fees, no PCI paperwork, nothing to renew ,
-and nothing on the site worth attacking.
+Two modes, set by `paymentMode` in `assets/js/data.js`.
 
-The same inbox receives special requests from the bottom of the menu.
+### `"deposit"` (what it ships as)
 
-**Set up Formspree** (five minutes, free tier is plenty):
+The order is a request. It lands in your inbox, you reply with the total, and
+you settle up by Venmo, Cash App or cash at pickup. No card is taken on the
+site, so there is no processor, no fees and nothing to renew.
+
+Set it up with Formspree, five minutes, free tier is plenty:
 
 1. Sign up at [formspree.io](https://formspree.io) and create a form.
 2. Copy the endpoint it gives you, `https://formspree.io/f/xxxxxxxx`.
 3. Paste it into `orderEndpoint` in `assets/js/data.js`.
-4. Place a test order. Formspree will email you to confirm the address once.
+4. Place a test order. Formspree emails you once to confirm the address.
 
-Leave `orderEndpoint` empty and the site falls back to opening the customer's
-own email app with the entire order filled in, addressed to you. That works,
-but it depends on them pressing send, Formspree is the better of the two.
+Leave `orderEndpoint` empty and the site opens the customer's own email with
+the whole order filled in. That works, but it depends on them pressing send.
 
-Change what you accept by editing `paymentMethods` and `paymentNote` in
-`data.js`; both appear at checkout and in the FAQ.
+### `"stripe"` (pay in full at checkout)
+
+The customer pays by card before the order exists. Change `paymentMode` to
+`"stripe"` in `assets/js/data.js` and set the environment variables below.
+
+**How the money is protected.** The browser sends product ids, quantities and
+the options chosen. It never sends a price, and if it did, the price would be
+thrown away. `functions/api/checkout.js` looks every item up in the same
+catalog the site is built from, recomputes the subtotal, the delivery fee and
+the tax, and builds the Stripe session from those figures. Someone editing the
+page in their browser can change what they see; they cannot change what they
+are charged.
+
+**What counts as paid.** Only the webhook. Landing back on the thank-you page
+proves nothing, because anyone can type that address. Stripe signs every
+webhook delivery, `functions/api/stripe-webhook.js` checks that signature
+against your webhook secret, rejects anything stale or forged, and only then
+emails you the paid order. The thank-you page asks the server to confirm the
+payment before it says "paid" to the customer.
+
+The paid email goes to the same place as deposit orders: your Formspree form,
+or whatever you set `ORDER_ENDPOINT` to.
+
+### Environment variables, and exactly where they go
+
+In the Cloudflare dashboard: **Workers & Pages → your project → Settings →
+Variables and Secrets → Add**. Add each one to **Production**, and to
+**Preview** too if you want the preview deployments to work.
+
+| Name | Type | Value | Needed |
+| --- | --- | --- | --- |
+| `STRIPE_SECRET_KEY` | Secret | `sk_test_...`, later `sk_live_...` | Yes, for card payment |
+| `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_...` from the webhook you create | Yes, for card payment |
+| `ORDER_ENDPOINT` | Plain text | Your Formspree URL, if you would rather not keep it in `data.js` | Optional |
+| `SITE_URL` | Plain text | `https://thefrostedfrog.com`, so Stripe returns to your domain and not the `pages.dev` one | Recommended |
+
+Choose **Secret** (not plain text) for both Stripe values. Cloudflare then
+encrypts them and stops showing them back to you.
+
+There is no publishable key here on purpose. Stripe Checkout is a page on
+Stripe's own domain, so the browser never talks to Stripe directly and never
+needs a key of any kind.
+
+**Never commit or upload:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, a
+`.env` file, or a `.dev.vars` file. They belong only in the Cloudflare
+dashboard. The repository's `.gitignore` already covers `.env` and
+`.dev.vars`. If a secret key is ever pasted into a file, a screenshot or a
+chat, roll it in the Stripe dashboard straight away: **Developers → API keys →
+Roll key**.
+
+### Testing with Stripe test mode first
+
+1. Create a Stripe account. Leave the dashboard toggle on **Test mode**.
+2. **Developers → API keys**, copy the **Secret key** (`sk_test_...`).
+3. Put it in Cloudflare as `STRIPE_SECRET_KEY`, as above.
+4. **Developers → Webhooks → Add endpoint.** URL:
+   `https://your-site.pages.dev/api/stripe-webhook`. Event:
+   `checkout.session.completed`. Create it, then copy the **Signing secret**
+   (`whsec_...`) into Cloudflare as `STRIPE_WEBHOOK_SECRET`.
+5. Set `paymentMode: "stripe"` in `assets/js/data.js` and redeploy.
+6. Open `https://your-site.pages.dev/api/health`. It should report
+   `stripeKeySet: true` and `webhookSecretSet: true`.
+7. Place an order on the site during the Monday to Wednesday window. The
+   button now reads "Pay $X and confirm".
+8. On Stripe's page use the test card **4242 4242 4242 4242**, any future
+   expiry, any three-digit CVC, any ZIP. No money moves in test mode.
+9. You should land back on the thank-you page and see **Paid**, with a
+   reference.
+10. Check your email: the paid order should arrive, marked PAID.
+11. Check **Developers → Webhooks → your endpoint** in Stripe. The delivery
+    should show a `200`. If it shows `400`, the signing secret does not match.
+    If it shows `500`, the order email failed and Stripe will retry.
+
+To test the price protection yourself: open the browser console on the order
+page, change a price in `PRODUCTS`, and check out. Stripe will still charge the
+real price, because the browser's copy is not consulted.
+
+### Going live
+
+1. Finish Stripe's account activation: business details, bank account.
+2. Flip the dashboard out of Test mode.
+3. **Developers → API keys**, copy the **live** secret key (`sk_live_...`) and
+   replace `STRIPE_SECRET_KEY` in Cloudflare with it.
+4. **Developers → Webhooks → Add endpoint** again, this time in live mode,
+   pointing at `https://thefrostedfrog.com/api/stripe-webhook`, same event.
+   Copy that new signing secret over `STRIPE_WEBHOOK_SECRET`. The test secret
+   will not work for live events.
+5. Set `SITE_URL` to your real domain so customers return to it after paying.
+6. Redeploy, then check `/api/health` again.
+7. Place one real order for something small, on your own card. Confirm the
+   charge appears in Stripe, the paid email arrives, and the webhook shows a
+   `200`.
+8. Refund that order in Stripe so you are not paying fees on your own test.
+
+Stripe's fee comes out of each payment. Check their current rate before you
+set prices.
+
+### Running the checkout tests
+
+```bash
+node tools/test-checkout.mjs
+```
+
+Stripe is stubbed, so this needs no keys and spends nothing. It checks that
+prices come from the catalog, that a tampered price is ignored, that unknown
+products and invented options are refused, that the pickup slot is enforced,
+and that a forged or stale webhook signature is rejected.
 
 ## Looking at it before you upload
 
@@ -165,6 +275,8 @@ of the week and empty the cart. That bar exists only in the preview.
 - [ ] Confirm the cottage-food disclaimer matches your state's required wording.
 - [ ] Set the sales tax rate, or `0` if you don't collect it.
 - [ ] Set up Formspree and place a test order end to end.
+- [ ] If taking cards: Stripe keys in Cloudflare, webhook registered, test
+      order placed with 4242 4242 4242 4242, paid email received.
 - [ ] Confirm the order window and pickup times in `SHOP_CONFIG.schedule`.
 - [ ] Swap the placeholder illustrations for photos of your own baking.
 - [ ] Replace the sample reviews with real ones, or delete them.

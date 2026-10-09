@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://thefrostedfrog.com/</loc>
+    <loc>https://thefrostedfrogbakery.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://thefrostedfrog.com/order.html</loc>
+    <loc>https://thefrostedfrogbakery.com/order.html</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://thefrostedfrog.com/bakery.html</loc>
+    <loc>https://thefrostedfrogbakery.com/bakery.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thefrostedfrog.com/faq.html</loc>
+    <loc>https://thefrostedfrogbakery.com/faq.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

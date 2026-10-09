@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thefrostedfrog.com/sitemap.xml
+Sitemap: https://thefrostedfrogbakery.com/sitemap.xml

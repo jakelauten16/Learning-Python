@@ -146,7 +146,7 @@ export function formEncode(value, prefix = "", out = new URLSearchParams()) {
 export async function stripeFetch(secret, path, { method = "POST", params, idempotencyKey } = {}) {
   const headers = {
     Authorization: `Bearer ${secret}`,
-    "Stripe-Version": "2024-06-20",
+    "Stripe-Version": "2026-08-26.dahlia",
   };
   if (params) headers["Content-Type"] = "application/x-www-form-urlencoded";
   if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;

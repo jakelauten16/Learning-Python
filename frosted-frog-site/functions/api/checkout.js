@@ -80,6 +80,9 @@ export async function onRequestPost({ request, env }) {
       idempotencyKey: reference,
       params: {
         mode: "payment",
+        /* Tags every session so these can be told apart in the Stripe
+           dashboard from anything else that takes payment later. */
+        integration_identifier: "frostedfrog-preorder-ckwzmrvb",
         line_items,
         customer_email: order.customer.email,
         client_reference_id: reference,

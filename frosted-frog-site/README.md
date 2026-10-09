@@ -46,7 +46,7 @@ a third party changing something under you.
 2. Drag the `frosted-frog-site` folder in. No build command, no framework
    preset, it's already a finished site.
 3. It goes live at `something.pages.dev` in about a minute.
-4. Custom domain → add `thefrostedfrog.com`, follow the DNS prompts.
+4. Custom domain → add `thefrostedfrogbakery.com`, follow the DNS prompts.
 
 To update the site later, drag the folder in again as a new deployment.
 
@@ -171,17 +171,57 @@ Variables and Secrets → Add**. Add each one to **Production**, and to
 
 | Name | Type | Value | Needed |
 | --- | --- | --- | --- |
-| `STRIPE_SECRET_KEY` | Secret | `sk_test_...`, later `sk_live_...` | Yes, for card payment |
+| `STRIPE_SECRET_KEY` | Secret | A **restricted key**, `rk_test_...` then `rk_live_...` | Yes, for card payment |
 | `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_...` from the webhook you create | Yes, for card payment |
 | `ORDER_ENDPOINT` | Plain text | Your Formspree URL, if you would rather not keep it in `data.js` | Optional |
-| `SITE_URL` | Plain text | `https://thefrostedfrog.com`, so Stripe returns to your domain and not the `pages.dev` one | Recommended |
+| `SITE_URL` | Plain text | `https://thefrostedfrogbakery.com`, so Stripe returns to your domain and not the `pages.dev` one | Recommended |
 
 Choose **Secret** (not plain text) for both Stripe values. Cloudflare then
 encrypts them and stops showing them back to you.
 
+**Use a restricted key, not your account secret key.** Stripe calls these
+restricted API keys and they start with `rk_` instead of `sk_`. A restricted
+key only does the jobs you tick, so if it ever leaks it cannot drain the
+account. Create one at **Developers → API keys → Create restricted key** and
+give it exactly these permissions, everything else left as None:
+
+| Permission | Level | Why this site needs it |
+| --- | --- | --- |
+| Checkout Sessions | Write | To create the payment page |
+| Payment Intents | Read | So the thank-you page can confirm a payment |
+
+The variable is still called `STRIPE_SECRET_KEY`; paste the `rk_` key into it.
+
 There is no publishable key here on purpose. Stripe Checkout is a page on
 Stripe's own domain, so the browser never talks to Stripe directly and never
-needs a key of any kind.
+needs a publishable key. If you have one, you do not need to do anything
+with it.
+
+### Wanting to try it before opening a Stripe account
+
+Stripe's CLI can make a throwaway test environment with no sign-up:
+
+```bash
+npm install -g @stripe/cli
+stripe sandbox create
+```
+
+That prints test keys you can paste into Cloudflare to try the whole flow.
+Nothing in a sandbox touches real money.
+
+### Keeping the keys out of the repository
+
+`tools/check-secrets.sh` refuses any commit containing a Stripe key. Install
+it once per clone, from the repository root:
+
+```bash
+cp frosted-frog-site/tools/check-secrets.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+A key that has been pasted into a chat, an email, a screenshot or a file
+should be treated as public, whatever happened to it afterwards. Roll it at
+**Developers → API keys**, which invalidates the old one on the spot.
 
 **Never commit or upload:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, a
 `.env` file, or a `.dev.vars` file. They belong only in the Cloudflare
@@ -196,9 +236,16 @@ Roll key**.
 2. **Developers → API keys**, copy the **Secret key** (`sk_test_...`).
 3. Put it in Cloudflare as `STRIPE_SECRET_KEY`, as above.
 4. **Developers → Webhooks → Add endpoint.** URL:
-   `https://your-site.pages.dev/api/stripe-webhook`. Event:
-   `checkout.session.completed`. Create it, then copy the **Signing secret**
-   (`whsec_...`) into Cloudflare as `STRIPE_WEBHOOK_SECRET`.
+   `https://your-site.pages.dev/api/stripe-webhook`. Subscribe to three
+   events: `checkout.session.completed`,
+   `checkout.session.async_payment_succeeded` and
+   `checkout.session.async_payment_failed`. Create it, then copy the
+   **Signing secret** (`whsec_...`) into Cloudflare as
+   `STRIPE_WEBHOOK_SECRET`.
+
+   The last two matter because some payment methods settle hours later. Cards
+   clear instantly; bank-style methods do not, and an order that is only
+   pending must not be baked yet.
 5. Set `paymentMode: "stripe"` in `assets/js/data.js` and redeploy.
 6. Open `https://your-site.pages.dev/api/health`. It should report
    `stripeKeySet: true` and `webhookSecretSet: true`.
@@ -224,9 +271,9 @@ real price, because the browser's copy is not consulted.
 3. **Developers → API keys**, copy the **live** secret key (`sk_live_...`) and
    replace `STRIPE_SECRET_KEY` in Cloudflare with it.
 4. **Developers → Webhooks → Add endpoint** again, this time in live mode,
-   pointing at `https://thefrostedfrog.com/api/stripe-webhook`, same event.
-   Copy that new signing secret over `STRIPE_WEBHOOK_SECRET`. The test secret
-   will not work for live events.
+   pointing at `https://thefrostedfrogbakery.com/api/stripe-webhook`, with the
+   same three events. Copy that new signing secret over
+   `STRIPE_WEBHOOK_SECRET`. The test secret will not work for live events.
 5. Set `SITE_URL` to your real domain so customers return to it after paying.
 6. Redeploy, then check `/api/health` again.
 7. Place one real order for something small, on your own card. Confirm the
@@ -273,7 +320,11 @@ of the week and empty the cart. That bar exists only in the preview.
 
 - [ ] Put your real email, phone and pickup location in `SHOP_CONFIG`.
 - [ ] Confirm the cottage-food disclaimer matches your state's required wording.
-- [ ] Set the sales tax rate, or `0` if you don't collect it.
+- [ ] Set the sales tax rate, or `0` if you don't collect it. The site charges
+      a flat rate from `data.js`; many states treat home-baked goods
+      differently from restaurant food, so confirm the rate with your state
+      before taking a card. Stripe can calculate tax for you instead, but
+      only once you hold an active tax registration in your state.
 - [ ] Set up Formspree and place a test order end to end.
 - [ ] If taking cards: Stripe keys in Cloudflare, webhook registered, test
       order placed with 4242 4242 4242 4242, paid email received.

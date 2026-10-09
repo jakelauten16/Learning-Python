@@ -6,7 +6,13 @@
    signs this request, we check the signature, and then we believe it.
 
    Point Stripe at https://your-domain/api/stripe-webhook and subscribe to
-   checkout.session.completed.
+   checkout.session.completed, checkout.session.async_payment_succeeded and
+   checkout.session.async_payment_failed.
+
+   Why three: some payment methods settle hours or days later. For those, the
+   completed event arrives while the session is still unpaid, so treating
+   "completed" as "paid" would both confirm orders that later fail and never
+   confirm the ones that succeed.
    --------------------------------------------------------------------------- */
 import { SHOP_CONFIG, verifyStripeSignature, notifyBaker, json } from "../_lib/order.js";
 
@@ -33,13 +39,36 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Bad payload" }, 400);
   }
 
-  if (event.type !== "checkout.session.completed") {
+  const handled = [
+    "checkout.session.completed",
+    "checkout.session.async_payment_succeeded",
+    "checkout.session.async_payment_failed",
+  ];
+  if (!handled.includes(event.type)) {
     return json({ received: true, ignored: event.type });
   }
 
   const session = event.data?.object || {};
-  if (session.payment_status !== "paid") {
-    return json({ received: true, ignored: "not paid" });
+
+  /* A payment that was pending and then failed. Worth knowing about, so it
+     goes to the same inbox, clearly marked as nothing to bake. */
+  if (event.type === "checkout.session.async_payment_failed") {
+    const failedRef = session.metadata?.reference || session.client_reference_id || session.id;
+    await notifyBaker(env.ORDER_ENDPOINT || SHOP_CONFIG.orderEndpoint, {
+      _subject: `Payment FAILED for order ${failedRef}`,
+      status: "PAYMENT FAILED",
+      reference: failedRef,
+      order: `The payment for order ${failedRef} did not go through, so there is nothing to bake.\n` +
+        `Name: ${session.metadata?.customer_name || ""}\n` +
+        `Pickup was: ${session.metadata?.pickup_date || ""} at ${session.metadata?.pickup_time || ""}`,
+    });
+    return json({ received: true, failed: failedRef });
+  }
+
+  /* Fulfil on anything that is not still unpaid. For a card that is "paid"
+     straight away; for a slower method it is the async success event. */
+  if (session.payment_status === "unpaid") {
+    return json({ received: true, pending: true });
   }
 
   const meta = session.metadata || {};

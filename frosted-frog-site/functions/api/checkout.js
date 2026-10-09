@@ -79,16 +79,31 @@ export async function onRequestPost({ request, env }) {
     const session = await stripeFetch(env.STRIPE_SECRET_KEY, "checkout/sessions", {
       idempotencyKey: reference,
       params: {
-        mode: "payment",
-        /* Tags every session so these can be told apart in the Stripe
-           dashboard from anything else that takes payment later. */
-        integration_identifier: "frostedfrog-preorder-ckwzmrvb",
-        line_items,
-        customer_email: order.customer.email,
-        client_reference_id: reference,
+        /* ---- Configured in Checkout Studio. Change them there, not here. ---- */
+        ui_mode: "hosted_page",
+        billing_address_collection: "auto",
         phone_number_collection: { enabled: true },
+        automatic_tax: { enabled: false },
+        allow_promotion_codes: false,
+        submit_type: "pay",
+        name_collection: {
+          individual: { enabled: true, optional: true },
+          business: { enabled: true, optional: true },
+        },
+        saved_payment_method_options: { payment_method_save: "enabled" },
+        integration_identifier: "hosted_web_0001",
+        origin_context: "web",
+
+        /* ---- This bakery's own values ---- */
+        mode: "payment",
+        line_items,
         success_url: `${origin}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/order.html`,
+
+        /* ---- Carried through to fulfilment. The webhook builds the paid
+           order email out of this metadata, so none of it is decoration. ---- */
+        customer_email: order.customer.email,
+        client_reference_id: reference,
         payment_intent_data: {
           description: `The Frosted Frog order ${reference}`,
         },

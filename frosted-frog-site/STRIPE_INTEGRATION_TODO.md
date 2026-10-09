@@ -213,6 +213,26 @@ npx wrangler secret put STRIPE_WEBHOOK_SECRET
 npx wrangler deploy
 ```
 
+#### When the first build does not run
+
+Workers Builds starts on a **push**, not on connecting. If you connect the
+repository after the last commit was already pushed, nothing happens and the
+Worker keeps serving whatever was there before. Push any commit and the build
+starts.
+
+Three ways to tell what is going on, without guessing:
+
+| What you see | What it means |
+|---|---|
+| **Settings → Builds** lists no repository | The connection did not save. Connect again from inside this Worker, not from the Workers & Pages list. |
+| A repository is listed but there are no builds | Nothing has been pushed since connecting. Push a commit, or use **Retry** on the latest. |
+| A build is listed and failed | Open it and read the last lines. A non-empty build command and a Worker name that does not match `wrangler.jsonc` are the two usual causes. |
+
+Watch out for **Import a repository** on the Workers & Pages list: that flow
+creates a *new* Worker named after the repository and leaves this one alone.
+If the site appears at a different address than the one you expect, that is
+why.
+
 #### Checking it worked
 
 ```

@@ -151,6 +151,31 @@ globalThis.fetch = async () => new Response("nope", { status: 500 });
 res = await webhook({ request: hook(payload, sign(payload)), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
 ok("email failure returns 500 so Stripe retries", res.status === 500);
 
+/* 14. A test-checkout session proves the webhook ran without looking like an
+   order to bake. */
+const testPayload = JSON.stringify({
+  id: "evt_test", type: "checkout.session.completed",
+  data: { object: { id: "cs_test_999", payment_status: "paid", amount_total: 100, currency: "usd",
+    metadata: { test_order: "true", reference: "TEST-abcd1234", customer_name: "Test order, no customer",
+      items: "1x TEST ORDER, not a real purchase", total: "$1.00", pickup_date: "n/a", pickup_time: "n/a" } } },
+});
+emailed = null;
+globalThis.fetch = async (url, init) => {
+  emailed = { url, body: JSON.parse(init.body) };
+  return new Response("{}", { status: 200, headers: { "Content-Type": "application/json" } });
+};
+res = await webhook({ request: hook(testPayload, sign(testPayload)), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
+let testBody = await res.json();
+ok("test session accepted and reported as a test", res.status === 200 && testBody.test === true);
+ok("the test email is not a PAID order", emailed && emailed.body.status === "TEST" && !emailed.body.order.includes("PAID ORDER"));
+ok("the test email says plainly there is nothing to bake", /nothing to bake/i.test(emailed.body.order));
+ok("the test email names the event, which is the proof asked for", emailed.body.order.includes("checkout.session.completed"));
+
+/* An unsigned test session is still refused: the flag is not a way in. */
+emailed = null;
+res = await webhook({ request: hook(testPayload, sign(testPayload, ts, "whsec_wrong")), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
+ok("a forged test webhook is rejected too", res.status === 400 && emailed === null);
+
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

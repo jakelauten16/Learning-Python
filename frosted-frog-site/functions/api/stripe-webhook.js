@@ -50,6 +50,36 @@ export async function onRequestPost({ request, env }) {
 
   const session = event.data?.object || {};
 
+  /* The temporary test checkout marks its sessions. They prove the wiring
+     works, so they are still reported, but never as something to bake. */
+  if (session.metadata?.test_order === "true") {
+    const testRef = session.metadata.reference || session.id;
+    const outcome = event.type === "checkout.session.async_payment_failed"
+      ? "the test payment FAILED"
+      : session.payment_status === "unpaid"
+        ? "the test payment is still pending"
+        : "the test payment succeeded";
+    const result = await notifyBaker(env.ORDER_ENDPOINT || SHOP_CONFIG.orderEndpoint, {
+      _subject: `TEST, not an order: webhook received ${event.type}`,
+      status: "TEST",
+      reference: testRef,
+      order: [
+        "THIS IS A TEST. There is nothing to bake and nobody is waiting on it.",
+        "",
+        `Event: ${event.type}`,
+        `Outcome: ${outcome}`,
+        `Reference: ${testRef}`,
+        `Amount: $${((session.amount_total || 0) / 100).toFixed(2)}`,
+        `Stripe session: ${session.id}`,
+        "",
+        "Seeing this email means the Cloudflare webhook received the event,",
+        "checked Stripe's signature and ran the confirmation path correctly.",
+      ].join("\n"),
+    });
+    console.log("test order webhook", event.type, testRef, result.sent ? "emailed" : "email failed");
+    return json({ received: true, test: true, reference: testRef, emailed: result.sent === true });
+  }
+
   /* A payment that was pending and then failed. Worth knowing about, so it
      goes to the same inbox, clearly marked as nothing to bake. */
   if (event.type === "checkout.session.async_payment_failed") {

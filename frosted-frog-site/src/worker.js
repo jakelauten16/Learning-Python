@@ -14,12 +14,20 @@ import { onRequestPost as checkout } from "../functions/api/checkout.js";
 import { onRequestPost as stripeWebhook } from "../functions/api/stripe-webhook.js";
 import { onRequestGet as session } from "../functions/api/session.js";
 import { onRequestGet as health } from "../functions/api/health.js";
+import {
+  onRequestGet as testCheckoutPage,
+  onRequestPost as testCheckoutStart,
+} from "../functions/api/test-checkout.js";
 
 const ROUTES = {
   "/api/checkout": { POST: checkout },
   "/api/stripe-webhook": { POST: stripeWebhook },
   "/api/session": { GET: session },
   "/api/health": { GET: health },
+
+  /* Temporary, admin-only, test keys only. See functions/api/test-checkout.js.
+     Off entirely unless TEST_CHECKOUT_TOKEN is set in Cloudflare. */
+  "/api/test-checkout": { GET: testCheckoutPage, POST: testCheckoutStart },
 };
 
 function json(data, status) {

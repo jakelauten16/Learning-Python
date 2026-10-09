@@ -86,6 +86,7 @@ and Secrets → Add**, applied to **Production**:
 | `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_...`, from the webhook endpoint you create |
 | `SITE_URL` | Plain text | Only once a custom domain is attached. The Worker otherwise uses the domain the request arrived on, which is correct on `workers.dev`. |
 | `ORDER_ENDPOINT` | Plain text | Optional. Your Formspree URL, if you would rather not keep it in `data.js` |
+| `TEST_CHECKOUT_TOKEN` | Secret | Temporary. A password you invent, which switches on the admin-only test checkout. Delete it to switch the test checkout off. |
 
 There is no `.env` file and no publishable key. The site is static files, so
 nothing is bundled and no variable is ever exposed to a browser. A publishable
@@ -321,10 +322,65 @@ After a test order, check Developers → Webhooks → your endpoint. A `200` mea
 the order email went out. A `400` means the signing secret does not match. A
 `500` means the email failed and Stripe will keep retrying.
 
+## The temporary test checkout
+
+A separate door for proving the payment wiring works on a day the order book
+is shut. It changes nothing about ordering: `/api/checkout` still refuses any
+order outside Monday to Wednesday, and the public site has no link to this.
+
+**URL:** `https://super-dust-23bf.madison-lautenschlager.workers.dev/api/test-checkout`
+
+Until `TEST_CHECKOUT_TOKEN` is set, that URL is a plain 404. Nobody can tell
+it exists.
+
+### To use it
+
+1. Make sure `STRIPE_SECRET_KEY` holds a **test** key (`rk_test_` or
+   `sk_test_`). With a live key the endpoint refuses to run, so a real card
+   cannot be charged through it.
+2. Add `TEST_CHECKOUT_TOKEN` as a Secret in the dashboard, with a password you
+   invent. Twenty or more random characters.
+3. Open the URL, paste the token, and pay with `4242 4242 4242 4242`, any
+   future expiry, any CVC.
+4. Stripe charges **$1.00 in test mode**, which is not real money.
+
+### What proves it worked
+
+- **Stripe → Developers → Webhooks → your endpoint.** The delivery of
+  `checkout.session.completed` shows `200`. That is the webhook receiving the
+  event and verifying Stripe's signature.
+- **Your order inbox.** An email subject reading
+  `TEST, not an order: webhook received checkout.session.completed`, whose
+  body says there is nothing to bake and names the event. That is the
+  confirmation path running.
+- **Stripe → Payments.** A $1.00 test payment with reference `TEST-...`.
+
+If the delivery shows `400`, `STRIPE_WEBHOOK_SECRET` does not match the
+endpoint's signing secret. `503` means it is not set at all.
+
+### Why it cannot take real money or create a real order
+
+| Guard | Effect |
+|-------|--------|
+| Test keys only | A `sk_live_`/`rk_live_` key makes the endpoint return 403 before Stripe is called |
+| Off by default | No `TEST_CHECKOUT_TOKEN`, no endpoint: 404 |
+| Token required | Compared in constant time; a wrong token is 401 |
+| Expires 2026-10-23 | 410 after that date whether or not anyone remembers |
+| Marked everywhere | `metadata.test_order`, a `TEST-` reference, a line item named "TEST ORDER, not a real purchase" |
+| Webhook branches early | A flagged session never reaches the paid-order path, so it can never arrive as something to bake |
+
+### To remove it
+
+Delete `TEST_CHECKOUT_TOKEN` in the dashboard. That is enough. For a clean
+removal, also delete `functions/api/test-checkout.js` and its two lines in
+`src/worker.js`.
+
 ## Next steps
 
 - [ ] Roll any Stripe key that has been pasted into a chat, an email or a
       screenshot. Developers → API keys.
+- [ ] After the test payment goes through, delete `TEST_CHECKOUT_TOKEN` to
+      switch the temporary test checkout back off.
 - [ ] Install the commit hook once:
       `cp tools/check-secrets.sh ../.git/hooks/pre-commit && chmod +x ../.git/hooks/pre-commit`
 - [ ] Confirm the sales tax rate in [assets/js/data.js](assets/js/data.js).

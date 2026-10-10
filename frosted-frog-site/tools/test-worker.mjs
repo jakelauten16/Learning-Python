@@ -115,5 +115,30 @@ ok("it goes to Stripe and nowhere else", sent?.url === "https://api.stripe.com/v
 r = await hit("/api/checkout", "POST", JSON.stringify({ items: [{ id: "cookie-weekly", qty: 12 }] }));
 ok("/api/checkout still refuses without a key", r.status === 503);
 
+/* --- cache busting ---------------------------------------------------------
+   The script filenames never change, so a browser holding a copy from before
+   a menu change will keep using it. Every reference carries a version, and
+   they all carry the same one: a half-bumped deploy would serve a new data.js
+   beside an old cart.js, which is worse than serving neither. */
+import { readdirSync, readFileSync as rf } from "node:fs";
+
+const pages = readdirSync(SITE).filter((f) => f.endsWith(".html"));
+const refs = [];
+for (const page of pages) {
+  const html = rf(join(SITE, page), "utf8");
+  for (const m of html.matchAll(/(?:src|href)="(assets\/(?:js|css)\/[^"]+)"/g)) {
+    refs.push({ page, url: m[1] });
+  }
+}
+
+ok("every page was scanned", pages.length >= 6, `${pages.length} pages, ${refs.length} refs`);
+
+const unversioned = refs.filter((r) => !/\?v=/.test(r.url));
+ok("every script and stylesheet is versioned", unversioned.length === 0,
+   unversioned.slice(0, 3).map((r) => `${r.page} -> ${r.url}`).join(" | "));
+
+const versions = [...new Set(refs.map((r) => (r.url.match(/\?v=([^"&]+)/) || [])[1]))];
+ok("one version across the whole site", versions.length === 1, versions.join(", "));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

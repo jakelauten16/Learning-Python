@@ -17,8 +17,8 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261010a">
-<link rel="stylesheet" href="assets/css/site.css?v=20261010a">
+<link rel="stylesheet" href="assets/css/fonts.css?v=2026101017">
+<link rel="stylesheet" href="assets/css/site.css?v=2026101017">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -51,8 +51,27 @@
     <div class="wrap center">
       <span class="eyebrow" data-reveal>Pre-Order</span>
       <h1 data-reveal style="font-size:clamp(2.1rem,4.2vw,3.2rem);margin-bottom:.3rem">This week's menu</h1>
-      <p class="lede center" data-reveal style="margin-inline:auto;margin-bottom:1.2rem">Add what you'd like, choose Friday or Saturday, and send it over. Nothing is charged here.</p>
+      <p class="lede center" data-reveal style="margin-inline:auto;margin-bottom:1.2rem">Add what you'd like, choose Friday or Saturday, and pay by card to confirm it.</p>
       <div class="week__status" data-order-status data-reveal></div>
+    </div>
+  </section>
+
+  <!-- What's in the cart, at the top where it can be seen. Hidden while the
+       cart is empty so an empty box never greets a first-time visitor. -->
+  <section class="section section--tight order-top" data-order-top hidden
+           style="padding-top:0;padding-bottom:1.4rem" aria-labelledby="order-top-h">
+    <div class="wrap">
+      <div class="order-top__card">
+        <div class="order-top__head">
+          <h2 id="order-top-h">Your order</h2>
+          <button type="button" class="order-top__clear" data-order-top-clear>Clear</button>
+        </div>
+        <ul class="order-top__lines" data-order-top-lines></ul>
+        <div class="order-top__foot">
+          <span class="order-top__total" data-order-top-total></span>
+          <a class="btn" href="#checkout" data-order-top-go>Review &amp; pre-order</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -240,11 +259,11 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/data.js?v=20261010a"></script>
-<script src="assets/js/schedule.js?v=20261010a"></script>
-<script src="assets/js/cart.js?v=20261010a"></script>
-<script src="assets/js/site.js?v=20261010a"></script>
-<script src="assets/js/catalog.js?v=20261010a"></script>
-<script src="assets/js/checkout.js?v=20261010a"></script>
+<script src="assets/js/data.js?v=2026101017"></script>
+<script src="assets/js/schedule.js?v=2026101017"></script>
+<script src="assets/js/cart.js?v=2026101017"></script>
+<script src="assets/js/site.js?v=2026101017"></script>
+<script src="assets/js/catalog.js?v=2026101017"></script>
+<script src="assets/js/checkout.js?v=2026101017"></script>
 </body>
 </html>

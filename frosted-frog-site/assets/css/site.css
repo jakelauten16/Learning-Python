@@ -870,3 +870,74 @@ p { margin: 0 0 1.1em; text-wrap: pretty; }
   .review { grid-template-columns: 1fr; }
   .review__side { position: static; }
 }
+
+/* ---------------------------------------------------------------------------
+   The order panel at the top of the pre-order page.
+
+   The cart used to live only in a drawer and in a section below the whole
+   menu, so a customer part-way through had to go looking for what they had
+   chosen. This puts it where they land. It inherits the tokens above, so it
+   follows dark mode without a second ruleset.
+   --------------------------------------------------------------------------- */
+.order-top__card {
+  border: 1px solid var(--gold-200);
+  border-radius: var(--radius);
+  background: var(--cream);
+  padding: 1.1rem 1.2rem;
+}
+.order-top__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem; margin-bottom: .65rem;
+}
+.order-top__head h2 { font-size: 1.15rem; margin: 0; }
+.order-top__clear {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.order-top__clear:hover { color: var(--gold-600); }
+
+.order-top__lines { list-style: none; margin: 0; padding: 0; }
+.order-top__line {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: .9rem;
+  padding: .55rem 0;
+  border-top: 1px solid rgba(44, 82, 64, .12);
+}
+.order-top__line:first-child { border-top: 0; }
+.order-top__what { min-width: 0; }
+.order-top__what strong { font-weight: 600; }
+.order-top__unit, .order-top__opts {
+  display: block; font-size: .78rem; color: var(--ink-soft);
+}
+.order-top__cost { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.order-top__rm {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.order-top__rm:hover { color: var(--gold-600); }
+
+.order-top__foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; margin-top: .85rem; padding-top: .8rem;
+  border-top: 1px solid rgba(44, 82, 64, .18);
+}
+.order-top__total { font-size: .92rem; font-variant-numeric: tabular-nums; }
+
+/* Narrow screens: the name takes the full width and the controls sit under
+   it, so nothing is squeezed to the point of being hard to tap. */
+@media (max-width: 560px) {
+  .order-top__line {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "what what" "qty cost" "rm rm";
+    gap: .5rem .9rem;
+  }
+  .order-top__what { grid-area: what; }
+  .order-top__line .qty { grid-area: qty; }
+  .order-top__cost { grid-area: cost; text-align: right; }
+  .order-top__rm { grid-area: rm; justify-self: start; }
+  .order-top__foot { flex-direction: column; align-items: stretch; }
+}

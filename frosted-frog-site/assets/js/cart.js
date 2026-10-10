@@ -288,14 +288,53 @@
         if (it2) Cart.setQty(k2, it2.qty + (it2.min > 1 ? it2.min : 1));
       }
       if (rm) Cart.remove(rm.getAttribute("data-remove"));
+      if (t.closest("[data-order-top-clear]")) Cart.clear();
     });
 
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeDrawer();
     });
 
-    Cart.onChange(function () { renderDrawer(); syncBadge(); });
+    Cart.onChange(function () { renderDrawer(); syncBadge(); renderTop(); });
+    renderTop();
   });
+
+  /* The order page shows what is in the cart at the top, so a customer can
+     see what they are buying without scrolling past the whole menu to find
+     it. Same data as the drawer, same steppers; only the placement differs.
+     Pages without the panel skip this entirely. */
+  function renderTop() {
+    var panel = document.querySelector("[data-order-top]");
+    if (!panel) return;
+
+    var items = read();
+    if (!items.length) {
+      panel.hidden = true;
+      return;
+    }
+    panel.hidden = false;
+
+    document.querySelector("[data-order-top-lines]").innerHTML = items.map(function (i) {
+      var opts = Object.keys(i.options || {}).map(function (k) { return i.options[k].name; });
+      return '<li class="order-top__line">' +
+        '<div class="order-top__what"><strong>' + i.name + "</strong>" +
+          (i.unit ? ' <span class="order-top__unit">' + i.unit + "</span>" : "") +
+          (opts.length ? '<span class="order-top__opts">' + opts.join(", ") + "</span>" : "") +
+        "</div>" +
+        '<div class="qty" role="group" aria-label="Quantity for ' + i.name + '">' +
+          '<button type="button" data-qty-down="' + i.key + '" aria-label="One fewer">&minus;</button>' +
+          "<span>" + i.qty + "</span>" +
+          '<button type="button" data-qty-up="' + i.key + '" aria-label="One more">+</button>' +
+        "</div>" +
+        '<span class="order-top__cost">' + money(i.qty * i.price) + "</span>" +
+        '<button type="button" class="order-top__rm" data-remove="' + i.key + '" ' +
+          'aria-label="Remove ' + i.name + '">Remove</button>' +
+        "</li>";
+    }).join("");
+
+    document.querySelector("[data-order-top-total]").textContent =
+      Cart.count() + (Cart.count() === 1 ? " item, " : " items, ") + money(Cart.subtotal());
+  }
 
   Cart.open = openDrawer;
   Cart.close = closeDrawer;

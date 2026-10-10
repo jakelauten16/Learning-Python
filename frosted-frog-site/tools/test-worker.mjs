@@ -171,6 +171,20 @@ ok("its pickup hours match the shop's", parsed.openingHoursSpecification?.length
 ok("no invented phone or address is published",
    !("telephone" in parsed) && !("address" in parsed));
 
+/* --- the unit label follows the chosen size --------------------------------
+   A dozen's price beside the words "per half dozen" makes a customer doubt
+   the arithmetic, so both the product modal and the cart derive the label
+   from the Size option rather than from the product's own unit. */
+const cartSrc = rf(join(SITE, "assets/js/cart.js"), "utf8");
+const catalogSrc = rf(join(SITE, "assets/js/catalog.js"), "utf8");
+
+ok("the cart derives a line's unit from its size", /function unitFor/.test(cartSrc));
+ok("a new cart line records the size it was added at", /unit: unitFor\(p, opts\)/.test(cartSrc));
+ok("reconciling a line keeps its own size", /i\.unit = unitFor\(p, i\.options\)/.test(cartSrc));
+ok("no cart line falls back to the product's cheapest unit",
+   !/unit: p\.unit \|\| ""/.test(cartSrc) && !/i\.unit = p\.unit/.test(cartSrc));
+ok("the product modal relabels the price too", /function unitLabel/.test(catalogSrc));
+
 /* --- cache busting ---------------------------------------------------------
    The script filenames never change, so a browser holding a copy from before
    a menu change will keep using it. Every reference carries a version, and

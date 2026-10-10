@@ -37,7 +37,7 @@
       var min = p.min || 1;
       i.name = p.name;
       i.image = p.image;
-      i.unit = p.unit || "";
+      i.unit = unitFor(p, i.options);
       i.price = p.price + extra;
       i.min = min;
       i.qty = Math.max(Math.round(i.qty / min) * min, min);
@@ -66,6 +66,16 @@
     return PRODUCTS.filter(function (p) { return p.id === id; })[0];
   }
 
+  /* What one of this line buys. A product's own unit describes its cheapest
+     size, so a line with Dozen chosen has to say so: the cart showing "per
+     half dozen" beside a dozen's price is the sort of thing that makes
+     somebody abandon a basket. */
+  function unitFor(p, options) {
+    var size = options && options.Size;
+    if (size && size.name) return "per " + String(size.name).toLowerCase();
+    return (p && p.unit) || "";
+  }
+
   var Cart = {
     items: read,
 
@@ -88,7 +98,7 @@
           id: id,
           name: p.name,
           image: p.image,
-          unit: p.unit || "",
+          unit: unitFor(p, opts),
           price: p.price + extra,
           qty: amount,
           min: p.min || 1,

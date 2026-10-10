@@ -109,10 +109,23 @@
 
     var selected = (p.options || []).map(function (g) { return g.choices[0]; });
 
+    /* The line under the price has to describe what the price now buys. With
+       "Dozen" chosen it said "per half dozen" next to the dozen's price,
+       which is the kind of mismatch that makes someone doubt the total. */
+    function unitLabel() {
+      var groups = p.options || [];
+      for (var i = 0; i < groups.length; i++) {
+        if (groups[i].label === "Size" && selected[i]) {
+          return "per " + selected[i].name.toLowerCase();
+        }
+      }
+      return p.unit || "each";
+    }
+
     function refreshPrice() {
       var extra = selected.reduce(function (s, c) { return s + (c.price || 0); }, 0);
       host.querySelector("[data-modal-price]").innerHTML =
-        money(p.price + extra) + "<small>" + (p.unit || "each") + "</small>";
+        money(p.price + extra) + "<small>" + unitLabel() + "</small>";
     }
 
     host.querySelector(".modal").addEventListener("click", function (e) {

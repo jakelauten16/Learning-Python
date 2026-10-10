@@ -42,7 +42,11 @@ const SHOP_CONFIG = {
 
     // Leave false. Set to true only while you're previewing the site, it
     // keeps ordering open on days it would normally be closed.
-    previewAnyDay: false,
+    //
+    // TEMPORARILY TRUE for a live card test on 2026-10-10. Set it back to
+    // false as soon as the test order is paid and refunded: while it is
+    // true, anyone who finds the site can order on a closed day.
+    previewAnyDay: true,
   },
 
   // Local delivery (set enabled:false to hide the option entirely).

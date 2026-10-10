@@ -70,7 +70,16 @@ ok("below minimum refused", !!priceOrder(baseOrder({ items: [{ id: "iced-sugar-c
 /* 6. Schedule still enforced on the server. */
 ok("bogus pickup slot refused", !!priceOrder(baseOrder({ window: "2:00 AM" }), monday).error);
 const thursday = new RealDate(monday); thursday.setDate(thursday.getDate() + 3);
-ok("closed window refused", priceOrder(baseOrder(), thursday).status === 409);
+/* previewAnyDay deliberately lifts the Monday-to-Wednesday rule while the
+   site is being previewed or a live payment is being tested. The assertion
+   follows the setting, so turning the preview off re-arms the guard without
+   anyone having to remember this test exists. */
+if (SHOP_CONFIG.schedule.previewAnyDay) {
+  ok("PREVIEW MODE IS ON, closed days accept orders", !priceOrder(baseOrder(), thursday).error,
+     "set schedule.previewAnyDay back to false when you are done");
+} else {
+  ok("closed window refused", priceOrder(baseOrder(), thursday).status === 409);
+}
 
 /* 7. Delivery minimum and fee. */
 const delivery = priceOrder(baseOrder({ fulfillment: "delivery", customer: { ...baseOrder().customer, address: "12 Willow Lane" } }), monday);

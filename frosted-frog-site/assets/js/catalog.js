@@ -159,7 +159,7 @@
         optionsHTML +
         '<div class="field"><label for="m-qty">Quantity' + (min > 1 ? " (minimum " + min + ")" : "") + "</label>" +
           '<input id="m-qty" type="number" inputmode="numeric" min="' + min + '" step="' + step + '" value="' + min + '"></div>' +
-        '<div class="field"><label for="m-note">Notes for the baker <span style="text-transform:none;letter-spacing:0">(colors, message on the cake, allergies)</span></label>' +
+        '<div class="field"><label for="m-note">Special messages <span style="text-transform:none;letter-spacing:0">(colours, a message to pipe on top, allergies)</span></label>' +
           '<textarea id="m-note" placeholder="Sage and gold, please, &quot;Happy Birthday Ellie&quot; on top."></textarea></div>' +
         '<button class="btn btn--block" data-add="' + p.id + '">Add to order</button>' +
         '<p class="hint" style="margin-top:.8rem">Orders need ' + SHOP_CONFIG.leadTimeDays + " days' notice. You'll choose your pickup day at checkout.</p>" +

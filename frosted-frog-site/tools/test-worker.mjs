@@ -171,6 +171,12 @@ ok("its pickup hours match the shop's", parsed.openingHoursSpecification?.length
 ok("no invented phone or address is published",
    !("telephone" in parsed) && !("address" in parsed));
 
+/* The nav label. "Pre-Order & Menu" said the same thing twice. */
+const navless2 = seoPages.filter((f) => !/>Menu</.test(rf(join(SITE, f), "utf8")));
+ok("every page's nav says Menu", navless2.length === 0, navless2.join(", "));
+const oldNav = seoPages.filter((f) => /Pre-Order &amp; Menu/.test(rf(join(SITE, f), "utf8")));
+ok("no page still says Pre-Order & Menu", oldNav.length === 0, oldNav.join(", "));
+
 /* --- the unit label follows the chosen size --------------------------------
    A dozen's price beside the words "per half dozen" makes a customer doubt
    the arithmetic, so both the product modal and the cart derive the label

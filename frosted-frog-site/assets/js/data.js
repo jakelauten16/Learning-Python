@@ -113,13 +113,13 @@ const CATEGORIES = [
   {
     id: "standard",
     name: "Standard Cupcakes",
-    blurb: "The everyday four, plus a variety pack when you can't choose. Every one baked to order.",
+    blurb: "Vanilla or chocolate cake, with the frosting you choose on top. By the half dozen or the dozen.",
     image: "assets/img/cupcakes.svg",
   },
   {
     id: "floral",
     name: "Floral Cupcakes",
-    blurb: "Piped buttercream flowers, in the colours you choose. Order them as a box, or arranged as a bouquet.",
+    blurb: "Piped buttercream flowers, in the colours you choose. Boxed or arranged as a bouquet, by the dozen.",
     image: "assets/img/cupcakes.svg",
   },
   {
@@ -183,106 +183,63 @@ const PRODUCTS = [
     ],
   },
 
-  /* ---- The standard four, plus a variety pack --------------------------- */
+  /* ---- The standard two. Pick the cake, then the frosting. ------------- */
   {
-    id: "cupcake-vanilla-vanilla",
-    name: "Vanilla Cake, Vanilla Frosting",
+    id: "cupcake-vanilla",
+    name: "Vanilla Cupcakes",
     group: "standard",
     kind: "Cupcakes",
     price: 5,
     unit: "per half dozen",
-    desc: "Vanilla bean cake under a silky vanilla buttercream. The one everybody reaches for.",
-    image: "assets/img/cupcakes.svg",
-    options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 5 },
-      ]},
-    ],
-  },
-  {
-    id: "cupcake-vanilla-chocolate",
-    name: "Vanilla Cake, Chocolate Frosting",
-    group: "standard",
-    kind: "Cupcakes",
-    price: 5,
-    unit: "per half dozen",
-    desc: "Vanilla bean cake with a deep chocolate buttercream.",
-    image: "assets/img/cupcakes.svg",
-    options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 5 },
-      ]},
-    ],
-  },
-  {
-    id: "cupcake-chocolate-chocolate",
-    name: "Chocolate Cake, Chocolate Frosting",
-    group: "standard",
-    kind: "Cupcakes",
-    price: 5,
-    unit: "per half dozen",
-    desc: "Dark chocolate cake with chocolate buttercream, for anyone who means it.",
-    image: "assets/img/cupcakes.svg",
-    options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 5 },
-      ]},
-    ],
-  },
-  {
-    id: "cupcake-chocolate-vanilla",
-    name: "Chocolate Cake, Vanilla Frosting",
-    group: "standard",
-    kind: "Cupcakes",
-    price: 5,
-    unit: "per half dozen",
-    desc: "Dark chocolate cake under vanilla buttercream.",
-    image: "assets/img/cupcakes.svg",
-    options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 5 },
-      ]},
-    ],
-  },
-  {
-    id: "cupcake-variety-pack",
-    name: "Variety Pack",
-    group: "standard",
-    kind: "Cupcakes",
-    price: 10,
-    unit: "per half dozen",
-    desc: "A mix of the standard four, so nobody has to choose. Tell us if you want a particular split.",
+    desc: "Vanilla bean cake, baked light and tender. Choose the frosting that goes on top.",
     image: "assets/img/cupcakes.svg",
     featured: true,
     options: [
       { label: "Size", choices: [
         { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 10 },
+        { name: "Dozen", price: 5 },
+      ]},
+      { label: "Frosting", choices: [
+        { name: "Vanilla buttercream", price: 0 },
+        { name: "Chocolate buttercream", price: 0 },
+      ]},
+    ],
+  },
+  {
+    id: "cupcake-chocolate",
+    name: "Chocolate Cupcakes",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Dark chocolate cake, rich without being heavy. Choose the frosting that goes on top.",
+    image: "assets/img/cupcakes.svg",
+    featured: true,
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
+      ]},
+      { label: "Frosting", choices: [
+        { name: "Vanilla buttercream", price: 0 },
+        { name: "Chocolate buttercream", price: 0 },
       ]},
     ],
   },
 
-  /* ---- Floral. The bouquet is its own item, not an add-on, so that a
-     dozen comes to exactly double the half dozen. ---------------------- */
+  /* ---- Floral. A dozen is the only size: the arrangements do not divide
+     sensibly into six, so there is no Size option to choose. -------------- */
   {
     id: "cupcake-floral",
     name: "Floral Cupcakes",
     group: "floral",
     kind: "Floral",
     price: 10,
-    unit: "per half dozen",
-    desc: "Buttercream flowers piped by hand, in the colours you pick. Boxed ready to set out.",
+    unit: "per dozen",
+    desc: "Buttercream flowers piped by hand, in the colours you pick. Boxed ready to set out. Sold by the dozen.",
     image: "assets/img/cupcakes.svg",
     featured: true,
     options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 10 },
-      ]},
       { label: "Icing colour", choices: [
         { name: "White", price: 0 },
         { name: "Red", price: 0 },
@@ -301,14 +258,10 @@ const PRODUCTS = [
     group: "floral",
     kind: "Floral",
     price: 12,
-    unit: "per half dozen",
-    desc: "The same piped flowers, arranged together as a bouquet rather than boxed. A centrepiece you can eat.",
+    unit: "per dozen",
+    desc: "The same piped flowers, arranged together as a bouquet rather than boxed. A centrepiece you can eat. Sold by the dozen.",
     image: "assets/img/cupcakes.svg",
     options: [
-      { label: "Size", choices: [
-        { name: "Half dozen", price: 0 },
-        { name: "Dozen", price: 12 },
-      ]},
       { label: "Icing colour", choices: [
         { name: "White", price: 0 },
         { name: "Red", price: 0 },

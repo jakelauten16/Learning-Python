@@ -122,5 +122,24 @@ clickAdd();
 ok("viewing another product first does not add it too", added.length === 1, `${added.length} call(s)`);
 ok("only the product last opened is added", added[0][0] === WEEKLY, added[0][0]);
 
+/* ---- 6. the renamed field and the dozen-only floral --------------------- */
+openProduct(WEEKLY);
+const modalHTML = SHARED[".modal"].innerHTML || HOST.node.innerHTML;
+ok("the notes field is called Special messages", /Special messages/.test(modalHTML));
+ok("it is no longer called notes for the baker", !/Notes for the baker/i.test(modalHTML));
+
+openProduct("cupcake-floral");
+const floralHTML = SHARED[".modal"].innerHTML || HOST.node.innerHTML;
+ok("floral offers no size to choose", !/Half dozen/.test(floralHTML));
+ok("floral still offers an icing colour", /Icing colour/.test(floralHTML));
+ok("floral is priced by the dozen", /per dozen/.test(priceText()), priceText());
+ok("floral is $10", priceText().includes("$10.00"), priceText());
+
+openProduct("cupcake-vanilla");
+const vanillaHTML = SHARED[".modal"].innerHTML || HOST.node.innerHTML;
+ok("vanilla offers a frosting choice", /Frosting/.test(vanillaHTML));
+ok("with both buttercreams", /Vanilla buttercream/.test(vanillaHTML) && /Chocolate buttercream/.test(vanillaHTML));
+ok("and still offers both sizes", /Half dozen/.test(vanillaHTML) && /Dozen/.test(vanillaHTML));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

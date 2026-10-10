@@ -31,7 +31,20 @@ export function money(amount) {
 function resolveOptions(product, chosen) {
   const picked = [];
   let extra = 0;
-  for (const group of product.options || []) {
+
+  /* A group this product does not have is refused rather than ignored.
+     Floral cupcakes come by the dozen only, so a browser asking for a "Size"
+     of half dozen was being quietly given a dozen: the customer would have
+     expected six and paid for twelve, or the other way about, and nothing in
+     the order would have recorded what they asked for. */
+  const groups = product.options || [];
+  for (const label of Object.keys(chosen && typeof chosen === "object" ? chosen : {})) {
+    if (!groups.some((g) => g.label === label)) {
+      return { error: `${product.name} has no ${label} to choose` };
+    }
+  }
+
+  for (const group of groups) {
     const wanted = chosen && typeof chosen === "object" ? chosen[group.label] : undefined;
     const match = group.choices.find((c) => c.name === wanted);
     if (wanted !== undefined && !match) {

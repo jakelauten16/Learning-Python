@@ -329,44 +329,51 @@ ok("the earliest Friday slot is accepted",
 ok("the earliest Saturday slot is accepted",
    !priceOrder(baseOrder({ date: satSlots.date, window: satSlots.slots[0] }), monday).error);
 
-/* 18. The cupcake menu: every item is sold by the half dozen or the dozen,
-   and a dozen is exactly double. Arithmetic a customer can check. */
-const cupcakes = PRODUCTS.filter((p) => (p.options || []).some((g) => g.label === "Size"));
-ok("every product is sold by the pack", cupcakes.length === PRODUCTS.length,
-   `${cupcakes.length} of ${PRODUCTS.length}`);
+/* 18. The menu's own arithmetic. Items sold in two sizes must double; items
+   sold in one size must say which size that is, because the price means
+   nothing without it. Both rules are read off the catalog, so changing what
+   is on the menu does not mean editing this file. */
+const twoSize = PRODUCTS.filter((p) => (p.options || []).some((g) => g.label === "Size"));
+const oneSize = PRODUCTS.filter((p) => !(p.options || []).some((g) => g.label === "Size"));
+ok("every product is in one group or the other", twoSize.length + oneSize.length === PRODUCTS.length,
+   `${twoSize.length} by the pack, ${oneSize.length} single size`);
 
-const notDouble = cupcakes.filter((p) => {
+const notDouble = twoSize.filter((p) => {
   const dozen = p.options.find((g) => g.label === "Size").choices.find((c) => c.name === "Dozen");
   return p.price + dozen.price !== p.price * 2;
 });
-ok("a dozen is exactly double the half dozen everywhere", notDouble.length === 0,
-   notDouble.map((p) => p.id).join(", "));
+ok("a dozen is exactly double the half dozen", notDouble.length === 0, notDouble.map((p) => p.id).join(", "));
 
-/* Priced end to end, not just read off the catalog. */
-const halfDozen = priceOrder(baseOrder({
-  items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Half dozen", "Icing colour": "Pink" } }],
-}), monday);
-const dozen = priceOrder(baseOrder({
-  items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Dozen", "Icing colour": "Pink" } }],
-}), monday);
-ok("a half dozen floral is $10", halfDozen.totals?.subtotal === 10, String(halfDozen.totals?.subtotal));
-ok("a dozen floral is $20", dozen.totals?.subtotal === 20, String(dozen.totals?.subtotal));
+const vague = oneSize.filter((p) => !/dozen|each|serves/i.test(p.unit || ""));
+ok("a single-size item says what the size is", vague.length === 0, vague.map((p) => p.id).join(", "));
 
-const bouquet = priceOrder(baseOrder({
-  items: [{ id: "cupcake-floral-bouquet", qty: 1, options: { Size: "Dozen", "Icing colour": "White" } }],
-}), monday);
-ok("a dozen bouquet is $24, double the $12 half dozen", bouquet.totals?.subtotal === 24,
-   String(bouquet.totals?.subtotal));
+/* Priced end to end, not read off the catalog. */
+const priceOf = (id, options = {}) =>
+  priceOrder(baseOrder({ items: [{ id, qty: 1, options }] }), monday).totals?.subtotal;
 
-const standard = priceOrder(baseOrder({
-  items: [{ id: "cupcake-vanilla-vanilla", qty: 1, options: { Size: "Half dozen" } }],
-}), monday);
-ok("a half dozen standard is $5", standard.totals?.subtotal === 5, String(standard.totals?.subtotal));
+ok("a half dozen vanilla is $5",
+   priceOf("cupcake-vanilla", { Size: "Half dozen", Frosting: "Vanilla buttercream" }) === 5);
+ok("a dozen vanilla is $10",
+   priceOf("cupcake-vanilla", { Size: "Dozen", Frosting: "Chocolate buttercream" }) === 10);
+ok("chocolate cake costs the same as vanilla",
+   priceOf("cupcake-chocolate", { Size: "Half dozen", Frosting: "Vanilla buttercream" }) === 5);
+ok("the frosting choice is free either way",
+   priceOf("cupcake-chocolate", { Size: "Half dozen", Frosting: "Chocolate buttercream" }) ===
+   priceOf("cupcake-chocolate", { Size: "Half dozen", Frosting: "Vanilla buttercream" }));
 
-/* An icing colour is free, and an invented one is refused. */
-ok("picking an icing colour costs nothing", halfDozen.totals.subtotal === 10);
+ok("a dozen floral is $10", priceOf("cupcake-floral", { "Icing colour": "Pink" }) === 10);
+ok("a dozen bouquet is $12", priceOf("cupcake-floral-bouquet", { "Icing colour": "White" }) === 12);
+
+/* Floral has no half dozen, so asking for one must be refused rather than
+   quietly priced as something else. */
+ok("a floral half dozen is refused",
+   !!priceOrder(baseOrder({ items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Half dozen", "Icing colour": "Pink" } }] }), monday).error);
+
+/* An option that is not offered is refused, whichever group it belongs to. */
 ok("an icing colour that is not offered is refused",
-   !!priceOrder(baseOrder({ items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Half dozen", "Icing colour": "Tartan" } }] }), monday).error);
+   !!priceOrder(baseOrder({ items: [{ id: "cupcake-floral", qty: 1, options: { "Icing colour": "Tartan" } }] }), monday).error);
+ok("a frosting that is not offered is refused",
+   !!priceOrder(baseOrder({ items: [{ id: "cupcake-vanilla", qty: 1, options: { Size: "Half dozen", Frosting: "Maple" } }] }), monday).error);
 
 /* Nothing on a live menu should quote a customer who does not exist. */
 ok("no invented testimonials are published", TESTIMONIALS.length === 0);

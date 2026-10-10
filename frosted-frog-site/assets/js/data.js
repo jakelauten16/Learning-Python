@@ -43,7 +43,11 @@ const SHOP_CONFIG = {
     // Leave false. Set to true only while you're previewing the site, it
     // keeps ordering open on days it would normally be closed, for everyone
     // who can find the site and not just for you.
-    previewAnyDay: false,
+    //
+    // TEMPORARILY TRUE for a live checkout test. Set it back to false when
+    // the test is done: the domain is live now, so this is open to anyone
+    // who finds the site, not only to whoever is testing.
+    previewAnyDay: true,
   },
 
   /* Pickup only. Everything is collected at one of the two windows above.

@@ -75,6 +75,25 @@ export async function onRequestPost({ request, env }) {
     .join(" | ")
     .slice(0, 480);
 
+  /* Built once and attached in two places: to the session, which the webhook
+     reads, and to the payment, which is what the dashboard shows. */
+  const metadata = {
+    reference,
+    fulfillment: order.fulfillment,
+    pickup_date: order.date,
+    pickup_time: order.window,
+    customer_name: order.customer.name,
+    customer_phone: order.customer.phone,
+    address: order.customer.address,
+    occasion: order.customer.occasion,
+    notes: order.customer.notes.slice(0, 480),
+    items,
+    subtotal: money(order.totals.subtotal),
+    delivery: money(order.totals.delivery),
+    tax: money(order.totals.tax),
+    total: money(order.totals.total),
+  };
+
   try {
     const session = await stripeFetch(env.STRIPE_SECRET_KEY, "checkout/sessions", {
       idempotencyKey: reference,
@@ -108,34 +127,23 @@ export async function onRequestPost({ request, env }) {
            order email out of this metadata, so none of it is decoration. ---- */
         customer_email: order.customer.email,
         client_reference_id: reference,
+        /* The same details on the payment itself. Session metadata is what
+           the webhook reads, but the Payments list in the dashboard shows
+           the payment, not the session, so without this a baker looking up
+           an order sees an amount and nothing about what to bake. */
         payment_intent_data: {
           description: `The Frosted Frog order ${reference}`,
+          metadata,
         },
-        metadata: {
-          reference,
-          fulfillment: order.fulfillment,
-          pickup_date: order.date,
-          pickup_time: order.window,
-          customer_name: order.customer.name,
-          customer_phone: order.customer.phone,
-          address: order.customer.address,
-          occasion: order.customer.occasion,
-          notes: order.customer.notes.slice(0, 480),
-          items,
-          subtotal: money(order.totals.subtotal),
-          delivery: money(order.totals.delivery),
-          tax: money(order.totals.tax),
-          total: money(order.totals.total),
-        },
+        metadata,
       },
     });
 
     return json({ url: session.url, reference });
   } catch (error) {
+    /* Stripe's reason goes to the Worker log, not to the customer: it is
+       written for a developer and can echo back the request. */
     console.error("checkout session failed", error.message);
-    /* TEMPORARY, 2026-10-10: Stripe's own words, so a failure can be
-       diagnosed without Worker logs. Put the friendly message back once the
-       live path is proven. */
-    return json({ error: "We could not reach the payment page. Please try again.", stripe: error.message }, 502);
+    return json({ error: "We could not reach the payment page. Please try again." }, 502);
   }
 }

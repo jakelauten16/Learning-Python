@@ -260,6 +260,28 @@ globalThis.fetch = async (url, init) => {
 res = await webhook({ request: hook(payload, sign(payload)), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
 ok("the paid email replies to the customer", emailed?.body._replyto === "jamie@example.com");
 
+/* 16b. The order details reach the payment, not only the session. The
+   dashboard's Payments list shows the payment, so metadata that lives only
+   on the session is invisible to whoever is trying to work out what to bake. */
+const sessionItems = sentToStripe.body.get("metadata[items]");
+const paymentItems = sentToStripe.body.get("payment_intent_data[metadata][items]");
+ok("the session carries the item list", !!sessionItems, sessionItems);
+ok("the payment carries it too", paymentItems === sessionItems);
+for (const key of ["reference", "pickup_date", "pickup_time", "customer_name", "total"]) {
+  ok(`${key} reaches the payment record`,
+     sentToStripe.body.get(`payment_intent_data[metadata][${key}]`) === sentToStripe.body.get(`metadata[${key}]`));
+}
+
+/* The customer never sees Stripe's own error text; it is written for a
+   developer and can quote the request back. */
+globalThis.fetch = async () => new Response(
+  JSON.stringify({ error: { message: "some internal Stripe detail" } }),
+  { status: 400, headers: { "Content-Type": "application/json" } });
+const broke = await checkout({ request: req(baseOrder()), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
+const brokeBody = await broke.json();
+ok("a Stripe failure gives the customer a plain message",
+   broke.status === 502 && !JSON.stringify(brokeBody).includes("some internal Stripe detail"));
+
 /* 17. Pickup only, at the two advertised windows. */
 ok("delivery is switched off", SHOP_CONFIG.delivery.enabled === false);
 

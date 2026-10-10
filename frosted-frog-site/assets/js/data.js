@@ -41,12 +41,9 @@ const SHOP_CONFIG = {
     slotMinutes: 30,
 
     // Leave false. Set to true only while you're previewing the site, it
-    // keeps ordering open on days it would normally be closed.
-    //
-    // TEMPORARILY TRUE for a live card test on 2026-10-10. Set it back to
-    // false as soon as the test order is paid and refunded: while it is
-    // true, anyone who finds the site can order on a closed day.
-    previewAnyDay: true,
+    // keeps ordering open on days it would normally be closed, for everyone
+    // who can find the site and not just for you.
+    previewAnyDay: false,
   },
 
   /* Pickup only. Everything is collected at one of the two windows above.

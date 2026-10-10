@@ -129,6 +129,9 @@ export async function onRequestPost({ request, env }) {
     return json({ url: session.url, reference });
   } catch (error) {
     console.error("checkout session failed", error.message);
-    return json({ error: "We could not reach the payment page. Please try again." }, 502);
+    /* TEMPORARY, 2026-10-10: Stripe's own words, so a failure can be
+       diagnosed without Worker logs. Put the friendly message back once the
+       live path is proven. */
+    return json({ error: "We could not reach the payment page. Please try again.", stripe: error.message }, 502);
   }
 }

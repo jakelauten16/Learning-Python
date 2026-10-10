@@ -63,6 +63,19 @@
 
       Array.prototype.forEach.call(document.querySelectorAll("[data-order-status]"), function (el) {
         var open = Schedule.isOrderingOpen();
+        var paused = SHOP_CONFIG.schedule.ordersPaused;
+
+        /* While the shop is paused there is no reopening date to give, and
+           naming one we might miss is worse than saying soon. */
+        if (paused) {
+          el.className = "week__status";
+          el.innerHTML =
+            '<span class="dot" aria-hidden="true"></span>' +
+            "<strong>Not taking orders yet</strong>" +
+            "<span>" + (SHOP_CONFIG.schedule.pausedMessage || "") + "</span>";
+          return;
+        }
+
         var pickups = Schedule.pickupOptions();
         var when = open
           ? "Ordering closes " + Schedule.ordersClose().toLocaleDateString(undefined, { weekday: "long" }) + " night"

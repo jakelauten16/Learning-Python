@@ -104,7 +104,16 @@
     var open = Schedule.isOrderingOpen();
     if (closedEl) {
       closedEl.hidden = open;
-      if (!open) {
+      if (!open && SHOP_CONFIG.schedule.ordersPaused) {
+        closedEl.innerHTML =
+          '<div class="panel center">' +
+            '<span class="eyebrow">Not taking orders yet</span>' +
+            "<h3>The kitchen isn't open for orders</h3>" +
+            "<p>" + (SHOP_CONFIG.schedule.pausedMessage || "") +
+            " Your basket is saved, so whatever you have picked will still be here.</p>" +
+            '<a class="btn btn--ghost" href="' + window.pageHref("order.html") + '">See the menu</a>' +
+          "</div>";
+      } else if (!open) {
         var opens = Schedule.ordersOpen();
         closedEl.innerHTML =
           '<div class="panel center">' +

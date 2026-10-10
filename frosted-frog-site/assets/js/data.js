@@ -43,11 +43,20 @@ const SHOP_CONFIG = {
     // Leave false. Set to true only while you're previewing the site, it
     // keeps ordering open on days it would normally be closed, for everyone
     // who can find the site and not just for you.
-    //
-    // TEMPORARILY TRUE for a live checkout test. Set it back to false when
-    // the test is done: the domain is live now, so this is open to anyone
-    // who finds the site, not only to whoever is testing.
-    previewAnyDay: true,
+    previewAnyDay: false,
+
+    /* ORDERS PAUSED ---------------------------------------------------------
+       true closes the shop completely: no orders on any day, whatever the
+       schedule above says, and whatever previewAnyDay is set to. The menu
+       stays readable and the cart still works, so somebody can look and come
+       back, they simply cannot pay.
+
+       Set it to false to go live on the normal Monday-to-Wednesday rhythm.
+       pausedMessage is what customers read in the meantime; keep it honest
+       about whether orders are coming back.
+    --------------------------------------------------------------------- */
+    ordersPaused: true,
+    pausedMessage: "We're not taking orders just yet. The menu is here to look at, and ordering opens soon.",
   },
 
   /* Pickup only. Everything is collected at one of the two windows above.

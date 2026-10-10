@@ -20,6 +20,14 @@ const ok = (name, cond, extra = "") => {
   console.log(`${cond ? "PASS" : "FAIL"}  ${name}${extra ? "  " + extra : ""}`);
 };
 
+/* What the site actually ships with, before the suite forces it open. The
+   pause switch gets its own section below; every other test here is about
+   pricing and would otherwise fail for the uninteresting reason that the
+   shop is shut. SHOP_CONFIG is the same object order.js reads, so setting
+   it here reaches the code under test. */
+const SHIPPED_PAUSED = SHOP_CONFIG.schedule.ordersPaused === true;
+SHOP_CONFIG.schedule.ordersPaused = false;
+
 /* A Monday inside the order window, so the schedule check passes. */
 const monday = new Date();
 monday.setHours(12, 0, 0, 0);
@@ -377,6 +385,34 @@ ok("a frosting that is not offered is refused",
 
 /* Nothing on a live menu should quote a customer who does not exist. */
 ok("no invented testimonials are published", TESTIMONIALS.length === 0);
+
+/* 19. The shop can be closed outright, not only outside its hours. Driven
+   both ways here, so this holds whether the shop ships open or shut. */
+SHOP_CONFIG.schedule.ordersPaused = true;
+
+ok("a paused shop is closed even on a Monday", !Schedule.isOrderingOpen(monday, SHOP_CONFIG));
+const refused = priceOrder(baseOrder(), monday);
+ok("a paused shop refuses a Monday order", !!refused.error, refused.error);
+ok("the customer is told why, in the words from the config",
+   refused.error === SHOP_CONFIG.schedule.pausedMessage);
+ok("the refusal is a 409, not a crash", refused.status === 409);
+
+/* A preview flag left switched on must not quietly reopen a closed shop. */
+SHOP_CONFIG.schedule.previewAnyDay = true;
+ok("previewAnyDay cannot reopen a paused shop", !Schedule.isOrderingOpen(monday, SHOP_CONFIG));
+SHOP_CONFIG.schedule.previewAnyDay = false;
+
+/* Closed is not broken: the menu is still there to read. */
+ok("the menu is still readable while paused", PRODUCTS.length > 0, `${PRODUCTS.length} items`);
+
+SHOP_CONFIG.schedule.ordersPaused = false;
+ok("unpausing opens the shop again", Schedule.isOrderingOpen(monday, SHOP_CONFIG));
+ok("and a Monday order is accepted", !priceOrder(baseOrder(), monday).error);
+
+/* Finally, say out loud which way the site is shipping. */
+SHOP_CONFIG.schedule.ordersPaused = SHIPPED_PAUSED;
+ok(SHIPPED_PAUSED ? "SHIPPING CLOSED: ordersPaused is true" : "shipping open for orders", true,
+   SHIPPED_PAUSED ? "set schedule.ordersPaused to false to open the shop" : "");
 
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);

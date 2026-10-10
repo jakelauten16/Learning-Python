@@ -66,7 +66,12 @@ export function priceOrder(body, now = new Date()) {
   if (items.length > MAX_LINES) return { error: "That is more lines than we can take in one order" };
 
   if (!Schedule.isOrderingOpen(now, SHOP_CONFIG)) {
-    return { error: "Ordering is closed. The order book opens again Monday.", status: 409 };
+    return {
+      error: SHOP_CONFIG.schedule.ordersPaused
+        ? (SHOP_CONFIG.schedule.pausedMessage || "We are not taking orders at the moment.")
+        : "Ordering is closed. The order book opens again Monday.",
+      status: 409,
+    };
   }
   if (!body?.date || !body?.window) return { error: "Choose a pickup day and time" };
   if (!Schedule.isValidPickup(body.date, body.window, now, SHOP_CONFIG)) {

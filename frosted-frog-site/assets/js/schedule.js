@@ -71,6 +71,9 @@
   function isOrderingOpen(now, config) {
     var s = cfg(config);
     now = now || new Date();
+    /* Checked before previewAnyDay, so a paused shop cannot be reopened by a
+       preview flag somebody forgot to turn off. */
+    if (s.ordersPaused) return false;
     if (s.previewAnyDay) return true;
     if (s.orderDays.indexOf(now.getDay()) === -1) return false;
     var m = minutesInto(now);

@@ -94,7 +94,11 @@ ok("checkout returns a Stripe url", res.status === 200 && json.url.startsWith("h
 ok("secret key never leaves the server", !JSON.stringify(json).includes("sk_test"));
 const amount = Number(sentToStripe.body.get("line_items[0][price_data][unit_amount]"));
 ok("unit amount sent in cents from the catalog", amount === Math.round((product.price + design.price) * 100), `got ${amount}`);
-ok("tax is its own line", [...sentToStripe.body.values()].includes("Sales tax"));
+/* Tax is a separate line when a rate is set, and absent when it is not, so
+   the customer is never charged a cent the page did not show them. */
+const taxLine = [...sentToStripe.body.values()].includes("Sales tax");
+ok(SHOP_CONFIG.taxRate ? "tax is its own line" : "no tax line when no tax is charged",
+   taxLine === Boolean(SHOP_CONFIG.taxRate), `taxRate=${SHOP_CONFIG.taxRate}`);
 ok("success url points at thank-you", sentToStripe.body.get("success_url").includes("/thank-you.html?session_id="));
 
 /* A tampered request through the real endpoint still charges full price. */

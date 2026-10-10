@@ -48,7 +48,10 @@ const SHOP_CONFIG = {
   // Local delivery (set enabled:false to hide the option entirely).
   delivery: { enabled: true, fee: 12, radiusMiles: 15, minimum: 45 },
 
-  taxRate: 0.07, // 0.07 = 7%. Set to 0 if you don't collect sales tax.
+  /* No sales tax is charged. Some items are exempt, so until the right rate
+     per item is settled, everything is treated as exempt and the price on
+     screen is exactly what the customer pays. 0.07 would be 7%. */
+  taxRate: 0,
 
   /* HOW ORDERS REACH YOU -----------------------------------------------------
      No card is taken on the site. An order is a request: it lands in your
@@ -73,7 +76,7 @@ const SHOP_CONFIG = {
                  is placed. Needs the Cloudflare function in functions/api and
                  your Stripe keys set as environment variables. See README.
   --------------------------------------------------------------------------- */
-  paymentMode: "deposit",
+  paymentMode: "stripe",
 
   // Where the browser asks the server to build a Stripe Checkout session.
   // Server-side code is the only thing that ever sees a price.

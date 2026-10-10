@@ -8,4 +8,4 @@ Disallow: /review
 Disallow: /thank-you
 Disallow: /api/
 
-Sitemap: https://thefrostedfrogbakery.com/sitemap.xml
+Sitemap: https://www.thefrostedfrogbakery.com/sitemap.xml

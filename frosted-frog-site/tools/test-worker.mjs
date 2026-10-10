@@ -119,7 +119,7 @@ ok("/api/checkout still refuses without a key", r.status === 503);
    Every page says which URL is the real one, so the workers.dev address and
    the custom domain are not indexed as two competing copies of the shop. */
 import { readFileSync as rfSeo } from "node:fs";
-const SEO_SITE = "https://thefrostedfrogbakery.com";
+const SEO_SITE = "https://www.thefrostedfrogbakery.com";
 const seoPages = readdirSync(SITE).filter((f) => f.endsWith(".html"));
 const PRIVATE = ["basket.html", "review.html", "thank-you.html", "404.html"];
 
@@ -138,6 +138,17 @@ ok("the basket, review, thank-you and 404 pages are noindex", leaky.length === 0
 const indexable = seoPages.filter((f) => !PRIVATE.includes(f));
 const wronglyHidden = indexable.filter((f) => /content="noindex/.test(rfSeo(join(SITE, f), "utf8")));
 ok("the pages that should rank are not hidden", wronglyHidden.length === 0, wronglyHidden.join(", "));
+
+/* The canonical host must be one that actually resolves. Pointing every page
+   at a hostname with no DNS record tells Google the real site is somewhere
+   that does not exist, which is worse than saying nothing at all. */
+const hosts = new Set(seoPages.map((f) => {
+  const m = rfSeo(join(SITE, f), "utf8").match(/rel="canonical" href="https?:\/\/([^/"]+)/);
+  return m && m[1];
+}).filter(Boolean));
+ok("all canonicals agree on one host", hosts.size === 1, [...hosts].join(", "));
+ok("that host is the one that serves the site",
+   hosts.has("www.thefrostedfrogbakery.com"), [...hosts].join(", "));
 
 const sitemap = rfSeo(join(SITE, "sitemap.xml"), "utf8");
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);

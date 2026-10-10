@@ -272,6 +272,13 @@ for (const key of ["reference", "pickup_date", "pickup_time", "customer_name", "
      sentToStripe.body.get(`payment_intent_data[metadata][${key}]`) === sentToStripe.body.get(`metadata[${key}]`));
 }
 
+/* The description is the one line a customer reads on their bank statement
+   and on Stripe's receipt, so it has to say when to collect, not just a
+   reference that means nothing outside the bakery. */
+const desc = sentToStripe.body.get("payment_intent_data[description]");
+ok("the description names the bakery", /Frosted Frog/.test(desc), desc);
+ok("the description carries the pickup", desc.includes(slot.date) && desc.includes(slot.slots[0]));
+
 /* The customer never sees Stripe's own error text; it is written for a
    developer and can quote the request back. */
 globalThis.fetch = async () => new Response(

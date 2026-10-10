@@ -131,8 +131,11 @@ export async function onRequestPost({ request, env }) {
            the webhook reads, but the Payments list in the dashboard shows
            the payment, not the session, so without this a baker looking up
            an order sees an amount and nothing about what to bake. */
+        /* The description is what a customer sees on their card statement and
+           on Stripe's receipt, so it carries the pickup rather than just a
+           reference number that means nothing to them. */
         payment_intent_data: {
-          description: `The Frosted Frog order ${reference}`,
+          description: `The Frosted Frog order ${reference} / pickup ${order.date} ${order.window}`,
           metadata,
         },
         metadata,

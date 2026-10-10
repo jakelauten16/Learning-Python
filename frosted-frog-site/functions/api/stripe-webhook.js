@@ -141,6 +141,8 @@ export async function onRequestPost({ request, env }) {
 
   const result = await notifyBaker(env.ORDER_ENDPOINT || SHOP_CONFIG.orderEndpoint, {
     _subject: `PAID order ${reference} / ${meta.pickup_date || ""} / ${meta.customer_name || ""}`,
+    /* So Reply goes to the customer, not into the void. */
+    _replyto: customerEmail,
     status: "PAID",
     reference,
     paid: `$${paidAmount}`,

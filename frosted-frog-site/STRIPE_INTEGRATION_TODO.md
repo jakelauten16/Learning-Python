@@ -85,7 +85,7 @@ and Secrets → Add**, applied to **Production**:
 | `STRIPE_SECRET_KEY` | Secret | A restricted key, `rk_test_...` while testing, `rk_live_...` when live |
 | `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_...`, from the webhook endpoint you create |
 | `SITE_URL` | Plain text | Only once a custom domain is attached. The Worker otherwise uses the domain the request arrived on, which is correct on `workers.dev`. |
-| `ORDER_ENDPOINT` | Plain text | Optional. Your Formspree URL, if you would rather not keep it in `data.js` |
+| `ORDER_ENDPOINT` | Plain text | Optional. Overrides the Formspree URL in `data.js`, which is already set. Use it to send orders somewhere else without a deploy. |
 | `TEST_CHECKOUT_TOKEN` | Secret | Temporary. A password you invent, which switches on the admin-only test checkout. Delete it to switch the test checkout off. |
 
 There is no `.env` file and no publishable key. The site is static files, so

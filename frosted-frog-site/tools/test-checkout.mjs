@@ -1,4 +1,5 @@
 /* Exercises the server code with Stripe stubbed out. */
+import { readFileSync } from "node:fs";
 import { createHmac } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -192,6 +193,29 @@ ok("Stripe being unwell is still 502", res.status === 502);
 
 res = await sessionLookup({ request: look("not-a-session-id"), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
 ok("a malformed id never reaches Stripe", res.status === 400);
+
+/* 16. The order actually has somewhere to go, and the browser is allowed to
+   send it there. connect-src governs fetch(); without it the CSP falls back
+   to default-src 'self' and every order dies in the browser. */
+const headers = readFileSync(SITE + "/_headers", "utf8");
+const csp = (headers.match(/Content-Security-Policy: (.+)/) || [])[1] || "";
+const connectSrc = (csp.match(/connect-src ([^;]+)/) || [])[1] || "";
+
+ok("an order endpoint is configured", /^https:\/\/formspree\.io\/f\/\w+$/.test(SHOP_CONFIG.orderEndpoint), SHOP_CONFIG.orderEndpoint);
+ok("the CSP sets connect-src at all", connectSrc !== "");
+ok("the browser may reach Formspree", connectSrc.includes("https://formspree.io"));
+ok("the order endpoint's host is one the CSP allows",
+   connectSrc.includes(new URL(SHOP_CONFIG.orderEndpoint).origin));
+ok("the CSP still refuses everything else by default", /default-src 'self'/.test(csp));
+
+/* The paid-order email replies to the customer, not to nobody. */
+emailed = null;
+globalThis.fetch = async (url, init) => {
+  emailed = { url, body: JSON.parse(init.body) };
+  return new Response("{}", { status: 200, headers: { "Content-Type": "application/json" } });
+};
+res = await webhook({ request: hook(payload, sign(payload)), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
+ok("the paid email replies to the customer", emailed?.body._replyto === "jamie@example.com");
 
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);

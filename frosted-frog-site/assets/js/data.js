@@ -64,7 +64,7 @@ const SHOP_CONFIG = {
      app with the whole order filled in, addressed to you. That works, but it
      relies on them pressing send, Formspree is the better of the two.
   --------------------------------------------------------------------------- */
-  orderEndpoint: "",
+  orderEndpoint: "https://formspree.io/f/meaekzlq",
 
   /* PAYMENT MODE -------------------------------------------------------------
      "deposit" - the order is a request. It reaches you by Formspree or email,

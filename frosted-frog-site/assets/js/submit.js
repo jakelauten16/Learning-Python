@@ -60,6 +60,8 @@
   function formPayload(d) {
     return {
       _subject: "Pre-order, " + d.customer.name + ", " + (d.pretty || d.date),
+      /* Formspree reads _replyto, so hitting Reply answers the customer. */
+      _replyto: d.customer.email,
       name: d.customer.name,
       email: d.customer.email,
       phone: d.customer.phone,

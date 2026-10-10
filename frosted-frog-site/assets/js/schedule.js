@@ -103,7 +103,7 @@
     return addDays(monday, (pickup.day + 6) % 7);
   }
 
-  /* Every slot start inside a window: 3:00, 3:30, … up to one slot before close. */
+  /* Every slot start inside a window: 12:00, 12:30, … up to one slot before close. */
   function slotsFor(pickup, config) {
     var s = cfg(config);
     if (!s.slotMinutes) return [];

@@ -68,6 +68,12 @@ export function priceOrder(body, now = new Date()) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: "That email address does not look right" };
   if (!phone) return { error: "We need a phone number in case we have a question" };
 
+  /* Say so rather than quietly turning a delivery into a pickup. Someone who
+     asked to have it delivered should be told it is collection only, not
+     find out when nothing arrives. */
+  if (body.fulfillment === "delivery" && !SHOP_CONFIG.delivery.enabled) {
+    return { error: "Everything is collected in person at one of the two pickup windows." };
+  }
   const delivery = body.fulfillment === "delivery" && SHOP_CONFIG.delivery.enabled;
   const address = String(customer.address || "").trim().slice(0, 300);
   if (delivery && !address) return { error: "We need an address to deliver to" };

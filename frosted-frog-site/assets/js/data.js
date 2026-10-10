@@ -32,8 +32,8 @@ const SHOP_CONFIG = {
 
     // The pickup windows for the week that's just been ordered.
     pickups: [
-      { day: 5, label: "Friday",   start: "15:00", end: "19:00" },
-      { day: 6, label: "Saturday", start: "10:00", end: "19:00" },
+      { day: 5, label: "Friday",   start: "12:00", end: "19:00" },
+      { day: 6, label: "Saturday", start: "08:00", end: "19:00" },
     ],
 
     // Customers choose a time inside the window, in increments of this many
@@ -49,8 +49,11 @@ const SHOP_CONFIG = {
     previewAnyDay: true,
   },
 
-  // Local delivery (set enabled:false to hide the option entirely).
-  delivery: { enabled: true, fee: 12, radiusMiles: 15, minimum: 45 },
+  /* Pickup only. Everything is collected at one of the two windows above.
+     Setting enabled back to true would restore the delivery option, the fee
+     line and the address field everywhere they appear; the fee and radius
+     below are kept so that switch stays a one-word change. */
+  delivery: { enabled: false, fee: 12, radiusMiles: 15, minimum: 45 },
 
   /* No sales tax is charged. Some items are exempt, so until the right rate
      per item is settled, everything is treated as exempt and the price on

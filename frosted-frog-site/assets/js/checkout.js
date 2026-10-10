@@ -127,7 +127,25 @@
     var statusEl = $("[data-status]");
     var method = "pickup";
 
-    /* --- fulfillment options --- */
+    /* --- fulfillment options ---
+       With delivery off there is only pickup, and a chooser offering one
+       choice is just a step to click past. Hide the whole panel and let the
+       page get on with asking which pickup window they want. */
+    if (methodRow && !SHOP_CONFIG.delivery.enabled) {
+      var methodPanel = methodRow.closest(".panel");
+      if (methodPanel) methodPanel.hidden = true;
+      methodRow = null;
+
+      /* The steps are numbered in the markup. Dropping one would otherwise
+         leave the customer reading 2, 3 with no 1. */
+      var step = 0;
+      Array.prototype.forEach.call(form.querySelectorAll(".panel"), function (panel) {
+        if (panel.hidden) return;
+        var num = panel.querySelector("h3 .num");
+        if (num) num.textContent = String(++step);
+      });
+    }
+
     if (methodRow) {
       var methods = ['<button type="button" class="choice is-active" data-set-method="pickup">Pickup</button>'];
       if (SHOP_CONFIG.delivery.enabled) {

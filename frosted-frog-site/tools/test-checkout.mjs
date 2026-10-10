@@ -94,10 +94,17 @@ if (SHOP_CONFIG.schedule.previewAnyDay) {
   ok("closed window refused", priceOrder(baseOrder(), thursday).status === 409);
 }
 
-/* 7. Delivery minimum and fee. */
+/* 7. Delivery, whichever way the switch is set. The shop is pickup only, so
+   these follow SHOP_CONFIG rather than assuming: turning delivery back on
+   re-arms the fee and address checks without anyone editing this file. */
 const delivery = priceOrder(baseOrder({ fulfillment: "delivery", customer: { ...baseOrder().customer, address: "12 Willow Lane" } }), monday);
-ok("delivery fee added once", delivery.totals?.delivery === SHOP_CONFIG.delivery.fee);
-ok("delivery needs an address", !!priceOrder(baseOrder({ fulfillment: "delivery" }), monday).error);
+if (SHOP_CONFIG.delivery.enabled) {
+  ok("delivery fee added once", delivery.totals?.delivery === SHOP_CONFIG.delivery.fee);
+  ok("delivery needs an address", !!priceOrder(baseOrder({ fulfillment: "delivery" }), monday).error);
+} else {
+  ok("delivery is refused while the shop is pickup only", !!delivery.error, delivery.error);
+  ok("no address is ever asked for", !/address/i.test(delivery.error || ""));
+}
 
 /* 8. The whole endpoint, with Stripe stubbed. */
 let sentToStripe = null;
@@ -252,6 +259,33 @@ globalThis.fetch = async (url, init) => {
 };
 res = await webhook({ request: hook(payload, sign(payload)), env: { STRIPE_WEBHOOK_SECRET: secret, ORDER_ENDPOINT: "https://formspree.io/f/test" } });
 ok("the paid email replies to the customer", emailed?.body._replyto === "jamie@example.com");
+
+/* 17. Pickup only, at the two advertised windows. */
+ok("delivery is switched off", SHOP_CONFIG.delivery.enabled === false);
+
+const fri = SHOP_CONFIG.schedule.pickups.find((p) => p.day === 5);
+const sat = SHOP_CONFIG.schedule.pickups.find((p) => p.day === 6);
+ok("Friday runs noon to 7", fri.start === "12:00" && fri.end === "19:00", `${fri.start}-${fri.end}`);
+ok("Saturday runs 8 to 7", sat.start === "08:00" && sat.end === "19:00", `${sat.start}-${sat.end}`);
+ok("there are only those two windows", SHOP_CONFIG.schedule.pickups.length === 2);
+
+/* A delivery request is refused outright, not quietly made a pickup: someone
+   expecting it brought to them should be told it is collection only. */
+const asksDelivery = priceOrder(baseOrder({ fulfillment: "delivery", customer: { ...baseOrder().customer, address: "1 Any Street" } }), monday);
+ok("a delivery request is refused", !!asksDelivery.error, asksDelivery.error);
+ok("and no delivery fee can ever be charged",
+   !priceOrder(baseOrder(), monday).error && priceOrder(baseOrder(), monday).totals.delivery === 0);
+
+/* The earliest slot on each day has to be bookable, or the window is a lie. */
+const slots = Schedule.pickupOptions(monday, SHOP_CONFIG);
+const friSlots = slots.find((o) => o.label === "Friday");
+const satSlots = slots.find((o) => o.label === "Saturday");
+ok("Friday opens at noon", friSlots.slots[0] === "12:00 PM", friSlots.slots[0]);
+ok("Saturday opens at 8", satSlots.slots[0] === "8:00 AM", satSlots.slots[0]);
+ok("the earliest Friday slot is accepted",
+   !priceOrder(baseOrder({ date: friSlots.date, window: friSlots.slots[0] }), monday).error);
+ok("the earliest Saturday slot is accepted",
+   !priceOrder(baseOrder({ date: satSlots.date, window: satSlots.slots[0] }), monday).error);
 
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);

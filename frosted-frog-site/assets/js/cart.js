@@ -10,10 +10,39 @@
     try {
       var raw = window.localStorage.getItem(KEY);
       var items = raw ? JSON.parse(raw) : [];
-      return Array.isArray(items) ? items : [];
+      return Array.isArray(items) ? reconcile(items) : [];
     } catch (e) {
       return [];
     }
+  }
+
+  /* A cart outlives the menu. It sits in localStorage for weeks, so a line
+     saved before a price change, a renaming, or a change to how an item is
+     sold would otherwise keep showing yesterday's figures. Every read checks
+     each line against the catalog as it stands now. The server settles the
+     real price either way; this is so the customer is never quoted one
+     number and charged another. */
+  function reconcile(items) {
+    return items.map(function (i) {
+      var p = product(i.id);
+      if (!p) return i;
+      var extra = Object.keys(i.options || {}).reduce(function (sum, k) {
+        var picked = (p.options || []).reduce(function (found, group) {
+          return found || (group.choices || []).filter(function (c) {
+            return c.name === i.options[k].name;
+          })[0];
+        }, null);
+        return sum + (picked ? picked.price || 0 : i.options[k].price || 0);
+      }, 0);
+      var min = p.min || 1;
+      i.name = p.name;
+      i.image = p.image;
+      i.unit = p.unit || "";
+      i.price = p.price + extra;
+      i.min = min;
+      i.qty = Math.max(Math.round(i.qty / min) * min, min);
+      return i;
+    });
   }
 
   function write(items) {

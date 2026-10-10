@@ -65,7 +65,20 @@ ok("unknown product refused", !!priceOrder(baseOrder({ items: [{ id: "free-cake"
 
 /* 5. Quantity games refused. */
 ok("negative quantity refused", !!priceOrder(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: -5 }] }), monday).error);
-ok("below minimum refused", !!priceOrder(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: 1 }] }), monday).error);
+/* Everything on the menu is priced by the package now, so one is a valid
+   order: one dozen, one half dozen, one cake. The minimum rule still exists
+   for any product that sets one, and this follows the catalog rather than
+   assuming a particular item does. */
+ok("one of a package-priced item is accepted",
+   !priceOrder(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: 1 }] }), monday).error);
+
+const withMin = PRODUCTS.find((p) => (p.min || 1) > 1);
+if (withMin) {
+  ok(`below minimum refused on ${withMin.id}`,
+     !!priceOrder(baseOrder({ items: [{ id: withMin.id, qty: 1 }] }), monday).error);
+} else {
+  ok("nothing on the menu sets a minimum, so none can be undercut", true);
+}
 
 /* 6. Schedule still enforced on the server. */
 ok("bogus pickup slot refused", !!priceOrder(baseOrder({ window: "2:00 AM" }), monday).error);

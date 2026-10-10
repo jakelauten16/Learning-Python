@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# Nothing here for a search engine: a basket belongs to one person, the
+# review and thank-you pages are mid-transaction, and the API is not a page.
+Disallow: /basket
+Disallow: /review
+Disallow: /thank-you
+Disallow: /api/
+
 Sitemap: https://thefrostedfrogbakery.com/sitemap.xml

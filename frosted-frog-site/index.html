@@ -8,7 +8,9 @@
 <meta property="og:title" content="The Frosted Frog | Cottage Bakery | Cakes, Cookies &amp; Confections">
 <meta property="og:description" content="Small-batch cakes, cupcakes, cookies, cake pops and brownies, baked to order in a home kitchen. Pre-order online and collect on Friday or Saturday.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="assets/img/og-image.png">
+<link rel="canonical" href="https://thefrostedfrogbakery.com/">
+<meta property="og:url" content="https://thefrostedfrogbakery.com/">
+<meta property="og:image" content="https://thefrostedfrogbakery.com/assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#11211A" media="(prefers-color-scheme: dark)">
@@ -17,8 +19,60 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261010173700">
-<link rel="stylesheet" href="assets/css/site.css?v=20261010173700">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261010175212">
+<link rel="stylesheet" href="assets/css/site.css?v=20261010175212">
+<!-- Tells Google this is a bakery, where to order and when pickup is,
+     rather than leaving it to infer all of that from prose. Add
+     "telephone", "address" and "sameAs" here once the real phone,
+     pickup area and social accounts are settled: they must match the
+     Google Business Profile exactly, so a placeholder is worse than
+     leaving them out. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "The Frosted Frog",
+  "description": "Small-batch cakes, cupcakes, cookies, cake pops and brownies, baked to order in a home kitchen. Pre-order online and collect on Friday or Saturday.",
+  "url": "https://thefrostedfrogbakery.com/",
+  "logo": "https://thefrostedfrogbakery.com/assets/img/frosted-frog-logo.webp",
+  "image": "https://thefrostedfrogbakery.com/assets/img/og-image.png",
+  "priceRange": "$$",
+  "currenciesAccepted": "USD",
+  "paymentAccepted": "Credit Card, Debit Card",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Friday"
+      ],
+      "opens": "12:00",
+      "closes": "19:00",
+      "description": "Order pickup"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Saturday"
+      ],
+      "opens": "08:00",
+      "closes": "19:00",
+      "description": "Order pickup"
+    }
+  ],
+  "potentialAction": {
+    "@type": "OrderAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://thefrostedfrogbakery.com/order",
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform"
+      ]
+    },
+    "deliveryMethod": "http://purl.org/goodrelations/v1#PickUpOnly"
+  }
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -189,10 +243,10 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/data.js?v=20261010173700"></script>
-<script src="assets/js/schedule.js?v=20261010173700"></script>
-<script src="assets/js/cart.js?v=20261010173700"></script>
-<script src="assets/js/site.js?v=20261010173700"></script>
-<script src="assets/js/catalog.js?v=20261010173700"></script>
+<script src="assets/js/data.js?v=20261010175212"></script>
+<script src="assets/js/schedule.js?v=20261010175212"></script>
+<script src="assets/js/cart.js?v=20261010175212"></script>
+<script src="assets/js/site.js?v=20261010175212"></script>
+<script src="assets/js/catalog.js?v=20261010175212"></script>
 </body>
 </html>

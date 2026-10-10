@@ -115,6 +115,51 @@ ok("it goes to Stripe and nowhere else", sent?.url === "https://api.stripe.com/v
 r = await hit("/api/checkout", "POST", JSON.stringify({ items: [{ id: "cookie-weekly", qty: 12 }] }));
 ok("/api/checkout still refuses without a key", r.status === 503);
 
+/* --- findable on the web --------------------------------------------------
+   Every page says which URL is the real one, so the workers.dev address and
+   the custom domain are not indexed as two competing copies of the shop. */
+import { readFileSync as rfSeo } from "node:fs";
+const SEO_SITE = "https://thefrostedfrogbakery.com";
+const seoPages = readdirSync(SITE).filter((f) => f.endsWith(".html"));
+const PRIVATE = ["basket.html", "review.html", "thank-you.html", "404.html"];
+
+const noCanon = seoPages.filter((f) => !/rel="canonical"/.test(rfSeo(join(SITE, f), "utf8")));
+ok("every page declares a canonical URL", noCanon.length === 0, noCanon.join(", "));
+
+const relCanon = seoPages.filter((f) => {
+  const m = rfSeo(join(SITE, f), "utf8").match(/rel="canonical" href="([^"]+)"/);
+  return !m || !m[1].startsWith(SEO_SITE);
+});
+ok("every canonical points at the real domain", relCanon.length === 0, relCanon.join(", "));
+
+const leaky = PRIVATE.filter((f) => !/name="robots" content="noindex/.test(rfSeo(join(SITE, f), "utf8")));
+ok("the basket, review, thank-you and 404 pages are noindex", leaky.length === 0, leaky.join(", "));
+
+const indexable = seoPages.filter((f) => !PRIVATE.includes(f));
+const wronglyHidden = indexable.filter((f) => /content="noindex/.test(rfSeo(join(SITE, f), "utf8")));
+ok("the pages that should rank are not hidden", wronglyHidden.length === 0, wronglyHidden.join(", "));
+
+const sitemap = rfSeo(join(SITE, "sitemap.xml"), "utf8");
+const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+ok("the sitemap lists the public pages", locs.length === 4, locs.length + " urls");
+ok("the sitemap has no .html redirects in it", !locs.some((u) => u.endsWith(".html")));
+ok("the sitemap excludes the private pages",
+   !locs.some((u) => /basket|review|thank-you/.test(u)));
+
+const robots = rfSeo(join(SITE, "robots.txt"), "utf8");
+ok("robots.txt points at the sitemap", robots.includes(`${SEO_SITE}/sitemap.xml`));
+ok("robots.txt keeps crawlers out of the API", /Disallow: \/api\//.test(robots));
+
+const home = rfSeo(join(SITE, "index.html"), "utf8");
+const ld = home.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+ok("the home page carries structured data", !!ld);
+const parsed = ld ? JSON.parse(ld[1]) : {};
+ok("it identifies the business as a bakery", parsed["@type"] === "Bakery");
+ok("its pickup hours match the shop's", parsed.openingHoursSpecification?.length === 2);
+/* A placeholder here would contradict the Google Business Profile. */
+ok("no invented phone or address is published",
+   !("telephone" in parsed) && !("address" in parsed));
+
 /* --- cache busting ---------------------------------------------------------
    The script filenames never change, so a browser holding a copy from before
    a menu change will keep using it. Every reference carries a version, and

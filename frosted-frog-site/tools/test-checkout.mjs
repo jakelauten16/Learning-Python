@@ -115,6 +115,16 @@ sentToStripe = null;
 await checkout({ request: req(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: 12, unit_amount: 1, price: 0.01, options: { Design: "Detailed, florals, lettering" } }] })), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
 ok("endpoint ignores a tampered price", Number(sentToStripe.body.get("line_items[0][price_data][unit_amount]")) === Math.round((product.price + design.price) * 100));
 
+/* Stripe rejects the entire session if saved_payment_method_options is sent
+   without a customer, so sending it would break every checkout. This caught
+   nothing until a live payment was attempted; it will now. */
+const sentKeys = [...sentToStripe.body.keys()];
+const needsCustomer = sentKeys.filter((k) => k.startsWith("saved_payment_method_options"));
+ok("no parameter is sent that would require a Stripe Customer",
+   needsCustomer.length === 0, needsCustomer.join(", "));
+ok("and no customer is being created, so that stays true",
+   !sentKeys.includes("customer") && !sentKeys.includes("customer_creation"));
+
 /* 9. Missing key fails closed. */
 res = await checkout({ request: req(baseOrder()), env: {} });
 ok("no key means no checkout", res.status === 503);

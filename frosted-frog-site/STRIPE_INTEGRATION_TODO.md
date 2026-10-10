@@ -42,7 +42,6 @@ rather than editing them here, or the two will drift apart.
 | allow_promotion_codes | false |
 | submit_type | pay |
 | name_collection | individual and business, both enabled and optional |
-| saved_payment_method_options | payment_method_save: enabled |
 | integration_identifier | hosted_web_0001 |
 | origin_context | web |
 
@@ -65,13 +64,21 @@ them would break the orders rather than tidy them:
 If you do want any of these gone, say so and they can be removed, but the
 webhook needs rewriting at the same time.
 
-**One parameter to watch on the first test.**
-`saved_payment_method_options: { payment_method_save: "enabled" }` offers to
-save a customer's card for next time. Stripe normally needs a Customer record
-on the session for that. If your first test order comes back with an error
-mentioning a customer, that is the cause, and the fix is to add
-`customer_creation: "always"` to the same call. It could not be verified from
-here without a live key.
+**saved_payment_method_options was removed, 2026-10-10.** It offered to save
+a customer's card for next time, and Stripe refuses the entire session when
+it is sent without a Customer record:
+
+> `saved_payment_method_options` requires a customer.
+
+So `/api/checkout` could never create a session. The temporary test checkout
+worked only because it never sent that parameter. Found by attempting a real
+payment on the live site; no amount of code reading had caught it.
+
+The alternative fix was `customer_creation: "always"`, which makes a Stripe
+Customer for every order. Removing the parameter was chosen instead: a
+pre-order bakery has no need for stored cards, and not creating Customer
+records is one less pile of personal data to look after. Two tests now
+assert that no parameter requiring a Customer is sent.
 
 ## Setup
 

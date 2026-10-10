@@ -90,7 +90,11 @@ export async function onRequestPost({ request, env }) {
           individual: { enabled: true, optional: true },
           business: { enabled: true, optional: true },
         },
-        saved_payment_method_options: { payment_method_save: "enabled" },
+        /* saved_payment_method_options is deliberately absent. Offering to
+           save a card requires a Stripe Customer, and Stripe rejects the
+           whole session without one. A bakery pre-order does not need
+           stored cards, and not creating Customer records means one less
+           pile of personal data to look after. */
         integration_identifier: "hosted_web_0001",
         origin_context: "web",
 

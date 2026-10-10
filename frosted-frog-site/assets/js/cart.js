@@ -230,7 +230,7 @@
     foot.innerHTML =
       '<div class="totals"><div><span>Subtotal</span><span>' + money(Cart.subtotal()) + "</span></div>" +
       '<div><span>Pickup details</span><span>at checkout</span></div></div>' +
-      '<a class="btn btn--block" href="' + window.pageHref("order.html") + '" style="margin-top:1rem">Review &amp; pre-order</a>';
+      '<a class="btn btn--block" href="' + window.pageHref("basket.html") + '" style="margin-top:1rem">Review &amp; pay</a>';
   }
 
   function openDrawer() {

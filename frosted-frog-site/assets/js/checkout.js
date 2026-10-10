@@ -1,6 +1,7 @@
-/* Order page: review the cart, choose pickup or delivery, pick one of the
-   week's two pickup windows, and send the order. Nothing is charged here ,
-   the order goes to Formspree, or to the customer's own email app. */
+/* The basket page: review the cart, choose pickup or delivery, pick one of
+   the week's two pickup windows, and pay. The browser sends ids and
+   quantities; the server settles what it costs. In deposit mode the same
+   form emails the order instead, and nothing is charged. */
 (function () {
   "use strict";
 
@@ -340,7 +341,24 @@
       try {
         sessionStorage.setItem("frostedfrog.pendingOrder", JSON.stringify(data));
       } catch (e) { /* private mode */ }
-      go("review.html");
+
+      /* The basket is the review: the items, the pickup and the total are all
+         on this page, so there is nowhere left to send someone before they
+         pay. Where OrderSubmit is not loaded, fall back to the separate
+         review page rather than dropping the order on the floor. */
+      if (!window.OrderSubmit) { go("review.html"); return; }
+
+      var button = form.querySelector("[data-submit]");
+      var status = form.querySelector("[data-status]");
+      var label = button ? button.textContent : "";
+      if (button) { button.disabled = true; button.textContent = "Taking you to payment…"; }
+      if (status) status.textContent = "";
+
+      window.OrderSubmit.send(data, function (message, retry, fallback) {
+        if (button) { button.disabled = false; button.textContent = label; }
+        if (status) status.textContent = message;
+        if (fallback) fallback();
+      });
     });
 
   });

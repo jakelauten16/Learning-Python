@@ -10,7 +10,11 @@
 set -eu
 cd "$(dirname "$0")/.."
 
-NEW="$(date -u +%Y%m%d)$(printf '%s' "$(date -u +%H%M)" | cut -c1-2)"
+# Down to the second. An earlier version only went to the hour, so two
+# deploys in one hour produced the same stamp and the second one never
+# reached anybody's browser, which is the exact failure this script exists
+# to prevent.
+NEW="$(date -u +%Y%m%d%H%M%S)"
 OLD="$(grep -ho 'assets/js/data\.js?v=[^"]*' index.html | head -1 | sed 's/.*?v=//')"
 
 [ -n "$OLD" ] || { echo "No version stamp found. Has bump-assets run before?" >&2; exit 1; }

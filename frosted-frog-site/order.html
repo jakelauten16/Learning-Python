@@ -17,8 +17,8 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=2026101017">
-<link rel="stylesheet" href="assets/css/site.css?v=2026101017">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261010172325">
+<link rel="stylesheet" href="assets/css/site.css?v=20261010172325">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -34,6 +34,7 @@
       <li><a href="bakery.html">The Bakery</a></li>
       <li><a href="order.html" aria-current="page">Pre-Order &amp; Menu</a></li>
       <li><a href="faq.html">FAQ &amp; Policies</a></li>
+      <li><a href="basket.html">Basket</a></li>
     </ul>
     <div class="nav__actions">
       <button class="theme-toggle" type="button">Dark</button>
@@ -69,7 +70,7 @@
         <ul class="order-top__lines" data-order-top-lines></ul>
         <div class="order-top__foot">
           <span class="order-top__total" data-order-top-total></span>
-          <a class="btn" href="#checkout" data-order-top-go>Review &amp; pre-order</a>
+          <a class="btn" href="basket.html" data-order-top-go>Review &amp; pay</a>
         </div>
       </div>
     </div>
@@ -133,97 +134,6 @@
       </section>
     </div>
   </section>
-
-  <section class="section section--cream" id="checkout" style="padding-top:3rem">
-    <div class="wrap">
-      <div class="center" style="margin-bottom:2rem">
-        <span class="swirl" data-reveal aria-hidden="true"></span>
-        <h2 data-reveal style="margin-bottom:.2rem">Your order</h2>
-        <p class="lede center" data-reveal style="margin-inline:auto">Check it over, tell us when you're coming, and send it.</p>
-      </div>
-
-      <div data-window-closed hidden style="margin-bottom:2rem"></div>
-      <div data-order-lines style="margin-bottom:2.2rem"></div>
-
-      <form class="checkout" data-order-form novalidate hidden>
-        <div>
-          <div class="panel" data-reveal>
-            <h3><span class="num">1</span> How would you like it?</h3>
-            <div class="choice-row" data-method></div>
-            <div data-delivery-fields hidden>
-              <div class="field">
-                <label for="address">Delivery address</label>
-                <input id="address" name="address" autocomplete="street-address" placeholder="123 Willow Lane, Sugar Hill">
-                <p class="hint">Local delivery within <span data-config="delivery.radiusMiles"></span> miles. Minimum order applies.</p>
-                <p class="error">This one's required.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel" data-reveal>
-            <h3><span class="num">2</span> Which pickup are you coming to?</h3>
-            <p class="hint" style="margin-top:-.4rem">Everything is baked fresh for that week's two pickups. Choose the one that suits you.</p>
-            <div class="field">
-              <span class="legend">Pickup day</span>
-              <div class="choice-row" data-pickup-days></div>
-              <input type="hidden" id="pickup-date" name="date">
-              <p class="error">Pick Friday or Saturday.</p>
-            </div>
-            <div class="field">
-              <label for="pickup-window">Time</label>
-              <select id="pickup-window" name="window" required></select>
-              <p class="error">Pick a time.</p>
-            </div>
-            <div class="field">
-              <label for="occasion">Occasion <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
-              <input id="occasion" name="occasion" placeholder="Ellie's 5th birthday">
-            </div>
-          </div>
-
-          <div class="panel" data-reveal>
-            <h3><span class="num">3</span> Where do we reach you?</h3>
-            <div class="field">
-              <label for="name">Full name</label>
-              <input id="name" name="name" autocomplete="name" required>
-              <p class="error">This one's required.</p>
-            </div>
-            <div class="field--row">
-              <div class="field">
-                <label for="email">Email</label>
-                <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required>
-                <p class="error">Check the email address.</p>
-              </div>
-              <div class="field">
-                <label for="phone">Phone</label>
-                <input id="phone" name="phone" type="tel" autocomplete="tel" required>
-                <p class="error">This one's required.</p>
-              </div>
-            </div>
-            <div class="field">
-              <label for="notes">Anything else we should know?</label>
-              <textarea id="notes" name="notes" placeholder="Allergies, colors, inspiration photos you'll email over…"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <aside class="summary" data-reveal="right">
-          <div class="panel">
-            <h3 style="margin-bottom:1.2rem">Order summary</h3>
-            <div data-order-totals></div>
-            <button class="btn btn--block" type="submit" data-submit style="margin-top:1.4rem">Place pre-order</button>
-            <div data-status aria-live="polite"></div>
-            <div class="ribbit" style="margin-top:1.2rem">
-              <img src="assets/img/frog-baker.svg" alt="" aria-hidden="true" width="240" height="240">
-              <p style="margin:0"><strong>No card needed</strong><span data-config="paymentNote"></span> We take <span data-config="paymentMethods"></span>.</p>
-            </div>
-            <p class="hint" style="margin-top:1rem" data-schedule-summary></p>
-            <p class="hint">Changes are welcome until the order window closes Wednesday night.</p>
-            <p class="note" data-config="cottageNotice"></p>
-          </div>
-        </aside>
-      </form>
-    </div>
-  </section>
 </main>
 <footer class="site-footer">
   <div class="wrap">
@@ -259,11 +169,11 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/data.js?v=2026101017"></script>
-<script src="assets/js/schedule.js?v=2026101017"></script>
-<script src="assets/js/cart.js?v=2026101017"></script>
-<script src="assets/js/site.js?v=2026101017"></script>
-<script src="assets/js/catalog.js?v=2026101017"></script>
-<script src="assets/js/checkout.js?v=2026101017"></script>
+<script src="assets/js/data.js?v=20261010172325"></script>
+<script src="assets/js/schedule.js?v=20261010172325"></script>
+<script src="assets/js/cart.js?v=20261010172325"></script>
+<script src="assets/js/site.js?v=20261010172325"></script>
+<script src="assets/js/catalog.js?v=20261010172325"></script>
+<script src="assets/js/checkout.js?v=20261010172325"></script>
 </body>
 </html>

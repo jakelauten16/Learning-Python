@@ -133,6 +133,23 @@ for (const page of pages) {
 
 ok("every page was scanned", pages.length >= 6, `${pages.length} pages, ${refs.length} refs`);
 
+/* The basket is where the money changes hands, so the pages that lead to it
+   have to actually reach it, and it has to load what it needs to pay. */
+const basket = rf(join(SITE, "basket.html"), "utf8");
+ok("the basket page exists and holds the order form", /data-order-form/.test(basket));
+ok("the basket loads submit.js, so it can reach Stripe", /js\/submit\.js/.test(basket));
+ok("the basket says it takes payment", /Pay &amp; place order/.test(basket));
+
+const order = rf(join(SITE, "order.html"), "utf8");
+ok("the menu page sends people to the basket", /href="basket\.html"/.test(order));
+ok("the menu page no longer holds a second order form", !/data-order-form/.test(order));
+
+const navless = pages.filter((f) => !/href="basket\.html"/.test(rf(join(SITE, f), "utf8")));
+ok("every page links to the basket", navless.length === 0, navless.join(", "));
+
+const dangling = pages.filter((f) => /order\.html#checkout/.test(rf(join(SITE, f), "utf8")));
+ok("nothing still points at the old checkout anchor", dangling.length === 0, dangling.join(", "));
+
 const unversioned = refs.filter((r) => !/\?v=/.test(r.url));
 ok("every script and stylesheet is versioned", unversioned.length === 0,
    unversioned.slice(0, 3).map((r) => `${r.page} -> ${r.url}`).join(" | "));

@@ -48,6 +48,32 @@
   /* --- product modal ----------------------------------------------------- */
   var modalHost;
 
+  /* The product the modal is currently showing, and the options picked on
+     it. Module level because exactly one modal exists. */
+  var current = null;
+
+  /* The line under the price has to describe what the price now buys. With
+     "Dozen" chosen it said "per half dozen" next to the dozen's price, which
+     is the kind of mismatch that makes someone doubt the total. */
+  function unitLabel() {
+    var p = current.product;
+    var groups = p.options || [];
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].label === "Size" && current.selected[i]) {
+        return "per " + current.selected[i].name.toLowerCase();
+      }
+    }
+    return p.unit || "each";
+  }
+
+  function refreshPrice() {
+    if (!current || !modalHost) return;
+    var p = current.product;
+    var extra = current.selected.reduce(function (s, c) { return s + (c.price || 0); }, 0);
+    var el = modalHost.querySelector("[data-modal-price]");
+    if (el) el.innerHTML = money(p.price + extra) + "<small>" + unitLabel() + "</small>";
+  }
+
   function ensureModal() {
     if (modalHost) return modalHost;
     modalHost = document.createElement("div");
@@ -56,6 +82,38 @@
     document.body.appendChild(modalHost);
     modalHost.addEventListener("click", function (e) {
       if (e.target === modalHost || e.target.closest(".modal__close")) closeModal();
+    });
+
+    /* Bound once, on the node that is reused for every product. Binding it
+       inside openModal left one listener behind per open: a second click on
+       "Add to order" then ran every listener still attached, adding the item
+       two or three times, and adding whatever product an earlier listener
+       had closed over. It read as a wrong price in the basket. */
+    modalHost.addEventListener("click", function (e) {
+      if (!current) return;
+
+      var choice = e.target.closest(".choice");
+      if (choice) {
+        var row = choice.parentNode;
+        var gi = parseInt(row.getAttribute("data-group"), 10);
+        var ci = parseInt(choice.getAttribute("data-choice"), 10);
+        Array.prototype.forEach.call(row.children, function (b) { b.classList.remove("is-active"); });
+        choice.classList.add("is-active");
+        current.selected[gi] = current.product.options[gi].choices[ci];
+        refreshPrice();
+        return;
+      }
+
+      if (e.target.closest("[data-add]")) {
+        var p = current.product;
+        var qty = parseInt(modalHost.querySelector("#m-qty").value, 10) || current.min;
+        var note = modalHost.querySelector("#m-note").value.trim();
+        var opts = {};
+        (p.options || []).forEach(function (g, gi2) { opts[g.label] = current.selected[gi2]; });
+        window.Cart.add(p.id, qty, opts, note);
+        closeModal();
+        window.Cart.open();
+      }
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeModal();
@@ -107,49 +165,12 @@
         '<p class="hint" style="margin-top:.8rem">Orders need ' + SHOP_CONFIG.leadTimeDays + " days' notice. You'll choose your pickup day at checkout.</p>" +
       "</div>";
 
-    var selected = (p.options || []).map(function (g) { return g.choices[0]; });
-
-    /* The line under the price has to describe what the price now buys. With
-       "Dozen" chosen it said "per half dozen" next to the dozen's price,
-       which is the kind of mismatch that makes someone doubt the total. */
-    function unitLabel() {
-      var groups = p.options || [];
-      for (var i = 0; i < groups.length; i++) {
-        if (groups[i].label === "Size" && selected[i]) {
-          return "per " + selected[i].name.toLowerCase();
-        }
-      }
-      return p.unit || "each";
-    }
-
-    function refreshPrice() {
-      var extra = selected.reduce(function (s, c) { return s + (c.price || 0); }, 0);
-      host.querySelector("[data-modal-price]").innerHTML =
-        money(p.price + extra) + "<small>" + unitLabel() + "</small>";
-    }
-
-    host.querySelector(".modal").addEventListener("click", function (e) {
-      var choice = e.target.closest(".choice");
-      if (choice) {
-        var row = choice.parentNode;
-        var gi = parseInt(row.getAttribute("data-group"), 10);
-        var ci = parseInt(choice.getAttribute("data-choice"), 10);
-        Array.prototype.forEach.call(row.children, function (b) { b.classList.remove("is-active"); });
-        choice.classList.add("is-active");
-        selected[gi] = p.options[gi].choices[ci];
-        refreshPrice();
-      }
-      var add = e.target.closest("[data-add]");
-      if (add) {
-        var qty = parseInt(host.querySelector("#m-qty").value, 10) || min;
-        var note = host.querySelector("#m-note").value.trim();
-        var opts = {};
-        (p.options || []).forEach(function (g, gi2) { opts[g.label] = selected[gi2]; });
-        window.Cart.add(p.id, qty, opts, note);
-        closeModal();
-        window.Cart.open();
-      }
-    });
+    current = {
+      product: p,
+      min: min,
+      selected: (p.options || []).map(function (g) { return g.choices[0]; }),
+    };
+    refreshPrice();
 
     host.classList.add("is-open");
     document.body.style.overflow = "hidden";

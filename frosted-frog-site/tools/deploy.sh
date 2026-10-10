@@ -48,6 +48,7 @@ fi
 say "Running the tests..."
 node tools/test-worker.mjs | tail -1
 node tools/test-checkout.mjs | tail -1
+node tools/test-catalog.mjs | tail -1
 
 say "Building, without uploading, to prove it compiles..."
 $WRANGLER deploy --dry-run --outdir .wrangler/dry-run >/dev/null 2>&1 \

@@ -5,7 +5,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "test": "node tools/test-worker.mjs && node tools/test-checkout.mjs",
+    "test": "node tools/test-worker.mjs && node tools/test-checkout.mjs && node tools/test-catalog.mjs",
     "preview": "node tools/build-preview.js"
   },
   "devDependencies": {

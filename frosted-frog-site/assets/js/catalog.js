@@ -209,8 +209,13 @@
       }
     }
 
+    /* No invented reviews. With nothing in TESTIMONIALS the whole section is
+       removed rather than left as an empty frame with a heading over it. */
     var quotes = document.querySelector("[data-testimonials]");
-    if (quotes) {
+    if (quotes && !TESTIMONIALS.length) {
+      var section = quotes.closest("section") || quotes;
+      section.hidden = true;
+    } else if (quotes) {
       quotes.innerHTML = TESTIMONIALS.map(function (t, i) {
         return '<figure class="quote" data-reveal data-delay="' + (i * 130) + '"><p>&ldquo;' + t.quote +
           '&rdquo;</p><cite>' + t.name + (t.context ? '<span>' + t.context + "</span>" : "") + "</cite></figure>";

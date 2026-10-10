@@ -8,7 +8,7 @@
 
 const SHOP_CONFIG = {
   businessName: "The Frosted Frog",
-  tagline: "Small-batch cakes, cookies & confections, baked at home for your table.",
+  tagline: "Small-batch cupcakes, baked at home for your table.",
   email: "hello@thefrostedfrog.com",
   phone: "(555) 555-0142",
   instagram: "https://instagram.com/thefrostedfrog",
@@ -98,11 +98,11 @@ const SHOP_CONFIG = {
 const CATEGORIES = [
   {
     id: "weekly",
-    name: "This Week's Special Cookies",
-    blurb: "A new batch every week. When they're gone, they're gone until they come round again.",
-    image: "assets/img/cookies.svg",
+    name: "Cupcake of the Week",
+    blurb: "One flavour, on the board for this week only. When it's gone it's gone until it comes round again.",
+    image: "assets/img/cupcakes.svg",
     // Update this line each week, it shows at the top of the menu.
-    note: "This week: brown butter pecan, and iced pumpkin spice.",
+    note: "This week: cookies and cream.",
   },
   {
     id: "seasonal",
@@ -111,10 +111,16 @@ const CATEGORIES = [
     image: "assets/img/seasonal.svg",
   },
   {
-    id: "mainstays",
-    name: "The Mainstays",
-    blurb: "On the board every week: cakes, cupcakes, cookies, cake pops and bars.",
-    image: "assets/img/cakes.svg",
+    id: "standard",
+    name: "Standard Cupcakes",
+    blurb: "The everyday four, plus a variety pack when you can't choose. Every one baked to order.",
+    image: "assets/img/cupcakes.svg",
+  },
+  {
+    id: "floral",
+    name: "Floral Cupcakes",
+    blurb: "Piped buttercream flowers, in the colours you choose. Order them as a box, or arranged as a bouquet.",
+    image: "assets/img/cupcakes.svg",
   },
   {
     id: "requests",
@@ -128,7 +134,7 @@ const CATEGORIES = [
    id        unique, lowercase, no spaces
    name      what the customer sees
    group     which menu section it sits in, a CATEGORIES id
-   kind      the little label on the card ("Layer cake", "Cookies"…)
+   kind      the little label on the card ("Cupcakes", "Floral"…)
    price     base price in dollars
    unit      "each", "per dozen", etc., shown next to the price
    min       smallest quantity that can be ordered (default 1)
@@ -139,213 +145,194 @@ const CATEGORIES = [
    available false = shows as "sold out" and can't be added to the cart
 */
 const PRODUCTS = [
-  /* ---- This week's special cookies, the top of the menu ---------------- */
+  /* ---- Cupcake of the week, the top of the menu ------------------------ */
   {
-    id: "weekly-brown-butter-pecan",
-    name: "Brown Butter Pecan",
+    id: "cupcake-week-cookies-and-cream",
+    name: "Cookies & Cream",
     group: "weekly",
     kind: "This week only",
-    price: 26,
+    price: 5,
     unit: "per half dozen",
-    desc: "Brown butter dough, toasted pecans, a little flaked salt on top. On the board this week only.",
-    image: "assets/img/cookies.svg",
+    desc: "Chocolate cookie crumb through the cake and the buttercream, with a cookie on top. This week only.",
+    image: "assets/img/cupcakes.svg",
     featured: true,
-  },
-  {
-    id: "weekly-iced-pumpkin-spice",
-    name: "Iced Pumpkin Spice",
-    group: "weekly",
-    kind: "This week only",
-    price: 26,
-    unit: "per half dozen",
-    desc: "Soft pumpkin cookies under a thin brown-sugar icing. Autumn in a cookie tin.",
-    image: "assets/img/cookies.svg",
-    featured: true,
-  },
-  {
-    id: "weekly-bakers-dozen",
-    name: "Baker's Choice Dozen",
-    group: "weekly",
-    kind: "This week only",
-    price: 32,
-    unit: "per dozen",
-    desc: "A dozen of whatever's best coming out of the oven this week: a little of each special.",
-    image: "assets/img/cookies.svg",
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
+      ]},
+    ],
   },
 
+  /* ---- Seasonal -------------------------------------------------------- */
   {
-    id: "vanilla-bean-layer",
-    name: "Vanilla Bean Layer Cake",
-    group: "mainstays",
-    kind: "Layer cake",
-    price: 55,
-    unit: "6-inch, serves 8-10",
-    desc: "Three layers of vanilla bean cake with silky Swiss meringue buttercream and a hand-piped finish.",
-    image: "assets/img/cakes.svg",
+    id: "cupcake-seasonal-pumpkin-spice",
+    name: "Pumpkin Spice",
+    group: "seasonal",
+    kind: "Seasonal",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Pumpkin and warm spice, with a cream cheese buttercream. On the board while the season lasts.",
+    image: "assets/img/seasonal.svg",
     featured: true,
     options: [
       { label: "Size", choices: [
-        { name: '6", serves 8-10', price: 0 },
-        { name: '8", serves 16-20', price: 25 },
-        { name: 'Two tier, serves 30+', price: 85 },
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
       ]},
-      { label: "Filling", choices: [
-        { name: "Vanilla buttercream", price: 0 },
-        { name: "Raspberry preserves", price: 6 },
-        { name: "Salted caramel", price: 8 },
-        { name: "Lemon curd", price: 8 },
+    ],
+  },
+
+  /* ---- The standard four, plus a variety pack --------------------------- */
+  {
+    id: "cupcake-vanilla-vanilla",
+    name: "Vanilla Cake, Vanilla Frosting",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Vanilla bean cake under a silky vanilla buttercream. The one everybody reaches for.",
+    image: "assets/img/cupcakes.svg",
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
       ]},
     ],
   },
   {
-    id: "chocolate-celebration",
-    name: "Chocolate Celebration Cake",
-    group: "mainstays",
-    kind: "Layer cake",
-    price: 60,
-    unit: "6-inch, serves 8-10",
-    desc: "Deep dark chocolate cake, whipped chocolate ganache, and a gold-dusted crown of buttercream.",
-    image: "assets/img/cakes.svg",
+    id: "cupcake-vanilla-chocolate",
+    name: "Vanilla Cake, Chocolate Frosting",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Vanilla bean cake with a deep chocolate buttercream.",
+    image: "assets/img/cupcakes.svg",
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
+      ]},
+    ],
+  },
+  {
+    id: "cupcake-chocolate-chocolate",
+    name: "Chocolate Cake, Chocolate Frosting",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Dark chocolate cake with chocolate buttercream, for anyone who means it.",
+    image: "assets/img/cupcakes.svg",
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
+      ]},
+    ],
+  },
+  {
+    id: "cupcake-chocolate-vanilla",
+    name: "Chocolate Cake, Vanilla Frosting",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 5,
+    unit: "per half dozen",
+    desc: "Dark chocolate cake under vanilla buttercream.",
+    image: "assets/img/cupcakes.svg",
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 5 },
+      ]},
+    ],
+  },
+  {
+    id: "cupcake-variety-pack",
+    name: "Variety Pack",
+    group: "standard",
+    kind: "Cupcakes",
+    price: 10,
+    unit: "per half dozen",
+    desc: "A mix of the standard four, so nobody has to choose. Tell us if you want a particular split.",
+    image: "assets/img/cupcakes.svg",
     featured: true,
     options: [
       { label: "Size", choices: [
-        { name: '6", serves 8-10', price: 0 },
-        { name: '8", serves 16-20', price: 25 },
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 10 },
       ]},
     ],
   },
+
+  /* ---- Floral. The bouquet is its own item, not an add-on, so that a
+     dozen comes to exactly double the half dozen. ---------------------- */
   {
-    id: "almond-champagne",
-    name: "Almond & Champagne Cake",
-    group: "mainstays",
-    kind: "Layer cake",
-    price: 68,
-    unit: "6-inch, serves 8-10",
-    desc: "Almond cake brushed with champagne syrup, mascarpone buttercream, sugared florals.",
-    image: "assets/img/cakes.svg",
-  },
-  {
-    id: "vanilla-cupcakes",
-    name: "Classic Vanilla Cupcakes",
-    group: "mainstays",
-    kind: "Cupcakes",
-    price: 30,
-    unit: "per dozen",
-    desc: "Buttery vanilla cupcakes swirled high with vanilla bean buttercream and a gold sanding-sugar finish.",
+    id: "cupcake-floral",
+    name: "Floral Cupcakes",
+    group: "floral",
+    kind: "Floral",
+    price: 10,
+    unit: "per half dozen",
+    desc: "Buttercream flowers piped by hand, in the colours you pick. Boxed ready to set out.",
     image: "assets/img/cupcakes.svg",
     featured: true,
+    options: [
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 10 },
+      ]},
+      { label: "Icing colour", choices: [
+        { name: "White", price: 0 },
+        { name: "Red", price: 0 },
+        { name: "Orange", price: 0 },
+        { name: "Yellow", price: 0 },
+        { name: "Green", price: 0 },
+        { name: "Blue", price: 0 },
+        { name: "Purple", price: 0 },
+        { name: "Pink", price: 0 },
+      ]},
+    ],
   },
   {
-    id: "lemon-blueberry-cupcakes",
-    name: "Lemon Blueberry Cupcakes",
-    group: "mainstays",
-    kind: "Cupcakes",
-    price: 34,
-    unit: "per dozen",
-    desc: "Lemon cake folded with blueberries, topped with lemon cream cheese frosting.",
+    id: "cupcake-floral-bouquet",
+    name: "Floral Cupcake Bouquet",
+    group: "floral",
+    kind: "Floral",
+    price: 12,
+    unit: "per half dozen",
+    desc: "The same piped flowers, arranged together as a bouquet rather than boxed. A centrepiece you can eat.",
     image: "assets/img/cupcakes.svg",
-  },
-  {
-    id: "brown-butter-chocolate-chip",
-    name: "Brown Butter Chocolate Chip",
-    group: "mainstays",
-    kind: "Cookies",
-    price: 24,
-    unit: "per dozen",
-    desc: "Thick, soft-centered and freckled with sea salt. The one everybody re-orders.",
-    image: "assets/img/cookies.svg",
-  },
-  {
-    id: "iced-sugar-cookies",
-    name: "Iced Sugar Cookies",
-    group: "mainstays",
-    kind: "Cookies",
-    price: 42,
-    unit: "per dozen",
-    desc: "Hand-iced in your colors for showers, birthdays, holidays, or a monogram for the table.",
-    image: "assets/img/cookies.svg",
-    featured: true,
     options: [
-      { label: "Design", choices: [
-        { name: "One or two colors", price: 0 },
-        { name: "Detailed, florals, lettering", price: 12 },
-        { name: "Custom, send me your theme", price: 20 },
+      { label: "Size", choices: [
+        { name: "Half dozen", price: 0 },
+        { name: "Dozen", price: 12 },
+      ]},
+      { label: "Icing colour", choices: [
+        { name: "White", price: 0 },
+        { name: "Red", price: 0 },
+        { name: "Orange", price: 0 },
+        { name: "Yellow", price: 0 },
+        { name: "Green", price: 0 },
+        { name: "Blue", price: 0 },
+        { name: "Purple", price: 0 },
+        { name: "Pink", price: 0 },
       ]},
     ],
-  },
-  {
-    id: "classic-cake-pops",
-    name: "Classic Cake Pops",
-    group: "mainstays",
-    kind: "Cake pops",
-    price: 30,
-    unit: "per dozen",
-    desc: "Vanilla or chocolate cake, dipped in candy coating with a drizzle and sprinkle of your choosing.",
-    image: "assets/img/cakepops.svg",
-    featured: true,
-    options: [
-      { label: "Flavor", choices: [
-        { name: "Vanilla", price: 0 },
-        { name: "Chocolate", price: 0 },
-        { name: "Half and half", price: 0 },
-      ]},
-      { label: "Finish", choices: [
-        { name: "Drizzle + sprinkles", price: 0 },
-        { name: "Gold leaf accents", price: 10 },
-      ]},
-    ],
-  },
-  {
-    id: "fudge-brownies",
-    name: "Salted Fudge Brownies",
-    group: "mainstays",
-    kind: "Bars",
-    price: 26,
-    unit: "per dozen",
-    desc: "Dense, glossy-topped and finished with flaked sea salt. Cut thick.",
-    image: "assets/img/brownies.svg",
-    featured: true,
-  },
-  {
-    id: "blondies",
-    name: "Brown Sugar Blondies",
-    group: "mainstays",
-    kind: "Bars",
-    price: 24,
-    unit: "per dozen",
-    desc: "Chewy brown sugar bars with white chocolate and toasted pecans.",
-    image: "assets/img/brownies.svg",
-  },
-  {
-    id: "dessert-box",
-    name: "The Frosted Frog Dessert Box",
-    group: "seasonal",
-    kind: "Dessert box",
-    price: 48,
-    unit: "serves 6-8",
-    desc: "A curated box of the week's best: cookies, brownie bites, cake pops and a little something extra.",
-    image: "assets/img/seasonal.svg",
-    featured: true,
-  },
-  {
-    id: "seasonal-pie-bars",
-    name: "Seasonal Pie Bars",
-    group: "seasonal",
-    kind: "Bars",
-    price: 28,
-    unit: "per dozen",
-    desc: "Whatever's in season, in a shortbread crust. Ask what's on the board this month.",
-    image: "assets/img/seasonal.svg",
   },
 ];
 
 /* Replace these with real reviews before launch, or delete the block and the
    home page simply skips the section. */
-const TESTIMONIALS = [
-  { quote: "The cake was the prettiest thing at the party, and somehow it tasted even better than it looked.", name: "Marissa H.", context: "Birthday cake, June" },
-  { quote: "Four dozen iced cookies for a baby shower. Every single one was perfect.", name: "Dana P.", context: "Baby shower, March" },
-  { quote: "Easiest pre-order I have ever done, and the cake pops disappeared in ten minutes.", name: "Kelsey R.", context: "Office party, October" },
-];
+/* Real customer words only. The three that used to sit here were written as
+   placeholders while the site was a mockup, and one of them praised cake pops
+   that are no longer on the menu. Invented reviews on a site that takes money
+   are not a placeholder, they are a false claim, so the section hides itself
+   while this is empty. Add entries as customers actually say things:
+     { quote: "...", name: "First L.", context: "Birthday, March" },
+*/
+const TESTIMONIALS = [];
 
 const FAQS = [
   { q: "When can I order?", a: "The order form is open Monday through Wednesday each week. Thursday is shopping day, and everything is baked fresh Friday and Saturday for that week's pickups. If you land here on a Thursday or a weekend, the menu is still here to browse, ordering reopens Monday morning." },

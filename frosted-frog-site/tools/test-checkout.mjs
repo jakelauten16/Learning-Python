@@ -6,6 +6,11 @@ import { dirname, join } from "node:path";
 const SITE = join(dirname(fileURLToPath(import.meta.url)), "..");
 const { priceOrder, verifyStripeSignature, SHOP_CONFIG, PRODUCTS, Schedule } =
   await import(SITE + "/functions/_lib/order.js");
+/* TESTIMONIALS is not part of what the server imports, and widening the
+   server's exports for a test would widen its trust boundary, so read it
+   straight from the catalog file instead. */
+const { createRequire } = await import("node:module");
+const { TESTIMONIALS } = createRequire(import.meta.url)(SITE + "/assets/js/data.js");
 const { onRequestPost: checkout } = await import(SITE + "/functions/api/checkout.js");
 const { onRequestPost: webhook } = await import(SITE + "/functions/api/stripe-webhook.js");
 
@@ -28,8 +33,17 @@ globalThis.Date = class extends RealDate {
   static now() { return monday.getTime(); }
 };
 
+/* The fixture is taken from the catalog rather than naming a product, so
+   revamping the menu cannot break the suite. It picks the first item that has
+   a priced option, which is what exercises the interesting arithmetic. */
+const product = PRODUCTS.find((p) =>
+  (p.options || []).some((g) => g.choices.some((c) => c.price > 0))) || PRODUCTS[0];
+const group = (product.options || []).find((g) => g.choices.some((c) => c.price > 0));
+const upgrade = group.choices.find((c) => c.price > 0);
+const QTY = 2;
+
 const baseOrder = (over = {}) => ({
-  items: [{ id: "iced-sugar-cookies", qty: 12, options: { Design: "Detailed, florals, lettering" } }],
+  items: [{ id: product.id, qty: QTY, options: { [group.label]: upgrade.name } }],
   fulfillment: "pickup",
   date: slot.date,
   window: slot.slots[0],
@@ -38,9 +52,8 @@ const baseOrder = (over = {}) => ({
 });
 
 /* 1. Honest order prices from the catalog. */
-const product = PRODUCTS.find((p) => p.id === "iced-sugar-cookies");
-const design = product.options[0].choices.find((c) => c.name.startsWith("Detailed"));
-const expected = (product.price + design.price) * 12;
+const design = upgrade;
+const expected = (product.price + upgrade.price) * QTY;
 const priced = priceOrder(baseOrder(), monday);
 ok("prices from the catalog", priced.totals?.subtotal === expected,
    `subtotal ${priced.totals?.subtotal} expected ${expected}`);
@@ -48,7 +61,7 @@ ok("tax computed server side", Math.abs(priced.totals.tax - expected * SHOP_CONF
 
 /* 2. Prices sent by the browser are ignored. */
 const tampered = priceOrder(baseOrder({
-  items: [{ id: "iced-sugar-cookies", qty: 12, price: 0.01, unitPrice: 0.01, options: { Design: "Detailed, florals, lettering" } }],
+  items: [{ id: product.id, qty: QTY, price: 0.01, unitPrice: 0.01, options: { [group.label]: upgrade.name } }],
   totals: { subtotal: 0.01, total: 0.01 },
 }), monday);
 ok("browser-sent prices ignored", tampered.totals?.subtotal === expected,
@@ -56,7 +69,7 @@ ok("browser-sent prices ignored", tampered.totals?.subtotal === expected,
 
 /* 3. Invented options rejected. */
 const badOption = priceOrder(baseOrder({
-  items: [{ id: "iced-sugar-cookies", qty: 12, options: { Design: "Free please" } }],
+  items: [{ id: product.id, qty: QTY, options: { [group.label]: "Free please" } }],
 }), monday);
 ok("unknown option refused", !!badOption.error, badOption.error || "");
 
@@ -64,13 +77,13 @@ ok("unknown option refused", !!badOption.error, badOption.error || "");
 ok("unknown product refused", !!priceOrder(baseOrder({ items: [{ id: "free-cake", qty: 1 }] }), monday).error);
 
 /* 5. Quantity games refused. */
-ok("negative quantity refused", !!priceOrder(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: -5 }] }), monday).error);
+ok("negative quantity refused", !!priceOrder(baseOrder({ items: [{ id: product.id, qty: -5 }] }), monday).error);
 /* Everything on the menu is priced by the package now, so one is a valid
    order: one dozen, one half dozen, one cake. The minimum rule still exists
    for any product that sets one, and this follows the catalog rather than
    assuming a particular item does. */
 ok("one of a package-priced item is accepted",
-   !priceOrder(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: 1 }] }), monday).error);
+   !priceOrder(baseOrder({ items: [{ id: product.id, qty: 1 }] }), monday).error);
 
 const withMin = PRODUCTS.find((p) => (p.min || 1) > 1);
 if (withMin) {
@@ -132,7 +145,7 @@ ok("success url points at thank-you", sentToStripe.body.get("success_url").inclu
 
 /* A tampered request through the real endpoint still charges full price. */
 sentToStripe = null;
-await checkout({ request: req(baseOrder({ items: [{ id: "iced-sugar-cookies", qty: 12, unit_amount: 1, price: 0.01, options: { Design: "Detailed, florals, lettering" } }] })), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
+await checkout({ request: req(baseOrder({ items: [{ id: product.id, qty: QTY, unit_amount: 1, price: 0.01, options: { [group.label]: upgrade.name } }] })), env: { STRIPE_SECRET_KEY: "sk_test_fake" } });
 ok("endpoint ignores a tampered price", Number(sentToStripe.body.get("line_items[0][price_data][unit_amount]")) === Math.round((product.price + design.price) * 100));
 
 /* Stripe rejects the entire session if saved_payment_method_options is sent
@@ -155,7 +168,7 @@ const payload = JSON.stringify({
   id: "evt_1", type: "checkout.session.completed",
   data: { object: { id: "cs_test_123", payment_status: "paid", amount_total: 69336, currency: "usd",
     customer_details: { email: "jamie@example.com", phone: "555 0123" },
-    metadata: { reference: "abc123", customer_name: "Jamie Tester", pickup_date: slot.date, pickup_time: slot.slots[0], items: "12x Iced Sugar Cookies", total: "$693.36", fulfillment: "pickup" } } },
+    metadata: { reference: "abc123", customer_name: "Jamie Tester", pickup_date: slot.date, pickup_time: slot.slots[0], items: "2x Cupcakes", total: "$693.36", fulfillment: "pickup" } } },
 });
 const ts = Math.floor(monday.getTime() / 1000);
 const sign = (body, t = ts, key = secret) => `t=${t},v1=${createHmac("sha256", key).update(`${t}.${body}`).digest("hex")}`;
@@ -315,6 +328,48 @@ ok("the earliest Friday slot is accepted",
    !priceOrder(baseOrder({ date: friSlots.date, window: friSlots.slots[0] }), monday).error);
 ok("the earliest Saturday slot is accepted",
    !priceOrder(baseOrder({ date: satSlots.date, window: satSlots.slots[0] }), monday).error);
+
+/* 18. The cupcake menu: every item is sold by the half dozen or the dozen,
+   and a dozen is exactly double. Arithmetic a customer can check. */
+const cupcakes = PRODUCTS.filter((p) => (p.options || []).some((g) => g.label === "Size"));
+ok("every product is sold by the pack", cupcakes.length === PRODUCTS.length,
+   `${cupcakes.length} of ${PRODUCTS.length}`);
+
+const notDouble = cupcakes.filter((p) => {
+  const dozen = p.options.find((g) => g.label === "Size").choices.find((c) => c.name === "Dozen");
+  return p.price + dozen.price !== p.price * 2;
+});
+ok("a dozen is exactly double the half dozen everywhere", notDouble.length === 0,
+   notDouble.map((p) => p.id).join(", "));
+
+/* Priced end to end, not just read off the catalog. */
+const halfDozen = priceOrder(baseOrder({
+  items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Half dozen", "Icing colour": "Pink" } }],
+}), monday);
+const dozen = priceOrder(baseOrder({
+  items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Dozen", "Icing colour": "Pink" } }],
+}), monday);
+ok("a half dozen floral is $10", halfDozen.totals?.subtotal === 10, String(halfDozen.totals?.subtotal));
+ok("a dozen floral is $20", dozen.totals?.subtotal === 20, String(dozen.totals?.subtotal));
+
+const bouquet = priceOrder(baseOrder({
+  items: [{ id: "cupcake-floral-bouquet", qty: 1, options: { Size: "Dozen", "Icing colour": "White" } }],
+}), monday);
+ok("a dozen bouquet is $24, double the $12 half dozen", bouquet.totals?.subtotal === 24,
+   String(bouquet.totals?.subtotal));
+
+const standard = priceOrder(baseOrder({
+  items: [{ id: "cupcake-vanilla-vanilla", qty: 1, options: { Size: "Half dozen" } }],
+}), monday);
+ok("a half dozen standard is $5", standard.totals?.subtotal === 5, String(standard.totals?.subtotal));
+
+/* An icing colour is free, and an invented one is refused. */
+ok("picking an icing colour costs nothing", halfDozen.totals.subtotal === 10);
+ok("an icing colour that is not offered is refused",
+   !!priceOrder(baseOrder({ items: [{ id: "cupcake-floral", qty: 1, options: { Size: "Half dozen", "Icing colour": "Tartan" } }] }), monday).error);
+
+/* Nothing on a live menu should quote a customer who does not exist. */
+ok("no invented testimonials are published", TESTIMONIALS.length === 0);
 
 Date.now = realNow; globalThis.Date = RealDate;
 console.log(`\n${pass} passed, ${fail} failed`);
